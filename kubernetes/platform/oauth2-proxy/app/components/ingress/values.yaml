@@ -7,7 +7,7 @@ ingress:
   annotations:
     # Enable cert-manager to create automatically the SSL certificate and store in Secret
     # Possible Cluster-Issuer values:
-    #   * 'letsencrypt-issuer' (valid TLS certificate using IONOS API)
+    #   * 'letsencrypt-issuer' (valid TLS certificate using OVH API)
     #   * 'ca-issuer' (CA-signed certificate, not valid)
     cert-manager.io/cluster-issuer: letsencrypt-issuer
     cert-manager.io/common-name: oauth2-proxy.${CLUSTER_DOMAIN}

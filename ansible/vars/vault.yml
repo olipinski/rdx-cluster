@@ -57,6 +57,7 @@ vault:
 
   # Certmanager
   certmanager:
-    ionos:
-      public_prefix: your-public-prefix
-      secret: your-key
+    ovh:
+      ak: your-application-key
+      as: your-application-secret-key
+      ck: your-customer-key

@@ -6,12 +6,13 @@ install_python_packages: true
 # Set certbot python virtual environment
 certbot_venv: /letsencrypt
 
-# dns ionos credentials
-dns_ionos_prefix: ionos-prefix
-dns_ionos_secret: ionos-secret
-dns_ionos_api_endpoint: https://api.hosting.ionos.com
+# DNS OVH credentials
+dns_ovh_endpoint = ovh-eu
+dns_ovh_application_key = ovh_ak
+dns_ovh_application_secret = ovh_as
+dns_ovh_consumer_key = ovh_ck
 
-certbot_email: myemail@mydomain.es
+certbot_email: myemail@mydomain.eu
 
-# dns propagation in seconds
+# DNS propagation in seconds
 propagation_seconds: 300

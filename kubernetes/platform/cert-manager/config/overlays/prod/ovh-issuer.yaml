@@ -11,18 +11,21 @@ spec:
     email: admin@ricsanfre.com
     # Name of a secret used to store the ACME account private key
     privateKeySecretRef:
-      name: letsencrypt-ionos-prod
+      name: letsencrypt-ovh-prod
     # Enable the dns01 challenge provider
     solvers:
       - dns01:
           webhook:
             groupName: acme.ricsanfre.com
-            solverName: ionos
+            solverName: ovh
             config:
-              apiUrl: https://api.hosting.ionos.com/dns/v1
-              publicKeySecretRef:
-                key: IONOS_PUBLIC_PREFIX
-                name: ionos-secret
-              secretKeySecretRef:
-                key: IONOS_SECRET
-                name: ionos-secret
+              endpoint: ovh-eu
+              applicationKeyRef:
+                key: OVH_AK
+                name: ovh-secret
+              applicationSecretRef:
+                key: OVH_AS
+                name: ovh-secret
+              consumerKeyRef:
+                key: OVH_CK
+                name: ovh-secret

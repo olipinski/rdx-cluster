@@ -126,11 +126,11 @@ linkerd_dashboard_dns: "linkerd.{{ dns_domain }}"
 # Enable letsencrypt certificates
 enable_letsencrypt: true
 
-# IONOS API credentials
-ionos_public_prefix: "{{ vault.certmanager.ionos.public_prefix }}"
-ionos_secret: "{{ vault.certmanager.ionos.secret }}"
-ionos_api_endpoint: https://api.hosting.ionos.com
-
+# OVH API credentials
+ovh_ak: "{{ vault.certmanager.ovh.ak }}"
+ovh_as: "{{ vault.certmanager.ovh.as }}"
+ovh_ck: "{{ vault.certmanager.ovh.ck }}"
+ovh_api_endpoint: ovh-eu
 
 # issuer email
 acme_issuer_email: admin@ricsanfre.com

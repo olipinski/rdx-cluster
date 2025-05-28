@@ -85,9 +85,10 @@ vault:
       client-secret: {{ grafana_client_secret }}
   # Certmanager
   certmanager:
-    ionos:
-      public_prefix: {{ ionos_public_prefix }}
-      secret: {{ ionos_secret }}
+    ovh:
+      ak: {{ ovh_ak }}
+      as: {{ ovh_as }}
+      ck: {{ ovh_ck }}
   # PostgreSQL
   postgresql:
     admin:
