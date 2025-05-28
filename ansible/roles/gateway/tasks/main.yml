@@ -1,0 +1,11 @@
+# Secure SSH access
+# configure hostaname
+# disable ssh password
+# configure lan
+# cofngiure wan
+# confgiure defualt route
+# confiure firewall
+# configure DNS forwarding
+# configure DHCP -> delegate to MAAS
+# configure NTP
+# configure HAProxy
