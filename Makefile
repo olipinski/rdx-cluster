@@ -43,10 +43,6 @@ nodes-setup:
 dns-setup:
 	${RUNNER} ansible-playbook configure_dns_authoritative.yml
 
-.PHONY: pxe-setup
-pxe-setup:
-	${RUNNER} ansible-playbook configure_pxe_server.yml
-
 .PHONY: external-services
 external-services:
 	${RUNNER} ansible-playbook external_services.yml
@@ -90,7 +86,6 @@ shutdown-k3s-worker:
 .PHONY: shutdown-k3s-master
 shutdown-k3s-master:
 	${RUNNER} ansible -b -m shell -a "shutdown -h 1 min" k3s_master
-
 
 .PHONY: shutdown-picluster
 shutdown-picluster:

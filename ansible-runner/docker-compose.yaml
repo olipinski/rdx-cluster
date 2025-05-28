@@ -10,7 +10,6 @@ services:
     volumes:
       - ./../ansible:/runner
       - ./../kubernetes:/kubernetes
-      - ./../metal/x86/pxe-files:/metal/x86/pxe-files
       - ./runner/.gnupg:/home/runner/.gnupg
       - ./runner/.vault:/home/runner/.vault
       - ./runner/.secrets:/home/runner/.secrets

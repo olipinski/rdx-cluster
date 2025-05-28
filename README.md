@@ -1,4 +1,4 @@
-# Pi Kubernetes Cluster
+# Radxa Kubernetes Cluster
 
 <img src="docs/assets/img/picluster-logo.png" width="200" />
 

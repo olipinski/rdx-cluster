@@ -77,9 +77,6 @@ all:
     dns:
       hosts:
         node1:
-    pxe:
-      hosts:
-        node1:
     vault:
       hosts:
         node1:
