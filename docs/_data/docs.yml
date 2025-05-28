@@ -8,18 +8,14 @@
   docs:
   - pimaster
   - gateway
-  - openwrt
   - external
   - node
   - san
   - dns
-  - pxe-server
-- title: Nodes OS Setup
+- title: Node Provisioning
   docs:
-  - firmware
-  - ubuntu/rpi
-  - ubuntu/x86
-  - os-basic
+  - maas-setup
+  - radxa-prep
 - title: External Services
   docs:
   - s3-backup
@@ -32,8 +28,6 @@
   - k3s-networking
   - cilium
   - kube-dns
-  - metallb
-  - traefik
   - nginx
 - title: Certificate Management
   docs:
@@ -60,7 +54,6 @@
   - backup
 - title: GitOps
   docs:
-  - argocd
   - fluxcd
 - title: Microservices
   docs:
@@ -73,4 +66,3 @@
   - k8s-networking
   - k8s-commands
   - iscsi-commands
-  - pi-commands
