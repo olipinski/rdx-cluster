@@ -1,11 +1,6 @@
 ---
 # Encrypted variables - Ansible Vault
 vault:
-  # SAN
-  san:
-    iscsi:
-      node_pass: s1cret0
-      password_mutual: 0tr0s1cret0
   # K3s secrets
   cluster:
     k3s:

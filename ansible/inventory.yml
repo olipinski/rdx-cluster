@@ -82,7 +82,7 @@ all:
         node1:
     haproxy:
       hosts:
-        node1:
-    san:
+        service0:
+    s3:
       hosts:
-        node1:
+        service0:

@@ -20,10 +20,6 @@
     update_cache: true
     state: present
 
-- name: Execute RaspberryPi specific setup tasks
-  ansible.builtin.include_tasks: raspberrypi_tasks.yml
-  when: "'raspberrypi' in group_names"
-
 - name: Load required Kernel modules
   ansible.builtin.include_tasks: load_kernel_modules.yml
 

@@ -37,7 +37,7 @@
       tags: [ntp]
 
 - name: Configure External Node
-  hosts: node1
+  hosts: service0
   gather_facts: true
   tags: [external]
   become: true
@@ -57,25 +57,6 @@
     # NTP Client configuration
     - role: ricsanfre.ntp
       tags: [ntp]
-
-  tasks:
-    # Aditional Tasks in case alternative architecture (centralized SAN)
-    - name: Centralized SAN
-      block:
-        # Include centralized san variables
-        - name: Include iSCSI variables
-          include_vars:
-            file: vars/centralized_san/iscsi_target.yml
-        # iSCSI LUNs: LVM Volumes configuration
-        - name: Configure iSCSI SAN Target
-          include_role:
-            name: ricsanfre.storage
-        # iSCSI LUNs: LVM Volumes configuration
-        - name: Configure iSCSI SAN Target
-          include_role:
-            name: ricsanfre.iscsi_target
-      when: centralized_san
-      tags: [iscsi]
 
 - name: Configure Pi Cluster Nodes
   hosts: k3s_cluster
@@ -100,24 +81,6 @@
       tags: [ntp]
 
   tasks:
-    # Aditional Tasks in case alternative architecture (centralized SAN)
-    - name: Centralized SAN
-      block:
-        # Include centralized san variables
-        - name: Include iSCSI variables
-          include_vars:
-            file: vars/centralized_san/iscsi_initiator.yml
-        # iSCSI client (initiator) configuration
-        - name: Configure iSCSI Initiator
-          include_role:
-            name: ricsanfre.iscsi_initiator
-        # Mounting iSCSI LUNs
-        - name: Configure iSCSI SAN Target
-          include_role:
-            name: ricsanfre.storage
-      when: centralized_san
-      tags: [iscsi]
-
       # Local Storage configuration
     - name: Dedicated Disks
       block:
@@ -127,7 +90,6 @@
           include_role:
             name: ricsanfre.iscsi_initiator
           vars:
-            open_iscsi_initiator_name: "iqn.2021-07.com.ricsanfre.homelab:{{ ansible_facts['nodename'] }}"
+            open_iscsi_initiator_name: "iqn.2025-06.com.changeme.homelab:{{ ansible_facts['nodename'] }}"
             open_iscsi_automatic_startup: true
-      when: not centralized_san
       tags: [storage]
