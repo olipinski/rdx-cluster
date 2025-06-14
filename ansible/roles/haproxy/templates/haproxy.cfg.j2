@@ -49,7 +49,5 @@ backend k8s_controlplane
     option ssl-hello-chk
     balance     roundrobin
 {% for host in groups['k3s_master'] %}
-{% if hostvars[host].hostname is defined and hostvars[host].ip is defined %}
-      server {{ hostvars[host].hostname }} {{ hostvars[host].ip }}:6443 check
-{% endif %}
+      server {{ hostvars[host].ansible_hostname }} {{ hostvars[host].ansible_hostname }}.maas.internal.changeme.com:6443 check
 {% endfor %}
