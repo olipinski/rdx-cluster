@@ -10,7 +10,6 @@
   - gateway
   - external
   - node
-  - san
   - dns
 - title: Node Provisioning
   docs:

@@ -7,12 +7,12 @@ install_python_packages: true
 certbot_venv: /letsencrypt
 
 # DNS OVH credentials
-dns_ovh_endpoint = ovh-eu
-dns_ovh_application_key = ovh_ak
-dns_ovh_application_secret = ovh_as
-dns_ovh_consumer_key = ovh_ck
+dns_ovh_endpoint: ovh_api_endpoint
+dns_ovh_application_key: ovh_ak
+dns_ovh_application_secret: ovh_as
+dns_ovh_consumer_key: ovh_ck
 
-certbot_email: myemail@mydomain.eu
+certbot_email: myemail@changeme.com
 
 # DNS propagation in seconds
 propagation_seconds: 300

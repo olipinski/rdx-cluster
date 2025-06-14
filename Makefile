@@ -95,10 +95,6 @@ shutdown-picluster:
 kubernetes-vault-config:
 	${RUNNER} ansible-playbook kubernetes_vault_config.yml
 
-.PHONY: get-pi-status
-get-pi-status:
-	${RUNNER} ansible -b -m shell -a "pi_throttling" raspberrypi
-
 .PHONY: install-local-utils
 install-local-utils:
 	echo "dummy" > ansible/vault-pass-dummy
