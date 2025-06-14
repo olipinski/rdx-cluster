@@ -744,7 +744,7 @@ External Secrets Operator is installed through its helm chart.
 - Step 6: Create Cluster Secret Store
 
   ```yml
-  apiVersion: external-secrets.io/v1beta1
+  apiVersion: external-secrets.io/v1
    kind: ClusterSecretStore
    metadata:
      name: vault-backend
@@ -777,7 +777,7 @@ External Secrets Operator is installed through its helm chart.
 - Step 7: Create External secret
 
   ```yml
-  apiVersion: external-secrets.io/v1beta1
+  apiVersion: external-secrets.io/v1
   kind: ExternalSecret
   metadata:
    name: vault-example
