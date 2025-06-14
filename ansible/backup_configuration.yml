@@ -1,6 +1,6 @@
 ---
 
-- name: Configure Pi-cluster nodes backup
+- name: Configure Rdx-cluster nodes backup
   hosts: picluster
   gather_facts: true
   tags: [backup]

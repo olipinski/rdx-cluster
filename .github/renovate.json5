@@ -3,10 +3,11 @@
   extends: [
     'config:recommended',
     ':skipStatusChecks',
-    'github>olipinski/pi-cluster//.github/renovate/customManagers.json5',
-    'github>olipinski/pi-cluster//.github/renovate/grafanaDashboards.json5',
-    'github>olipinski/pi-cluster//.github/renovate/groups.json5',
-    'github>olipinski/pi-cluster//.github/renovate/labels.json5',
+    ':dependencyDashboard',
+    'github>olipinski/rdx-cluster//.github/renovate/customManagers.json5',
+    'github>olipinski/rdx-cluster//.github/renovate/grafanaDashboards.json5',
+    'github>olipinski/rdx-cluster//.github/renovate/groups.json5',
+    'github>olipinski/rdx-cluster//.github/renovate/labels.json5',
   ],
   dependencyDashboardTitle: 'Renovate Dashboard 🤖',
   flux: {
