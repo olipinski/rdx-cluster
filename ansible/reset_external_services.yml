@@ -59,7 +59,7 @@
         daemon_reload: true
 
 - name: Clean Restic Installation
-  hosts: picluster:gateway
+  hosts: rdxcluster:gateway
   become: true
   gather_facts: false
   tags: [restic]

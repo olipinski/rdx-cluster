@@ -1,7 +1,5 @@
 ---
 all:
-  vars:
-    host_domain: maas.internal.changeme.com
   children:
     control:
       hosts:
@@ -12,6 +10,7 @@ all:
     rdxcluster:
       hosts:
         service0:
+          ansible_host: 10.20.0.8
         rock000:
         rock001:
         red000:

@@ -1,7 +1,7 @@
 ---
 
 - name: Configure Rdx-cluster nodes backup
-  hosts: picluster
+  hosts: rdxcluster
   gather_facts: true
   tags: [backup]
   become: true

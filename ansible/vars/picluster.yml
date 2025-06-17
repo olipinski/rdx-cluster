@@ -11,7 +11,7 @@ k3s_version: v1.33.1+k3s1
 
 # k3s master node VIP (loadbalancer)
 # this is the IP/hostname of the service node/loadbalancer
-k3s_api_vip: 10.0.0.8
+k3s_api_vip: service0.maas.changeme.com
 
 # k3s shared token
 k3s_token: "{{ vault.cluster.k3s.token }}"
@@ -151,7 +151,7 @@ minio_mc_version: "RELEASE.2025-05-24T17-08-30Z"
 # Minio data dirs
 minio_server_make_datadirs: true
 minio_server_datadirs:
-  - /storage/minio
+  - /naspool/s3
 
 # Minio admin credentials
 minio_root_user: "root"
