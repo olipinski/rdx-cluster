@@ -1,16 +1,40 @@
 ---
-- hosts: picluster
+- hosts: k3s_worker
   become: true
   gather_facts: false
   tasks:
-    - name: Shutdown
-      command: shutdown -h 1 min
-      ignore_errors: true
+    - name: Shutdown agents
+      community.general.shutdown:
+        delay: 60 # in seconds
+
+- hosts: k3s_master
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Shutdown servers
+      community.general.shutdown:
+        delay: 60 # in seconds
+
+- hosts: service0
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Shutdown service node
+      community.general.shutdown:
+        delay: 60 # in seconds
+
+- hosts: prime
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Shutdown prime node
+      community.general.shutdown:
+        delay: 60 # in seconds
 
 - hosts: gateway
   become: true
   gather_facts: false
   tasks:
-    - name: Shutdown
-      command: shutdown -h 1 min
-      ignore_errors: true
+    - name: Shutdown gateway
+      community.general.shutdown:
+        delay: 60 # in seconds

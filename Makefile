@@ -79,17 +79,9 @@ external-services-reset:
 openwrt-certbot-tls:
 	${RUNNER} ansible-playbook generate_gateway_tls_certificate.yml
 
-.PHONY: shutdown-k3s-worker
-shutdown-k3s-worker:
-	${RUNNER} ansible -b -m shell -a "shutdown -h 1 min" k3s_worker
-
-.PHONY: shutdown-k3s-master
-shutdown-k3s-master:
-	${RUNNER} ansible -b -m shell -a "shutdown -h 1 min" k3s_master
-
-.PHONY: shutdown-picluster
-shutdown-picluster:
-	${RUNNER} ansible -b -m shell -a "shutdown -h 1 min" picluster
+.PHONY: shutdown
+shutdown-k3s:
+	${RUNNER} ansible-playbook shutdown.yml
 
 .PHONY: kubernetes-vault-config
 kubernetes-vault-config:
