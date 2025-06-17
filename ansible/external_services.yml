@@ -237,14 +237,24 @@
       include_vars: "vars/picluster.yml"
 
     # Install hashicorp vault collection dependencies (hvac python package) using PIP.
-    - name: Ensure hvac Python library is installed.
+    - name: Ensure PIP is installed.
       package:
         name:
-          - python3-hvac
+          - python3-pip
+          - python3-virtualenv
+          - python3-setuptools
         state: present
       become: true
-        
+
+    - name: Ensure hvac Python library is installed.
+      pip:
+        name: hvac
+        state: present
+        virtualenv: "{{ vault_venv_path }}"
+      become: true
+
   tasks:
+
     # Vault Login using ansible environement variables for creating token file
     # token file will be usd in next commands
     - name: Vault login
@@ -272,6 +282,8 @@
         policies: ["write"]
       register: token_data
       become: false
+      vars:
+        ansible_python_interpreter: "{{ vault_venv_path }}/bin/python"
     # Load ansible vault variables into Hashicorp Vault Server
     - name: Load vault credentials
       include_tasks:
