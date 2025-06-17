@@ -24,6 +24,6 @@ jobs:
       - name: Install test dependencies.
         run: pip3 install yamllint
 
-      - name: Lint all the YAMLs.
+      - name: run-ansible-lint
+        uses: ansible/ansible-lint@v25.6.0
         working-directory: ./ansible
-        run: yamllint .
