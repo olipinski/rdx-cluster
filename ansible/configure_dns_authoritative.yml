@@ -11,3 +11,8 @@
   roles:
     # DNS configuration
     - role: ricsanfre.bind9
+
+- name: Switch Vyos to our new DNS
+  vyos.vyos.vyos_system:
+    name_servers:
+      - "{{ hostvars[groups['dns'][0]].ansible_host }}"

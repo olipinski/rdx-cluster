@@ -1,0 +1,16 @@
+{#
+Goals of this template:
+Secure SSH access
+configure hostaname
+disable ssh password
+configure lan
+configure defualt route
+confiure firewall
+configure DNS forwarding
+configure DHCP -> delegate to MAAS
+configure NTP
+configure HAProxy
+
+Also not the -# at the end. The - in front of # makes sure jinja2 removes the whitespace before the comment.
+This is CRUCIAL as vyos does a diff with this file to see what changes to make.
+-#}

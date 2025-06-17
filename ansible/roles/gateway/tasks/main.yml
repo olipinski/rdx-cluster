@@ -1,11 +1,7 @@
-# Secure SSH access
-# configure hostaname
-# disable ssh password
-# configure lan
-# cofngiure wan
-# confgiure defualt route
-# confiure firewall
-# configure DNS forwarding
-# configure DHCP -> delegate to MAAS
-# configure NTP
-# configure HAProxy
+# For more information look at the template file. There are comments there.
+---
+
+- name: Configure Vyos from Jinja2
+  vyos.vyos.vyos_config:
+    src: vyos.conf.j2
+    save: true
