@@ -81,7 +81,7 @@
       tags: [ntp]
 
   tasks:
-      # Local Storage configuration
+    # Local Storage configuration
     - name: Dedicated Disks
       block:
         # iSCSI client (initiator) configuration

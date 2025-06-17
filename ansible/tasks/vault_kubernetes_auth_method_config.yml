@@ -37,8 +37,8 @@
   vars:
     ansible_python_interpreter: "{{ vault_venv_path }}/bin/python"
 
-  # Enable kubernetes auth method
-  # vault auth enable kubernetes
+# Enable kubernetes auth method
+# vault auth enable kubernetes
 - name: Enable kubernetes auth method
   ansible.builtin.uri:
     url: "https://{{ vault_dns }}:8200/v1/sys/auth/kubernetes"
