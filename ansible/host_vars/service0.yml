@@ -6,9 +6,9 @@
 ########################
 
 bind9_authoritative: true
-bind9_forward: false
-bind9_recursor: false
-bind9_forward_servers: []
+bind9_forward: true
+bind9_recursor: true
+bind9_forward_servers: [9.9.9.11, 194.112.112.11]
 bind9_generate_ddns_key: true
 bind9_zones:
   - name: "{{ dns_domain }}"
@@ -43,9 +43,12 @@ bind9_zones:
       - label: s3
         type: A
         rdata: 10.20.0.8
+      - label: ns.maas
+        type: A
+        rdata: 10.20.0.10
       - label: maas
         type: NS
-        rdata: 10.20.0.10
+        rdata: ns.maas
   - name: 10.in-addr.arpa
     type: primary
     default_ttl: 600
