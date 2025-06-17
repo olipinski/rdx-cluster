@@ -20,6 +20,10 @@
     update_cache: true
     state: present
 
+- name: Execute Radxa Rock 5B+ specific setup tasks
+  ansible.builtin.include_tasks: radxa_tasks.yml
+  when: "'radxa' in group_names"
+
 - name: Load required Kernel modules
   ansible.builtin.include_tasks: load_kernel_modules.yml
 

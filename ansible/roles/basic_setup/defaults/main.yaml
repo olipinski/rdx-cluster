@@ -8,3 +8,6 @@ common_packages:
   - nfs-common
   - cryptsetup
   - dmsetup
+
+radxa_packages:
+  - fake-hwclock
