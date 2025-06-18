@@ -1,0 +1,59 @@
+---
+
+- name: Install the MAAS snap
+  community.general.snap:
+    name: maas
+    channel: 3.6/stable
+  become: true
+
+- name: Disable conflicting NTP
+  ansible.builtin.systemd_service:
+    name: systemd-timesyncd
+    state: stoppped
+    enabled: false
+
+- name: Install PostgreSQL
+  ansible.builtin.apt:
+    name: postgresql
+    update_cache: yes
+
+- name: Create MAAS PostgreSQL user
+  community.postgresql.postgresql_user:
+    name: "{{ maas.postgresql.user }}"
+    password: "{{ maas.postgresql.password }}"
+    encrypted: true
+  become: true
+
+- name: Create MAAS PostgreSQL database
+  community.postgresql.postgresql_db:
+    name: maas
+    owner: "{{ maas.postgresql.user }}"
+  become: true
+
+- name: Update pg_hba
+  community.postgresql.postgresql_pg_hba:
+    conntype: host
+    databases: maas
+    method: md5
+    netmask: 0/0
+  become: true
+
+- name: Initialise the MAAS instance and database
+  ansible.builtin.command:
+    argv:
+      - maas init region+rack
+      - --database-uri
+      - "postgres://{{ maas.postgresql.user }}:{{ maas.postgresql.password }}@localhost/maas"
+  become: yes
+
+- name: Initialise the MAAS admin user
+  ansible.builtin.command:
+    argv:
+      - maas createadmin
+      - --username="{{ maas.maas.user }}"
+      - --email="admin@{{ dns_domain }}"
+  become: yes
+
+# Get API key? generate API key?
+# CONSUMER_KEY, CONSUMER_TOKEN, SECRET = "<API-KEY>".split(":")
+

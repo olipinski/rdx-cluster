@@ -36,6 +36,24 @@
     - role: ricsanfre.ntp
       tags: [ntp]
 
+- name: Configure MAAS Node
+  hosts: maas
+  gather_facts: true
+  tags: [maas]
+  become: true
+  pre_tasks:
+    - name: Include vault variables
+      include_vars: "vars/vault.yml"
+      tags: ["always"]
+  roles:
+    # Security Hardening
+    - role: ricsanfre.security
+      tags: [security]
+
+    # NTP Client configuration
+    - role: ricsanfre.ntp
+      tags: [ntp]
+
 - name: Configure External Node
   hosts: service0
   gather_facts: true
@@ -75,10 +93,6 @@
     # Security Hardening
     - role: ricsanfre.security
       tags: [security]
-
-    # NTP Client configuration
-    - role: ricsanfre.ntp
-      tags: [ntp]
 
   tasks:
       # Local Storage configuration

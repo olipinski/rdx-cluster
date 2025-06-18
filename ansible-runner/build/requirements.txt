@@ -2,3 +2,4 @@ kubernetes
 hvac
 certbot
 certbot-dns-ovh
+netaddr

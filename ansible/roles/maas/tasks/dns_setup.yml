@@ -1,0 +1,41 @@
+---
+
+- name: Add the MAAS domain
+  maas.maas.dns_domain:
+    cluster_instance:
+      host:
+      token_key:
+      token_secret:
+      customer_key:
+    name: "maas.{{ dns_domain }}"
+    state: present
+    ttl: 60
+    authoritative: true
+
+- name: Add the NS record
+  maas.maas.dns_record:
+    cluster_instance:
+      host:
+      token_key:
+      token_secret:
+      customer_key:
+    name: "ns.maas"
+    domain: "{{ dns_domain }}"
+    type: NS
+    data: "{{  }}"
+    state: present
+    ttl: 60
+
+- name: Add the A record
+  maas.maas.dns_record:
+    cluster_instance:
+      host:
+      token_key:
+      token_secret:
+      customer_key:
+    name: "nmaas"
+    domain: "{{ dns_domain }}"
+    type: A
+    data: "{{  }}"
+    state: present
+    ttl: 60

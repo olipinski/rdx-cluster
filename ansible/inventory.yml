@@ -7,6 +7,9 @@ all:
           hostname: prime
           ansible_host: localhost
           ansible_connection: local
+    maas:
+      hosts:
+        prime:
     rdxcluster:
       hosts:
         service0:

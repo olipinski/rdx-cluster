@@ -1,6 +1,14 @@
 ---
 # Encrypted variables - Ansible Vault
 vault:
+  # MAAS secrets:
+  maas:
+    maas:
+      user: admin
+      password: supers1cret0
+    postgresql:
+      user: maas
+      passowrd: supers1cret0
   # K3s secrets
   cluster:
     k3s:
