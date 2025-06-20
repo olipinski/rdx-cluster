@@ -37,3 +37,18 @@ restic_backups_dirs:
     exclude:
       - pattern: '.cache'
       - pattern: '.ansible'
+
+##########################
+## ssh role variables
+##########################
+sshd_config:
+  UseDNS: no
+  PasswordAuthentication: no
+  PermitRootLogin: no
+  PermitEmptyPasswords: no
+  ChallengeResponseAuthentication: no
+  GSSAPIAuthentication: no
+  KerberosAuthentication: no
+  X11Forwarding: no
+  Protocol: 2
+  DebianBanner: no

@@ -5,7 +5,7 @@ FROM python:slim
 ARG ANSIBLE_GALAXY_CLI_COLLECTION_OPTS=--ignore-certs
 ARG ANSIBLE_GALAXY_CLI_ROLE_OPTS=--ignore-certs
 RUN apt-get update -qq && \
-    apt-get install sudo git apt-utils python3-pip pwgen gnupg curl -y && \
+    apt-get install sudo git apt-utils python3-pip pwgen gnupg curl wireguard-tools -y && \
     apt-get clean && \
     rm -rf /usr/share/doc/* /usr/share/man/* /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

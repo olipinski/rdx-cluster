@@ -7,6 +7,10 @@ all:
           hostname: prime
           ansible_host: localhost
           ansible_connection: local
+    gateways:
+      hosts:
+        gateway0:
+          ansible_host: 10.20.0.1
     rdxcluster:
       hosts:
         service0:
@@ -47,3 +51,4 @@ all:
     s3:
       hosts:
         service0:
+          ansible_host: 10.20.0.8
