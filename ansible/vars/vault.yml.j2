@@ -1,6 +1,9 @@
 ---
 # Encrypted variables - Ansible Vault
 vault:
+  # WireGuard secret
+  wireguard:
+    private_key: {{ wg_private_key }}
   # K3s secrets
   cluster:
     k3s:

@@ -31,6 +31,14 @@ view-vault-credentials:
 os-upgrade:
 	${RUNNER} ansible-playbook update.yml
 
+.PHONY: gateway-init
+gateway-init:
+	${RUNNER} ansible-playbook initialise_gateway.yml
+
+.PHONY: gateway-setup
+gateway-setup:
+	${RUNNER} ansible-playbook setup_picluster.yml --tags "gateway"
+
 .PHONY: external-setup
 external-setup:
 	${RUNNER} ansible-playbook setup_picluster.yml --tags "external"
@@ -74,10 +82,6 @@ k3s-reset:
 .PHONY: external-services-reset
 external-services-reset:
 	${RUNNER} ansible-playbook reset_external_services.yml
-
-.PHONY: openwrt-certbot-tls
-openwrt-certbot-tls:
-	${RUNNER} ansible-playbook generate_gateway_tls_certificate.yml
 
 .PHONY: shutdown
 shutdown-k3s:

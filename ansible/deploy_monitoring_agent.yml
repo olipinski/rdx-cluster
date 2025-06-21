@@ -1,7 +1,7 @@
 ---
 # Deploy fluentbit to get logs and prometheus metrics
-- name: Deploy fluentbit on control nodes (gateway and pimaster)
-  hosts: gateway
+- name: Deploy fluentbit on gateway
+  hosts: gateways
   gather_facts: true
   tags: [logging]
   become: true

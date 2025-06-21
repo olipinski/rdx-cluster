@@ -1,5 +1,6 @@
 /ansible/roles/ricsanfre.*
 /ansible/ansible_collections
+/ansible/vars/vault.yml
 /certbot
 /certificates
 /docs/_site
