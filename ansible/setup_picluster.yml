@@ -1,7 +1,7 @@
 ---
 
 - name: Configure Rdx Cluster Gateway (Ubuntu)
-  hosts: gateway
+  hosts: gateway0
   gather_facts: true
   tags: [gateway]
   become: true

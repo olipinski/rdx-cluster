@@ -5,7 +5,8 @@ roles:
   - name: ricsanfre.ntp
     version: v1.0.0
   - name: ricsanfre.firewall
-    version: v1.0.0
+    src: https://github.com/olipinski/ansible-role-firewall
+    version: main
   - name: mrlesmithjr.netplan
     version: v0.4.2
   - name: ricsanfre.bind9

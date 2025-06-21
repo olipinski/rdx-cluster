@@ -1,6 +1,11 @@
 ---
 all:
   children:
+    gateway_init:
+      hosts:
+        gateway0i:
+          ansible_host: 192.168.10.168
+          ansible_port: 22
     control:
       hosts:
         prime:
@@ -11,6 +16,7 @@ all:
       hosts:
         gateway0:
           ansible_host: 10.20.0.1
+          ansible_port: 24
     rdxcluster:
       hosts:
         service0:
