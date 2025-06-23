@@ -82,7 +82,7 @@ netplan_configuration:
             on-link: true
         nameservers:
           addresses:
-              - 10.20.0.1
+            - 10.20.0.1
     tunnels:
       wg0:
         mode: wireguard
@@ -123,7 +123,7 @@ netplan_configuration:
             keepalive: 120
         nameservers:
           addresses:
-              - 10.30.0.1
+            - 10.30.0.1
         routes:
           - to: default
             via: 10.30.10.2  # GW 1
@@ -133,14 +133,14 @@ netplan_configuration:
             type: blackhole
             table: 200
         routing-policy:
-        - from: 10.30.2.0/24  # NSC Network BH
-          to: 0.0.0.0/0
-          table: 200
-          priority: 0
-        - from: 10.30.2.0/24  # NSC Network GW
-          to: 0.0.0.0/0
-          table: 201
-          priority: 1
+          - from: 10.30.2.0/24  # NSC Network BH
+            to: 0.0.0.0/0
+            table: 200
+            priority: 0
+          - from: 10.30.2.0/24  # NSC Network GW
+            to: 0.0.0.0/0
+            table: 201
+            priority: 1
 
 #########################
 # firewall role variables

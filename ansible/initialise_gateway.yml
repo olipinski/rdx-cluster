@@ -67,7 +67,7 @@
       tags: [firewall]
       register: firewall_result
       vars:
-        firewall_apply: false # Don't apply firewall, only stage
+        firewall_apply: false  # Don't apply firewall, only stage
     # NTP Server configuration
     - name: NTP setup
       ansible.builtin.include_role:
