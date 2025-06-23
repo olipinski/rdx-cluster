@@ -35,7 +35,7 @@ spec:
   selector:
     matchLabels:
       app: nginx
-  template:
+  ansible.builtin.template:
     metadata:
       labels:
         app: nginx
@@ -66,7 +66,7 @@ spec:
             - mountPath: "/var/log/nginx"
               name: nginx-logs
               readOnly: false
-          command:
+          ansible.builtin.command:
             - "/bin/bash"
             - "-c"
             - "sleep infinity"
