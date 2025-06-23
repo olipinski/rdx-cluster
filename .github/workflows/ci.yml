@@ -26,7 +26,7 @@ jobs:
 
       - name: Lint all the ansible YAMLs.
         run: yamllint .
-        working-directory: "andible/"
+        working-directory: "ansible/"
 
       - name: run-ansible-lint
         uses: ansible/ansible-lint@v25.6.0
