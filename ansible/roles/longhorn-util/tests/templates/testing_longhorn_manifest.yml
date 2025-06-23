@@ -23,7 +23,7 @@ spec:
   selector:
     matchLabels:
       app: nginx
-  template:
+  ansible.builtin.template:
     metadata:
       labels:
         app: nginx

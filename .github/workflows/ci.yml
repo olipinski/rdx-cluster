@@ -22,13 +22,14 @@ jobs:
           python-version: '3.x'
 
       - name: Install test dependencies.
-        run: pip3 install yamllint
+        run: pip3 install yamllint hvac
 
       - name: Lint all the ansible YAMLs.
         run: yamllint .
-        working-directory: ./ansible
+        working-directory: "ansible/"
 
       - name: run-ansible-lint
         uses: ansible/ansible-lint@v25.6.0
         with:
-          working-directory: ./ansible
+          working_directory: "ansible/"
+          requirements_file: "requirements.yml"

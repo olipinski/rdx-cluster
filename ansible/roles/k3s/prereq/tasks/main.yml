@@ -16,7 +16,7 @@
 
 # Enable iptables to see bridged traffic
 - name: Add br_netfilter to /etc/modules-load.d/
-  copy:
+  ansible.builtin.copy:
     content: "br_netfilter"
     dest: /etc/modules-load.d/br_netfilter.conf
     mode: "u=rw,g=,o="

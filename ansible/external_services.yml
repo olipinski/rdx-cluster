@@ -11,24 +11,24 @@
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
+      ansible.builtin.include_vars: "vars/vault.yml"
     # Include picluster variables
     - name: Include picluster variables
-      include_vars: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yml"
 
     - name: Copy OVH secret file
-      template:
+      ansible.builtin.template:
         src: "{{ item.template }}"
         dest: "{{ item.dest }}"
         mode: 0600
       with_items:
-        - template: ovh-credentials.ini.j2
+        - ansible.builtin.template: ovh-credentials.ini.j2
           dest: "~/.secrets/ovh-credentials.ini"
       when: enable_letsencrypt
 
   tasks:
     - name: Create Letsencrytp certificate for external services
-      command: |
+      ansible.builtin.command: |
         certbot certonly \
         --dns-ovh \
         --dns-ovh-credentials ~/.secrets/ovh-credentials.ini \
@@ -53,13 +53,13 @@
       block:
         # Generate self-signed certificates directory
         - name: Create certificates directory
-          file:
+          ansible.builtin.file:
             path: "{{ selfsigned_certificates_path }}"
             state: directory
             mode: 0750
         # Include selfsigned certificates variables
         - name: Include selfsigned certificates variables
-          include_vars: "vars/selfsigned-certificates.yml"
+          ansible.builtin.: "vars/selfsigned-certificates.yml"
         # Generate custom CA
         - name: Generate custom CA
           include_tasks: tasks/generate_custom_ca.yml
@@ -93,10 +93,10 @@
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
+      ansible.builtin.: "vars/vault.yml"
     # Include picluster variables
     - name: Include picluster variables
-      include_vars: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yml"
 
     - name: Load customCA-signed TLS certificate for minio
       set_fact:
@@ -107,7 +107,7 @@
     - name: Get letsencrypt TLS certificate for minio
       block:
         - name: check TLS certificate for minio exits
-          command: "certbot certificates -d {{ minio_hostname }}"
+          ansible.builtin.command: "certbot certificates -d {{ minio_hostname }}"
           register: certbot_certificates
           delegate_to: localhost
           become: false
@@ -147,11 +147,11 @@
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
+      ansible.builtin.: "vars/vault.yml"
 
     # Include picluster variables
     - name: Include picluster variables
-      include_vars: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yml"
 
     - name: Load customCA-signed TLS certificate for minio
       set_fact:
@@ -163,7 +163,7 @@
     - name: Get letsencrypt TLS certificate for vault
       block:
         - name: check TLS certificate for vault exits
-          command: "certbot certificates -d {{ vault_hostname }}"
+          ansible.builtin.command: "certbot certificates -d {{ vault_hostname }}"
           register: certbot_certificates
           delegate_to: localhost
           become: false
@@ -230,15 +230,15 @@
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
+      ansible.builtin.: "vars/vault.yml"
 
     # Include picluster variables
     - name: Include picluster variables
-      include_vars: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yml"
 
     # Install hashicorp vault collection dependencies (hvac python package) using PIP.
     - name: Ensure PIP is installed.
-      package:
+      ansible.builtin.package:
         name:
           - python3-pip
           - python3-virtualenv
@@ -247,7 +247,7 @@
       become: true
 
     - name: Ensure hvac Python library is installed.
-      pip:
+      ansible.builtin.pip:
         name: hvac
         state: present
         virtualenv: "{{ vault_venv_path }}"
@@ -287,7 +287,7 @@
     # Load ansible vault variables into Hashicorp Vault Server
     - name: Load vault credentials
       include_tasks:
-        file: tasks/load_vault_credentials.yml
+        ansible.builtin.file: tasks/load_vault_credentials.yml
       loop: "{{ vault | dict2items }}"
       loop_control:
         loop_var: secret_group
@@ -297,15 +297,15 @@
 
     - name: Load http auth_basic credentials
       include_tasks:
-        file: tasks/create_basic_auth_credentials.yml
+        ansible.builtin.file: tasks/create_basic_auth_credentials.yml
       no_log: true
 
     - name: Load minio prometheus bearer credentials
       include_tasks:
-        file: tasks/create_minio_bearer_token.yml
+        ansible.builtin.file: tasks/create_minio_bearer_token.yml
       no_log: true
 
     - name: Load bind9 DDNS key
       include_tasks:
-        file: tasks/load_ddns_key_into_vault.yml
+        ansible.builtin.file: tasks/load_ddns_key_into_vault.yml
       no_log: true
