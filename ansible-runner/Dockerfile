@@ -29,8 +29,8 @@ RUN ansible-playbook ansible_runner_setup.yml
 # Copy helmfile
 COPY --from=helmfile /usr/local/bin/helmfile /usr/local/bin/helmfile
 
-ENV USER runner
-ENV FOLDER /home/runner
+ENV USER=runner
+ENV FOLDER=/home/runner
 RUN /usr/sbin/groupadd $USER && \
     /usr/sbin/useradd $USER -m -d $FOLDER -g $USER -s /bin/bash && \
     echo $USER 'ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers

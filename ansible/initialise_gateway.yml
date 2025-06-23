@@ -1,5 +1,12 @@
 ---
 
+- name: Get host vars for the firewall DNAT setup
+  hosts:
+    - haproxy
+    - s3
+  gather_facts: false
+  tasks: []
+
 - name: Initialise Rdx Cluster Gateway (Ubuntu)
   hosts: gateway0i
   gather_facts: true
@@ -8,42 +15,81 @@
     - name: Include vault variables
       include_vars: "vars/vault.yml"
       tags: ["always"]
-    - name: Collect credentials
-      vars_prompt:
-      - name: wifi_bssid
-        prompt: Enter WiFi AP BSSID
-        private: true
-      - name: wifi_password
-        prompt: Enter WiFI Password
-        private: true
-  vars:
-    - netplan_apply: false  # Don't apply netplan, it will kill this connection
-    - sshd_allow_reload: false  # Don't apply new SSH config, might also kill the connection
-    - sshd_allow_restart: false  # Same as above.
-    - firewall_apply: false # Don't apply firewall, only stage
-  roles:
+    - name: Include gateway variables
+      include_vars: "host_vars/gateway0.yml"
+      tags: ["always"]
+  tasks:
     # OS basic setup tasks
-    - role: basic_setup
+    - name: Run basic setup
+      ansible.builtin.include_role:
+        name: basic_setup
       tags: [os]
-    # SSH configuration and hardening
-    - role: willshersystems.sshd
-      tags: [security]
-    # Setup the authoritative DNS
-    - role: ricansfre.dns
-      tags: [dns]
-    # Interface and routing configuration
-    - role: mrlesmithjr.netplan
+      register: basic_setup_result
+    # wlan interface configuration
+    - name: Configure wlan link name using systemd-networkd
+      ansible.builtin.include_role:
+        name: kpfleming.systemd_networkd.link
       tags: [networking]
+      register: networkd_result
+    # Reboot for wlan to take effect
+    - name: Reboot to apply wlan naming
+      ansible.builtin.reboot:
+        msg: "Rebooting to install systemd-networkd links."
+      tags: [networking]
+      when: networkd_result.changed
+    # SSH configuration and hardening
+    - name: SSH configuration
+      ansible.builtin.include_role:
+        name: willshersystems.sshd
+      tags: [security]
+      register: ssh_result
+      vars:
+        sshd_allow_reload: false  # Don't apply new SSH config, might also kill the connection
+        sshd_allow_restart: false  # Same as above.
+    # Setup the authoritative DNS
+    - name: DNS setup
+      ansible.builtin.include_role:
+        name: ricsanfre.bind9
+      tags: [dns]
+      register: dns_result
+    # Interface and routing configuration
+    - name: Netplan config
+      ansible.builtin.include_role:
+        name: mrlesmithjr.netplan
+      tags: [networking]
+      register: netplan_result
+      vars:
+        netplan_apply: false  # Don't apply netplan, it will kill this connection
     # Firewall (nftables) configuration
-    - role: ricsanfre.firewall
+    - name: Firewall config
+      ansible.builtin.include_role:
+        name: ricsanfre.firewall
       tags: [firewall]
+      register: firewall_result
+      vars:
+        firewall_apply: false # Don't apply firewall, only stage
     # NTP Server configuration
-    - role: ricsanfre.ntp
+    - name: NTP setup
+      ansible.builtin.include_role:
+        name: ricsanfre.ntp
       tags: [ntp]
-  register: init_result
-
-- name: Reboot if there was a change.
-  command: "sleep 5 && reboot"
-  async: 1
-  poll: 0
-  when: init_result is changed
+      register: ntp_result
+    # Reboot if any changes were made
+    - name: Set reboot_required if any role changed things
+      set_fact:
+        reboot_required: true
+      when: >
+        ssh_result.changed or
+        dns_result.changed or
+        netplan_result.changed or
+        firewall_result.changed or
+        ntp_result.changed
+    # This reboot does not use ansible because
+    # we need to ignore the reconnecting to the node.
+    # The gateway node will never be back under this IP address.
+    # Now we can continue to setup_picluster.yml
+    - name: Reboot if required
+      command: "sleep 5 && reboot"
+      async: 1
+      poll: 0
+      when: reboot_required | default(false)

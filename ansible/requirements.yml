@@ -11,7 +11,7 @@ roles:
     version: v0.4.2
   - name: ricsanfre.bind9
     src: https://github.com/olipinski/ansible-role-bind9
-    version: null-forwarders
+    version: main
   - name: ricsanfre.storage
     version: v1.0.0
   - name: ricsanfre.iscsi_target
@@ -39,3 +39,5 @@ collections:
     version: 2.0.0
   - name: community.crypto
     version: 2.26.1
+  - name: kpfleming.systemd_networkd
+    version: 25.3.0

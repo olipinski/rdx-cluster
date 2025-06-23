@@ -19,6 +19,14 @@ sshd_config:
   Protocol: 2
   DebianBanner: no
 
+##########################
+## systemd-networkd.links role variables
+##########################
+links:
+  - name: wlExternal
+    match:
+      device:
+        mac_address: b8:08:cf:cd:9b:00  # Changeme!
 
 ##########################
 ## netplan role variables
@@ -37,23 +45,29 @@ netplan_configuration:
     ethernets:
       internal-lan:
         match:
-          macadress: ec:a8:6b:f2:9b:ce
+          macaddress: 94:c6:91:1a:65:e8  # Changeme!
         set-name: enoInternal
-        adresses:
+        addresses:
           - '10.20.0.1/24'
         nameservers:
           search:
             - maas.changeme.com
+          addresses:
+            - 10.20.0.1
     wifis:
-      external-wifi:
+      wlExternal:
         access-points:
-          external-wifi:
-            bssid: "{{ wifi_bssid }}"  # Will be set by the pre-task
+          ChangemeSSID:  # Change this to your SSID!
             auth:
-              key_management: sae  # Use WPA3
-              password: "{{ wifi_password }}"  # Will be set by the pre-task
-        match:
-          macadress: ae:fd:ce:27:21:90
+              key-management: sae  # Use WPA3
+              password: "{{ vault.wifi.psk }}"
+        # match:
+          # macaddress: ae:fd:ce:27:21:90
+        # set-name: wlExternal
+        # The above does not work, with netplan:
+        # "networkd backend does not support wifi with match:, only by interface name"
+        # Therefore, we use the systemd-networkd roles to rename the interface
+        # See above for
         dhcp4: true
         dhcp4-overrides:
           use-dns: false
@@ -61,8 +75,14 @@ netplan_configuration:
           use-hostname: false
           use-routes: false
           use-domains: false
-        set-name: wlExternal
         regulatory-domain: PL
+        routes:
+          - to: default
+            via: 192.168.10.1
+            on-link: true
+        nameservers:
+          addresses:
+              - 10.20.0.1
     tunnels:
       wg0:
         mode: wireguard
@@ -101,6 +121,9 @@ netplan_configuration:
             allowed-ips:
               - '10.30.2.11/32'  # DD 0
             keepalive: 120
+        nameservers:
+          addresses:
+              - 10.30.0.1
         routes:
           - to: default
             via: 10.30.10.2  # GW 1
@@ -111,17 +134,21 @@ netplan_configuration:
             table: 200
         routing-policy:
         - from: 10.30.2.0/24  # NSC Network BH
-          to: default
+          to: 0.0.0.0/0
           table: 200
           priority: 0
         - from: 10.30.2.0/24  # NSC Network GW
-          to: default
+          to: 0.0.0.0/0
           table: 201
           priority: 1
 
 #########################
 # firewall role variables
 #########################
+# Clear defaults
+nft_input_default_rules: {}
+nft_forward_default_rules: {}
+nft_output_default_rules: {}
 # TCP 9100 Prometheus (fluent-bit)
 # TCP 24 SSH (re-routed for GitLab)
 # TCP/UDP 53 DNS
@@ -134,8 +161,8 @@ in_udp_port: '{ 161, 53, 123, 51820 }'
 # TCP 25/465 SMTP/S
 # TCP 143/993 IMAP/S
 # TCP 1883/8883 MQTT/S
-forward_tcp_port: '{ 25, 465, 143, 993, 53, 80, 443, 22, 3478, 5349, 1883, 8883, 9091 }'
-forward_udp_port: '{ 53, 123, 3478, 5349 }'
+forward_tcp_port: '{ 25, 465, 143, 993, 80, 443, 22, 3478, 5349, 1883, 8883, 9091 }'
+forward_udp_port: '{ 123, 3478, 5349 }'
 # Enabling forwarding and NAT
 firewall_forward_enabled: true
 firewall_nat_enabled: true
@@ -213,17 +240,17 @@ nft_forward_host_rules:
 # NAT pre-routing, including DNAT
 nft_nat_host_prerouting_rules:
   005_dnat_http:
-    - iif $wan_interface tcp dport {80, 443} dnat "{{ hostvars[groups['ha_proxy'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport {80, 443} dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
   010_dnat_ssh:
-    - iif $wan_interface tcp dport 22 dnat "{{ hostvars[groups['ha_proxy'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport 22 dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
   015_dnat_email:
-    - iif $wan_interface tcp dport {143, 993, 25, 465} dnat "{{ hostvars[groups['ha_proxy'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport {143, 993, 25, 465} dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
   025_dnat_coturn:
-    - iif $wan_interface tcp dport {3478, 5349} dnat "{{ hostvars[groups['ha_proxy'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport {3478, 5349} dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
   030_dnat_mqtt:
-    - iif $wan_interface tcp dport {1883, 8883} dnat "{{ hostvars[groups['ha_proxy'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport {1883, 8883} dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
   500_dnat_minio:
-    - iif $wan_interface tcp dport 9091 dnat "{{ hostvars[groups['s3'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport 9091 dnat "{{ hostvars[groups['s3'][0]].ansible_host }}"
 
 # NAT post-routing
 nft_nat_host_postrouting_rules:
