@@ -31,5 +31,5 @@ jobs:
       - name: run-ansible-lint
         uses: ansible/ansible-lint@v25.6.0
         with:
-          working-directory: "ansible/"
+          working_directory: "ansible/"
           requirements_file: "ansible/requirements.yml"
