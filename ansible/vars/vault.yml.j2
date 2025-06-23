@@ -1,6 +1,9 @@
 ---
 # Encrypted variables - Ansible Vault
 vault:
+  general:
+    dns_domain: {{ sec_dns_domain }}
+    org: {{ sec_org }}
   # WiFi secret
   wifi:
     psk: {{ wifi_password }}

@@ -11,7 +11,7 @@ k3s_version: v1.33.1+k3s1
 
 # k3s master node VIP (loadbalancer)
 # this is the IP/hostname of the service node/loadbalancer
-k3s_api_vip: service0.maas.changeme.com
+k3s_api_vip: "service0.maas.{{ vault.general.dns_domain }}"
 
 # k3s shared token
 k3s_token: "{{ vault.cluster.k3s.token }}"
@@ -134,14 +134,14 @@ ovh_ck: "{{ vault.certmanager.ovh.ck }}"
 ovh_api_endpoint: ovh-eu
 
 # issuer email
-acme_issuer_email: admin@changeme.com
+acme_issuer_email: "admin@{{ vault.general.dns_domain }}"
 
 ##########################
 # Minio S3 configuration #
 ##########################
 
 # Minio S3 Server
-minio_hostname: "s3.changeme.com"
+minio_hostname: "s3.{{ vault.general.dns_domain }}"
 minio_endpoint: "{{ minio_hostname }}:9091"
 minio_url: "https://{{ minio_hostname }}:9091"
 

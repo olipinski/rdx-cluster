@@ -51,7 +51,7 @@ netplan_configuration:
           - '10.20.0.1/24'
         nameservers:
           search:
-            - maas.changeme.com
+            - "maas.{{ vault.general.dns_domain }}"
           addresses:
             - 10.20.0.1
     wifis:
