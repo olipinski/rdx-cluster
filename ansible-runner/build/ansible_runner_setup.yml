@@ -11,7 +11,7 @@
     k8s_arch: "{{ 'arm64' if ansible_facts.architecture == 'aarch64' else 'amd64' }}"
     kubectl_version: "1.33.0"
     # SHA512 checksum of the binary (see https://dl.k8s.io/release/v1.33.0/bin/linux/amd64/kubectl.sha512)
-    kubectl_checksum_binary: "sha512:8569511fc0e8a334961c018e33915952edbb0160ff5859a4391548ef7ea76a6791c58036cad5b25864b8fa67295f9fbe8ecf9ed81e0737b211d9f402dc378969"
+    kubectl_checksum_binary: "{{ 'sha512:380960e632e635234c0b476c86b63c91e46d1451f6218d544ecd4ebb25a98bef2c67f7a71149b0ef4b00335be7e8fb68afddfdbf122b7593e817d855a139de54' if ansible_facts.architecture == 'aarch64' else 'sha512:8569511fc0e8a334961c018e33915952edbb0160ff5859a4391548ef7ea76a6791c58036cad5b25864b8fa67295f9fbe8ecf9ed81e0737b211d9f402dc378969' }}"
     # renovate: datasource=github-releases depName=helm/helm
     helm_version: 'v3.17.3'
   roles:

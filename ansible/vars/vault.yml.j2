@@ -1,6 +1,12 @@
 ---
 # Encrypted variables - Ansible Vault
 vault:
+  # WiFi secret
+  wifi:
+    psk: {{ wifi_password }}
+  # WireGuard secret
+  wireguard:
+    private_key: {{ wg_private_key.stdout }}
   # K3s secrets
   cluster:
     k3s:

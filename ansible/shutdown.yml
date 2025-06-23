@@ -23,14 +23,6 @@
       community.general.shutdown:
         delay: 60  # in seconds
 
-- hosts: prime
-  become: true
-  gather_facts: false
-  tasks:
-    - name: Shutdown prime node
-      community.general.shutdown:
-        delay: 60  # in seconds
-
 - hosts: gateway
   become: true
   gather_facts: false

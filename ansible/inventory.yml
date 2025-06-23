@@ -1,12 +1,22 @@
 ---
 all:
   children:
+    gateway_init:
+      hosts:
+        gateway0i:
+          ansible_host: 192.168.10.68  # Changeme!
+          ansible_port: 22
     control:
       hosts:
         prime:
           hostname: prime
           ansible_host: localhost
           ansible_connection: local
+    gateways:
+      hosts:
+        gateway0:
+          ansible_host: 10.20.0.1
+          ansible_port: 24
     rdxcluster:
       hosts:
         service0:
@@ -47,3 +57,4 @@ all:
     s3:
       hosts:
         service0:
+          ansible_host: 10.20.0.8
