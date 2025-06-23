@@ -22,7 +22,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install test dependencies.
-        run: pip3 install yamllint
+        run: pip3 install yamllint hvac
 
       - name: Lint all the Ansible YAMLs.
         run: yamllint .
