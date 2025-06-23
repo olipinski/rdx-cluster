@@ -74,16 +74,6 @@
         name: ricsanfre.ntp
       tags: [ntp]
       register: ntp_result
-    # Reboot if any changes were made
-    - name: Set reboot_required if any role changed things
-      set_fact:
-        reboot_required: true
-      when: >
-        ssh_result.changed or
-        dns_result.changed or
-        netplan_result.changed or
-        firewall_result.changed or
-        ntp_result.changed
     # This reboot does not use ansible because
     # we need to ignore the reconnecting to the node.
     # The gateway node will never be back under this IP address.
@@ -92,4 +82,9 @@
       command: "sleep 5 && reboot"
       async: 1
       poll: 0
-      when: reboot_required | default(false)
+      when: >
+        ssh_result.changed or
+        dns_result.changed or
+        netplan_result.changed or
+        firewall_result.changed or
+        ntp_result.changed

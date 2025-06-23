@@ -6,4 +6,4 @@
   roles:
     - role: certbot
       vars:
-        - certbot_venv: /home/changeme/letsencrypt
+        - certbot_venv: /home/ansible/letsencrypt
