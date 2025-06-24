@@ -21,6 +21,12 @@
       ansible.builtin.include_role:
         name: basic_setup
       tags: [os]
+    # Make sure wpa_supplicant is installed
+    - name: Ensure wpa_supplicant is installed
+      ansible.builtin.apt:
+        name: wpasupplicant
+        update_cache: true
+        state: present
     # wlan interface configuration
     - name: Configure wlan link name using systemd-networkd
       ansible.builtin.include_role:
@@ -113,6 +119,6 @@
           include_role:
             name: ricsanfre.iscsi_initiator
           vars:
-            open_iscsi_initiator_name: "iqn.2025-06.com.{{ vault.general.dns_domain }}.longhorn:{{ ansible_facts['nodename'] }}"
+            open_iscsi_initiator_name: "iqn.2025-06.com.{{ vault.general.domains.dns }}.longhorn:{{ ansible_facts['nodename'] }}"
             open_iscsi_automatic_startup: true
       tags: [storage]

@@ -51,7 +51,7 @@ netplan_configuration:
           - '10.20.0.1/24'
         nameservers:
           search:
-            - "maas.{{ vault.general.dns_domain }}"
+            - "maas.{{ vault.general.domains.dns }}"
           addresses:
             - 10.20.0.1
     wifis:
@@ -60,7 +60,7 @@ netplan_configuration:
           ChangemeSSID:  # Change this to your SSID!
             auth:
               key-management: sae  # Use WPA3
-              password: "{{ vault.wifi.psk }}"
+              password: "{{ vault.wifi.keys.psk }}"
         # match:
           # macaddress: ae:fd:ce:27:21:90
         # set-name: wlExternal
@@ -87,7 +87,7 @@ netplan_configuration:
       wg0:
         mode: wireguard
         port: 51820
-        key: "{{ vault.wireguard.private_key }}"
+        key: "{{ vault.wireguard.keys.private_key }}"
         addresses:
           - '10.30.0.1/16'
         peers:
@@ -270,7 +270,7 @@ bind9_acl_networks:
   - 10.0.0.0/8
 bind9_forward_servers:
   - 9.9.9.11
-  - 194.112.112.11
+  - 149.112.112.11
 bind9_generate_ddns_key: true
 bind9_zones:
   - name: "{{ dns_domain }}"
@@ -296,7 +296,7 @@ bind9_zones:
         rdata: 10.20.0.1
       - label: ns
         type: A
-        rdata: 10.20.0.8
+        rdata: 10.20.0.1
       - label: vault
         type: A
         rdata: 10.20.0.8
@@ -308,7 +308,7 @@ bind9_zones:
         rdata: 10.20.0.8
       - label: ns.maas
         type: A
-        rdata: 10.20.0.10
+        rdata: 10.20.0.8
       - label: maas
         type: NS
         rdata: ns.maas
