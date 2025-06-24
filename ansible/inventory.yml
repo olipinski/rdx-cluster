@@ -15,7 +15,7 @@ all:
     gateways:
       hosts:
         gateway0:
-          ansible_host: 10.20.0.1
+          ansible_host: 10.30.0.1
           ansible_port: 24
     rdxcluster:
       hosts:
@@ -52,6 +52,9 @@ all:
       hosts:
         service0:
     haproxy:
+      hosts:
+        service0:
+    maas:
       hosts:
         service0:
     s3:

@@ -1,5 +1,4 @@
 ---
-
 - name: Get host vars for the firewall DNAT setup
   hosts:
     - haproxy
@@ -25,6 +24,12 @@
         name: basic_setup
       tags: [os]
       register: basic_setup_result
+    # Make sure wpa_supplicant is installed
+    - name: Ensure wpa_supplicant is installed
+      ansible.builtin.apt:
+        name: wpasupplicant
+        update_cache: true
+        state: present
     # wlan interface configuration
     - name: Configure wlan link name using systemd-networkd
       ansible.builtin.include_role:

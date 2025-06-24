@@ -21,7 +21,7 @@ default_gateway: 10.20.0.1
 #######################
 # DNS server
 dns_server: 10.20.0.1
-dns_domain: internal.changeme.com
+dns_domain: "{{ vault.general.domains.dns }}"
 
 ############################
 # restic backup role variables

@@ -12,7 +12,7 @@ dns_ovh_application_key: ovh_ak
 dns_ovh_application_secret: ovh_as
 dns_ovh_consumer_key: ovh_ck
 
-certbot_email: myemail@changeme.com
+certbot_email: "admin@{{ vault.general.domains.dns }}"
 
 # DNS propagation in seconds
 propagation_seconds: 300
