@@ -1,6 +1,6 @@
 ---
 
-- name: Configure Rdx-cluster nodes backup
+- name: Configure rdxcluster nodes backup
   hosts: rdxcluster
   gather_facts: true
   tags: [backup]

@@ -45,9 +45,6 @@ all:
           hosts:
             silver000:
             rock001:
-    dns:
-      hosts:
-        service0:
     vault:
       hosts:
         service0:

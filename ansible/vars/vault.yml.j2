@@ -7,11 +7,11 @@ vault:
       org: {{ sec_org }}
   # WiFi secret
   wifi:
-    keys:
+    auth:
       psk: {{ wifi_password }}
   # WireGuard secret
   wireguard:
-    keys:
+    auth:
       private_key: {{ wg_private_key.stdout }}
   # K3s secrets
   cluster:

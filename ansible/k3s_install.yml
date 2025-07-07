@@ -9,6 +9,13 @@
   gather_facts: true
   tags: [install]
   become: true
+  pre_tasks:
+    - name: Include vault variables
+      include_vars: "vars/vault.yml"
+      tags: ["always"]
+    - name: Include picluster variables
+      include_vars: "vars/picluster.yml"
+      tags: ["always"]
   roles:
     - role: haproxy
 

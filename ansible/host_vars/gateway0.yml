@@ -60,7 +60,7 @@ netplan_configuration:
           ChangemeSSID:  # Change this to your SSID!
             auth:
               key-management: sae  # Use WPA3
-              password: "{{ vault.wifi.keys.psk }}"
+              password: "{{ vault.wifi.auth.psk }}"
         # match:
           # macaddress: ae:fd:ce:27:21:90
         # set-name: wlExternal
@@ -87,7 +87,7 @@ netplan_configuration:
       wg0:
         mode: wireguard
         port: 51820
-        key: "{{ vault.wireguard.keys.private_key }}"
+        key: "{{ vault.wireguard.auth.private_key }}"
         addresses:
           - '10.30.0.1/16'
         peers:
