@@ -11,9 +11,9 @@ spec:
     - mongodb-0.mongodb-svc.mongodb.svc.cluster.local
     - mongodb-1.mongodb-svc.mongodb.svc.cluster.local
     - mongodb-2.mongodb-svc.mongodb.svc.cluster.local
-    - db-node-1.internal.changeme.com
-    - db-node-2.internal.changeme.com
-    - db-node-3.internal.changeme.com
+    - db-node-1.changeme.com
+    - db-node-2.changeme.com
+    - db-node-3.changeme.com
   secretName: mongodb-cert
   privateKey:
     algorithm: RSA

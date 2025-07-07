@@ -30,6 +30,11 @@
   args:
     executable: /bin/bash
 
+- name: Set the domain names in a ConfigMap
+  kubernetes.core.k8s:
+    state: present
+    template: templates/domain-config.yml.j2
+
 - name: Bootstrap Flux
   kubernetes.core.helm:
     name: flux-instance

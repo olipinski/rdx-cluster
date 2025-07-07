@@ -21,3 +21,4 @@ services:
       - ./certbot/work:/var/lib/letsencrypt
     env_file:
       - ./runner/env
+    dns_search: maas.changeme.com

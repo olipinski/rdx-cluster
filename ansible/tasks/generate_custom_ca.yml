@@ -9,7 +9,7 @@
 - name: create the CA CSR
   openssl_csr:
     privatekey_path: "{{ selfsigned_certificates_path }}/CA.key"
-    common_name: Changeme CA
+    common_name: "{{ vault.general.org }}" CA
     use_common_name_for_san: false  # since we do not specify SANs, don't use CN as a SAN
     basic_constraints:
       - 'CA:TRUE'

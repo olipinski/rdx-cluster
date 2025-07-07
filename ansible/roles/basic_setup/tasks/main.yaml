@@ -5,14 +5,11 @@
   ansible.builtin.package_facts:
     manager: auto
 
-- name: Check whether snap is package is installed
-  ansible.builtin.debug:
-    msg: "snapd found"
-  when: "'snapd' in ansible_facts.packages"
-
 - name: Remove snap package
   ansible.builtin.include_tasks: remove_snap.yaml
-  when: "'snapd' in ansible_facts.packages"
+  when: >
+     'snapd' in ansible_facts.packages
+     and 'maas' not in group_names
 
 - name: Install common packages
   ansible.builtin.apt:
