@@ -17,6 +17,12 @@ spec:
       kind: HelmRelease
       name: prometheus-operator-crds
       namespace: kube-system
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-settings
+      - kind: ConfigMap
+        name: domain-settings
 
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1

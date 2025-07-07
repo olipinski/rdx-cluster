@@ -49,6 +49,7 @@ netplan_configuration:
         set-name: enoInternal
         addresses:
           - '10.20.0.1/24'
+          - '10.0.0.1/24'
         nameservers:
           search:
             - "maas.{{ vault.general.domains.dns }}"
