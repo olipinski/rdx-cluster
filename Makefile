@@ -47,10 +47,6 @@ external-setup:
 nodes-setup:
 	${RUNNER} ansible-playbook setup_picluster.yml --tags "node"
 
-.PHONY: dns-setup
-dns-setup:
-	${RUNNER} ansible-playbook configure_dns_authoritative.yml
-
 .PHONY: external-services
 external-services:
 	${RUNNER} ansible-playbook external_services.yml
@@ -61,7 +57,7 @@ configure-os-backup:
 
 .PHONY: os-backup
 os-backup:
-	${RUNNER} ansible -b -m shell -a 'systemctl start restic-backup' picluster
+	${RUNNER} ansible -b -m shell -a 'systemctl start restic-backup' rdxcluster
 
 .PHONY: k3s-install
 k3s-install:
