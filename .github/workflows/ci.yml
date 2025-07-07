@@ -36,15 +36,10 @@ jobs:
         uses: ansible/ansible-lint@v25.6.0
         with:
           working-directory: ./ansible
-<<<<<<< HEAD
+          requirements_file: "requirements.yml"
 
       - name: Scan Kubernetes YAMLs
         id: kube-lint-scan
         uses: stackrox/kube-linter-action@v1
         with:
           directory: ./kubernetes
-          # config: .kube-linter/config.yaml
-
-=======
-          requirements_file: "requirements.yml"
->>>>>>> 5efb2af3 (Lint)
