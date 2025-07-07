@@ -5,7 +5,7 @@
     k3s_registration_ip: "{{ k3s_api_vip | default(hostvars[groups['k3s_master'][0]].ansible_hostname) }}"
 
 - name: Create K3S configuration directory
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
   loop:
@@ -18,7 +18,7 @@
     mode: 0600
 
 - name: Copy kubelet configuration file
-  copy:
+  ansible.builtin.copy:
     dest: "{{ k3s_config_directory }}/kubelet.config"
     content: "{{ k3s_kubelet_config }}"
 

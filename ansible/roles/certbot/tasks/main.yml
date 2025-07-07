@@ -1,7 +1,7 @@
 ---
 
 - name: Ensure python virtualenv is installed.
-  package:
+  ansible.builtin.package:
     name:
       - python3-pip
       - python3-venv
@@ -10,7 +10,7 @@
   when: install_python_packages
 
 - name: Install certbot and OVH plugin in venvironment
-  pip:
+  ansible.builtin.pip:
     name:
       - certbot
       - certbot-dns-ovh
@@ -19,7 +19,7 @@
     state: present
 
 - name: Create working directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: 0750
@@ -28,7 +28,7 @@
     - "{{ certbot_venv }}/config"
 
 - name: Create secret directory
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: 0700
@@ -36,21 +36,21 @@
     - "{{ certbot_venv }}/.secrets"
 
 - name: Copy OVH secret file
-  template:
+  ansible.builtin.template:
     src: "{{ item.template }}"
     dest: "{{ item.dest }}"
     mode: 0600
   with_items:
-    - template: ovh-credentials.ini.j2
+    - ansible.builtin.template: ovh-credentials.ini.j2
       dest: "{{ certbot_venv }}/.secrets/ovh-credentials.ini"
 
 - name: Copy certbot wrapper script
-  template:
+  ansible.builtin.template:
     src: "{{ item.template }}"
     dest: "{{ item.dest }}"
     mode: 0755
   with_items:
-    - template: certbot.sh.j2
+    - ansible.builtin.template: certbot.sh.j2
       dest: "{{ certbot_venv }}/bin/certbot-create-cert.sh"
-    - template: certbot-wrapper.sh.j2
+    - ansible.builtin.template: certbot-wrapper.sh.j2
       dest: "{{ certbot_venv }}/bin/certbot-wrapper.sh"

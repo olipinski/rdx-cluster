@@ -8,16 +8,16 @@ sshd_config:
     - 10.20.0.1
     - 10.30.0.1
   Port: 24
-  UseDNS: no
-  PasswordAuthentication: no
-  PermitRootLogin: no
-  PermitEmptyPasswords: no
-  ChallengeResponseAuthentication: no
-  GSSAPIAuthentication: no
-  KerberosAuthentication: no
-  X11Forwarding: no
+  UseDNS: false
+  PasswordAuthentication: false
+  PermitRootLogin: false
+  PermitEmptyPasswords: false
+  ChallengeResponseAuthentication: false
+  GSSAPIAuthentication: false
+  KerberosAuthentication: false
+  X11Forwarding: false
   Protocol: 2
-  DebianBanner: no
+  DebianBanner: false
 
 ##########################
 ## systemd-networkd.links role variables

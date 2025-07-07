@@ -26,10 +26,10 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
+      ansible.builtin.: "vars/vault.yml"
       tags: ["always"]
     - name: Include picluster variables
-      include_vars: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yml"
       tags: ["always"]
   roles:
     - role: k3s/prereq
@@ -40,10 +40,10 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
+      ansible.builtin.: "vars/vault.yml"
       tags: ["always"]
     - name: Include picluster variables
-      include_vars: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yml"
       tags: ["always"]
   roles:
     - role: k3s/master
@@ -55,10 +55,10 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
+      ansible.builtin.: "vars/vault.yml"
       tags: ["always"]
     - name: Include picluster variables
-      include_vars: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yml"
       tags: ["always"]
   roles:
     - role: k3s/worker
@@ -68,10 +68,10 @@
   tags: [config]
   pre_tasks:
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
+      ansible.builtin.: "vars/vault.yml"
       tags: ["always"]
     - name: Include picluster variables
-      include_vars: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yml"
       tags: ["always"]
   tasks:
     # - name: "Wait for worker nodes to be ready"
@@ -84,7 +84,7 @@
     #   delay: 5
     #   with_items: "{{ groups['k3s_worker'] }}"
 
-    - name: label k3s worker nodes
+    - name: Label k3s workers
       command:
         cmd: "kubectl label nodes {{ item }} kubernetes.io/role=worker"
       with_items: "{{ groups['k3s_worker'] }}"
@@ -103,6 +103,6 @@
       ansible.builtin.copy:
         content: "{{ kubeconfig_base64.content | b64decode | replace('127.0.0.1', k3s_api_vip ) }}"
         dest: "~/.kube/config"
-        mode: 0600
+        mode: "0600"
       delegate_to: localhost
       run_once: true

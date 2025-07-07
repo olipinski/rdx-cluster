@@ -1,8 +1,8 @@
 ---
 - name: reboot
-  reboot:
+  ansible.builtin.reboot:
 
 - name: restart multipath
-  service:
+  ansible.builtin.service:
     name: multipathd
     state: restarted

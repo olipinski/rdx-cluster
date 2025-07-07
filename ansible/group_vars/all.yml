@@ -42,13 +42,13 @@ restic_backups_dirs:
 ## ssh role variables
 ##########################
 sshd_config:
-  UseDNS: no
-  PasswordAuthentication: no
-  PermitRootLogin: no
-  PermitEmptyPasswords: no
-  ChallengeResponseAuthentication: no
-  GSSAPIAuthentication: no
-  KerberosAuthentication: no
-  X11Forwarding: no
+  UseDNS: false
+  PasswordAuthentication: false
+  PermitRootLogin: false
+  PermitEmptyPasswords: false
+  ChallengeResponseAuthentication: false
+  GSSAPIAuthentication: false
+  KerberosAuthentication: false
+  X11Forwarding: false
   Protocol: 2
-  DebianBanner: no
+  DebianBanner: false
