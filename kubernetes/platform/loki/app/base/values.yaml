@@ -89,7 +89,7 @@ read:
 # Configuration for the backend
 backend:
   # Number of replicas for the backend
-  replicas: 3
+  replicas: 2
   persistence:
     # -- Size of persistent disk
     size: 1Gi
@@ -111,6 +111,10 @@ backend:
         secretKeyRef:
           name: loki-minio-secret
           key: MINIO_SECRET_ACCESS_KEY
+
+# Reduce the memory requirements of the chunksCache
+chunksCache:
+  allocatedMemory: 2048 # In MB, was 8192
 
 # Configuration for the gateway
 gateway:
