@@ -1,3 +1,4 @@
+---
 # oauth2-proxy helm values (base)
 config:
   # Add config annotations
@@ -54,5 +55,3 @@ redis:
   # Limit PVC size to 1Gi
   persistence:
     size: 1Gi
-
-

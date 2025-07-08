@@ -1,3 +1,4 @@
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -13,14 +14,14 @@ spec:
           image: alpine/curl:latest
           imagePullPolicy: IfNotPresent
           env:
-          - name: KIBANA_URL
-            value: efk-kb-http
-          - name: KIBANA_PORT
-            value: "5601"
-          command: ["/bin/sh","/kibana/wait-for-kibana.sh"]
+            - name: KIBANA_URL
+              value: efk-kb-http
+            - name: KIBANA_PORT
+              value: "5601"
+          command: ["/bin/sh", "/kibana/wait-for-kibana.sh"]
           volumeMounts:
-          - name: kibana-config-data
-            mountPath: /kibana/ 
+            - name: kibana-config-data
+              mountPath: /kibana/
       containers:
         - name: kibana-config-job
           image: alpine/curl:latest
@@ -34,12 +35,12 @@ spec:
               value: efk-kb-http
             - name: KIBANA_PORT
               value: "5601"
-          command: ["/bin/sh","/kibana/create-data-view.sh"]
+          command: ["/bin/sh", "/kibana/create-data-view.sh"]
           volumeMounts:
-          - name: kibana-config-data
-            mountPath: /kibana/ 
+            - name: kibana-config-data
+              mountPath: /kibana/
       volumes:
-      - name: kibana-config-data
-        configMap:
-          name: kibana-config-data
-          defaultMode: 0777
+        - name: kibana-config-data
+          configMap:
+            name: kibana-config-data
+            defaultMode: 0777

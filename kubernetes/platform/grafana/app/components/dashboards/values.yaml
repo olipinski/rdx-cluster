@@ -1,5 +1,5 @@
+---
 # grafana helm values (dashboards)
-
 
 # Dashboard Providers
 dashboardProviders:

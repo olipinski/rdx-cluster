@@ -20,7 +20,6 @@ Finally, in this directory, run:
 
 Access web content through http://<host_ip>:4000
 
-
 ### Error running using Ruby 3.0
 
 During execution of `bundle exec jekyll serve` command the following error might occurs:
@@ -43,7 +42,6 @@ Jekyll 3.9 isn’t compatible with Ruby 3 so a patch need to be applied to pathu
 
 Follow [this procedure](https://stackoverflow.com/questions/66113639/jekyll-serve-throws-no-implicit-conversion-of-hash-into-integer-error/73909796#73909796) to fix it locally:
 
-
 ## Update dependencies
 
 - Remove `Gemfile.lock` file
@@ -58,7 +56,6 @@ Follow [this procedure](https://stackoverflow.com/questions/66113639/jekyll-serv
   ```shell
   bundle update
   ```
-
 
 ## Jekyll Theme
 

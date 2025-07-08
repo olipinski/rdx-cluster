@@ -3,9 +3,7 @@ title: Databases
 permalink: /docs/databases/
 description: How to deploy databases in Kubernetes cluster. Leveraging cloud-native operators such as CloudNative-PG or MongoDB
 last_modified_at: "11-01-2025"
-
 ---
-
 
 ## CloudNative-PG
 
@@ -25,13 +23,12 @@ CloudNative-PG offers a declarative way of deploying PostgreSQL databases, suppo
   - Support automatic initialization of the database. See details in [CloudNative-PG Bootstrap](https://cloudnative-pg.io/documentation/1.23/bootstrap/)
   - It also includes automatic import from an external database or backup
 - HA support using database replicas
-  - Data replication from rw instance to read-only instances. See details in [CloudNative-PG Replication](https://cloudnative-pg.io/documentation/1.23/replication/) 
+  - Data replication from rw instance to read-only instances. See details in [CloudNative-PG Replication](https://cloudnative-pg.io/documentation/1.23/replication/)
 - Backup and restore
   - Support backup and restore to/from S3 Object Storage like Minio/AWS. See details in [CloudNative-PG Backup on Object Stores](https://cloudnative-pg.io/documentation/1.23/backup_barmanobjectstore/)
-  - The operator can orchestrate a continuous backup infrastructure that is based on the [Barman Cloud](https://pgbarman.org/) tool. 
+  - The operator can orchestrate a continuous backup infrastructure that is based on the [Barman Cloud](https://pgbarman.org/) tool.
 - Monitoring:
   - For each PostgreSQL instance, the operator provides an exporter of metrics for [Prometheus](https://prometheus.io/) via HTTP, on port 9187, named `metrics`. See detaisl in [CloudNative-PG Montiroring](https://cloudnative-pg.io/documentation/1.23/monitoring/)
-
 
 ### CloudNative-PG operator installation
 
@@ -44,11 +41,13 @@ Installation using `Helm` (Release 3):
   ```shell
   helm repo add cnpg https://cloudnative-pg.github.io/charts
   ```
+
 - Step2: Fetch the latest charts from the repository:
 
   ```shell
   helm repo update
   ```
+
 - Step 3: Create namespace
 
   ```shell
@@ -61,22 +60,23 @@ Installation using `Helm` (Release 3):
   # Install operator CRDs
   crds:
     create: true
- 
+
   monitoring:
-    # Disabling podMonitoring by default. 
+    # Disabling podMonitoring by default.
     # It could be enabled per PosgreSQL Cluster resource.
     # Enabling it requires Prometheus Operator CRDs.
     podMonitorEnabled: false
     # Create Grafana dashboard configmap that can be automatically loaded by Grafana.
     grafanaDashboard:
-      create: true  
+      create: true
   ```
 
 - Step 5: Install CloudNative-PG operator
 
   ```shell
-  helm install cloudnative-pg cnpg/cloudnative-pg -f cloudnative-pg-values.yml --namespace databases 
+  helm install cloudnative-pg cnpg/cloudnative-pg -f cloudnative-pg-values.yml --namespace databases
   ```
+
 - Step 6: Confirm that the deployment succeeded, run:
 
   ```shell
@@ -86,7 +86,6 @@ Installation using `Helm` (Release 3):
 ### Deploy PosgreSQL database
 
 Using CloudNative-PG operator build PosgreSQL Cluster CRD.
-
 
 #### Creating simple PosgreSQL Cluster
 
@@ -113,14 +112,14 @@ spec:
       database: mydatabase
       owner: myuser
 ```
-  
+
 - It will create and bootstrap a 3 nodes database, 16.3-4 version.
 - Bootstrap will create a database named, `mydatabase` and a user, `myuser` which is the owner of that database
 - It will create automatically a secret containig all credentials to access the database
 
 #### Auto-generated secrets
 
-Bootstraping without specifying any secret, like in the previous example, cloudnative-pg generates a couple of secrets. 
+Bootstraping without specifying any secret, like in the previous example, cloudnative-pg generates a couple of secrets.
 
 - `[cluster name]-app` (unless you have provided an existing secret through .spec.bootstrap.initdb.secret.name)
 - `[cluster name]-superuser` (if .spec.enableSuperuserAccess is set to true and you have not specified a different secret using .spec.superuserSecret)
@@ -137,7 +136,6 @@ Each secret contain the following data:
 - jdbc-uri
 
 See further details in [Connected from applications - Secrets](https://cloudnative-pg.io/documentation/1.23/applications/#secrets).
-
 
 The secret generated can be automatically decoded using the following command:
 
@@ -173,15 +171,14 @@ During database bootstrap secrets for the database user can be specified:
       cnpg.io/reload: "true"
   stringData:
     username: "myuser"
-    password: "supersecret"  
+    password: "supersecret"
   ```
-  
+
   {{site.data.alerts.note}}
 
   `cnpg.io/reload: "true"` label added to ConfigMaps and Secrets to be automatically reloaded by cluster instances.
 
   {{site.data.alerts.end}}
-
 
 - Step 2. Create Cluster database specifying the secret:
 
@@ -204,9 +201,8 @@ During database bootstrap secrets for the database user can be specified:
         database: mydatabase
         owner: myuser
         secret:
-          name: mydatabase-db-secret  
+          name: mydatabase-db-secret
   ```
-
 
 ### Accesing Database
 
@@ -215,8 +211,8 @@ During database bootstrap secrets for the database user can be specified:
 3 Kubernetes services are created automatically to access the database:
 
 - `[cluster name]-rw` : Always points to the Primary node (read-write replica)
-- `[cluster name]-ro`:  Points to only Replica nodes, chosen by round-robin (Accees only to read-only replicas)
-- `[cluster name]-r` : Points to any node in the cluster, chosen by round-robin 
+- `[cluster name]-ro`: Points to only Replica nodes, chosen by round-robin (Accees only to read-only replicas)
+- `[cluster name]-r` : Points to any node in the cluster, chosen by round-robin
 
 ```shell
 kubectl get svc -n databases
@@ -239,7 +235,6 @@ psql -U myuser -h mydatabase-db-rw.databases -d mydatabase
 
 Password to be provided need to be extracted from the database secret.
 
-
 ### Configuring backup to external Object Store
 
 S3, storage server, like Minio need to be configured.
@@ -258,12 +253,10 @@ S3, storage server, like Minio need to be configured.
     namespace: database
   stringData:
     AWS_ACCESS_KEY_ID: "myuser"
-    AWS_SECRET_ACCESS_KEY: "supersecret" 
-
+    AWS_SECRET_ACCESS_KEY: "supersecret"
   ```
 
 - Step 2. Create Cluster with automated backup
-
 
   ```yaml
   apiVersion: postgresql.cnpg.io/v1
@@ -305,9 +298,6 @@ S3, storage server, like Minio need to be configured.
 
 ## MongoDB Operator
 
-
-
-
 ### MongoDB operator installation
 
 MongoDB Community Kubernetes Operator can be installed following different procedures. See [MonogDB Community Operator installation](https://github.com/mongodb/mongodb-kubernetes-operator/blob/master/docs/install-upgrade.md#install-the-operator). Helm installation procedure will be described here:
@@ -319,11 +309,13 @@ Installation using `Helm` (Release 3):
   ```shell
   helm repo add mongodb https://mongodb.github.io/helm-charts
   ```
+
 - Step 2: Fetch the latest charts from the repository:
 
   ```shell
   helm repo update
   ```
+
 - Step 3: Create namespace
 
   ```shell
@@ -345,7 +337,6 @@ Installation using `Helm` (Release 3):
   ```
 
 ### Create a MongoDB database cluster
-
 
 - Create secret containing password of admin user
 
@@ -389,9 +380,10 @@ Installation using `Helm` (Release 3):
     additionalMongodConfig:
       storage.wiredTiger.engineConfig.journalCompressor: zlib
   ```
+
   Where:
 
-  - `spec.members` specify the number of replicas 
+  - `spec.members` specify the number of replicas
   - `spec.version` specify Mongodb version
 
 ### Connection to Mongodb
@@ -402,11 +394,11 @@ The Community Kubernetes Operator creates secrets that contains users' connectio
 
 The secrets follow this naming convention: `<metadata.name>-<auth-db>-<username>`, where:
 
-|Variable|Description|Value in Sample|
-|---|---|---|
-|`<metadata.name>`|Name of the MongoDB database resource.|`mongodb`|
-|`<auth-db>`|[Authentication database](https://www.mongodb.com/docs/manual/core/security-users/#std-label-user-authentication-database) where you defined the database user.|`admin`|
-|`<username>`|Username of the database user.|`admin`|
+| Variable          | Description                                                                                                                                                     | Value in Sample |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| `<metadata.name>` | Name of the MongoDB database resource.                                                                                                                          | `mongodb`       |
+| `<auth-db>`       | [Authentication database](https://www.mongodb.com/docs/manual/core/security-users/#std-label-user-authentication-database) where you defined the database user. | `admin`         |
+| `<username>`      | Username of the database user.                                                                                                                                  | `admin`         |
 
 **NOTE**: Alternatively, you can specify an optional `users[i].connectionStringSecretName` field in the `MongoDBCommunity` custom resource to specify the name of the connection string secret that the Community Kubernetes Operator creates.
 
@@ -418,6 +410,7 @@ kubectl get secret mongodb-admin-admin -n mongodb \
 ```
 
 The connection string is like:
+
 ```shell
 {
   "connectionString.standard": "mongodb://admin:s1cret0@mongodb-0.mongodb-svc.mongodb.svc.cluster.local:27017,mongodb-1.mongodb-svc.mongodb.svc.cluster.local:27017,mongodb-2.mongodb-svc.mongodb.svc.cluster.local:27017/admin?replicaSet=mongodb&ssl=true",
@@ -432,13 +425,13 @@ Connection string from the secret (`connectionString.standardSrv`) can be used w
 
 ```yaml
 containers:
- - name: test-app
-   env:
-    - name: "CONNECTION_STRING"
-      valueFrom:
-        secretKeyRef:
-          name: <metadata.name>-<auth-db>-<username>
-          key: connectionString.standardSrv
+  - name: test-app
+    env:
+      - name: "CONNECTION_STRING"
+        valueFrom:
+          secretKeyRef:
+            name: <metadata.name>-<auth-db>-<username>
+            key: connectionString.standardSrv
 ```
 
 Also connectivity can be tested using `mongosh`
@@ -458,6 +451,7 @@ Also connectivity can be tested using `mongosh`
 ### Secure MongoDBCommunity Resource Connections using TLS
 
 MongoDB Community Kubernetes Operator can be configured to use TLS certificates to encrypt traffic between:
+
 - MongoDB hosts in a replica set, and
 - Client applications and MongoDB deployments.
 
@@ -487,7 +481,7 @@ Certificate can be generated using cert-manager
     issuerRef:
       name: ca-issuer
       kind: ClusterIssuer
-      group: cert-manager.io  
+      group: cert-manager.io
   ```
 
 - Create MongoDB cluster with tls enabled
@@ -523,17 +517,22 @@ Certificate can be generated using cert-manager
             db: admin
         scramCredentialsSecretName: my-scram
     additionalMongodConfig:
-      storage.wiredTiger.engineConfig.journalCompressor: zlib  
+      storage.wiredTiger.engineConfig.journalCompressor: zlib
   ```
+
   - Test connection using TLS
 
     Connecting to a mongod container inside a pod using kubectl:
+
     ```shell
     kubectl -n mongodb exec -it mongodb-0 -- /bin/bash
     ```
-  -  Use mongosh to connect over TLS. U
-    ```shell
-    mongosh "<connection-string>" --tls --tlsCAFile /var/lib/tls/ca/*.pem --tlsCertificateKeyFile /var/lib/tls/server/*.pem 
-    ```
-    where `<connection-string>` can be obtained using the procedure described before.
-    TLS certificates are mounted automatically in mongodb pods in `/var/lib/tls/` path
+
+  - Use mongosh to connect over TLS. U
+
+  ```shell
+  mongosh "<connection-string>" --tls --tlsCAFile /var/lib/tls/ca/*.pem --tlsCertificateKeyFile /var/lib/tls/server/*.pem
+  ```
+
+  where `<connection-string>` can be obtained using the procedure described before.
+  TLS certificates are mounted automatically in mongodb pods in `/var/lib/tls/` path

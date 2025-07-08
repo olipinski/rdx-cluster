@@ -5,22 +5,22 @@ description: The scope of this project is to create a kubernetes cluster at home
 last_modified_at: "07-12-2024"
 ---
 
-
 ## Scope
 
-The main goal of  this project is to create a kubernetes cluster at home using ARM/x86 bare metal nodes (**Raspberry Pis** and low cost refurbished **mini PCs**) and to automate its deployment and configuration applying **IaC (infrastructure as a code)** and **GitOps** methodologies with tools like [Ansible](https://docs.ansible.com/), [cloud-init](https://cloudinit.readthedocs.io/en/latest/) and [Flux CD](https://fluxcd.io/).
+The main goal of this project is to create a kubernetes cluster at home using ARM/x86 bare metal nodes (**Raspberry Pis** and low cost refurbished **mini PCs**) and to automate its deployment and configuration applying **IaC (infrastructure as a code)** and **GitOps** methodologies with tools like [Ansible](https://docs.ansible.com/), [cloud-init](https://cloudinit.readthedocs.io/en/latest/) and [Flux CD](https://fluxcd.io/).
 
 The project scope includes the automatic installation and configuration of a lightweight Kubernetes flavor based on [K3S](https://k3s.io/), and deployment of cluster basic services such as:
+
 - Distributed block storage for POD's persistent volumes, [LongHorn](https://longhorn.io/).
 - S3 Object storage, [Minio](https://min.io/).
-- Backup/restore solution for the cluster, [Velero](https://velero.io/) and [Restic](https://restic.net/). 
+- Backup/restore solution for the cluster, [Velero](https://velero.io/) and [Restic](https://restic.net/).
 - Certificate management, [Cert-Manager](https://cert-manager.io).
 - Secrets Management solution with [Vault](https://www.vaultproject.io/) and [External Secrets](https://external-secrets.io/)
 - Identity Access Management(IAM) providing Single-sign On, [Keycloak](https://www.keycloak.org/)
 - Observability platform based on:
-   - Metrics monitoring solution, [Prometheus](https://prometheus.io/)
-   - Logging and analytics solution, combined EFK+LG stacks ([Elasticsearch](https://www.elastic.co/elasticsearch/)-[Fluentd](https://www.fluentd.org/)/[Fluentbit](https://fluentbit.io/)-[Kibana](https://www.elastic.co/kibana/) + [Loki](https://grafana.com/oss/loki/)-[Grafana](https://grafana.com/oss/grafana/))
-   - Distributed tracing solution, [Tempo](https://grafana.com/oss/tempo/).
+  - Metrics monitoring solution, [Prometheus](https://prometheus.io/)
+  - Logging and analytics solution, combined EFK+LG stacks ([Elasticsearch](https://www.elastic.co/elasticsearch/)-[Fluentd](https://www.fluentd.org/)/[Fluentbit](https://fluentbit.io/)-[Kibana](https://www.elastic.co/kibana/) + [Loki](https://grafana.com/oss/loki/)-[Grafana](https://grafana.com/oss/grafana/))
+  - Distributed tracing solution, [Tempo](https://grafana.com/oss/tempo/).
 
 Also deployment of services for building a cloud-native microservices architecture are include as part of the scope:
 
@@ -32,7 +32,7 @@ Also deployment of services for building a cloud-native microservices architectu
 
 - Use hybrid x86/ARM bare metal nodes, combining in the same cluster Raspberry PI nodes (ARM) and x86 mini PCs (HP Elitedesk 800 G3).
 - Use lightweight Kubernetes distribution (K3S). Kubernetes distribution with a smaller memory footprint which is ideal for running on Raspberry PIs
-- Use distributed storage block technology, instead of centralized NFS system, for pod persistent storage.  Kubernetes block distributed storage solutions, like Rook/Ceph or Longhorn, in their latest versions have included ARM 64 bits support.
+- Use distributed storage block technology, instead of centralized NFS system, for pod persistent storage. Kubernetes block distributed storage solutions, like Rook/Ceph or Longhorn, in their latest versions have included ARM 64 bits support.
 - Use opensource projects under the [CNCF: Cloud Native Computing Foundation](https://www.cncf.io/) umbrella
 - Use latest versions of each opensource project to be able to test the latest Kubernetes capabilities.
 - Automate deployment of cluster using IaC (infrastructure as a code) and GitOps methodologies with tools like:
@@ -40,67 +40,62 @@ Also deployment of services for building a cloud-native microservices architectu
   - [Ansible](https://docs.ansible.com/) for automating the configuration of the cluster nodes, installation of kubernetes and external services, and triggering cluster bootstrap (FluxCD bootstrap).
   - [Flux CD](https://fluxcd.io/) to automatically provision Kubernetes applications from git repository.
 
-
 ## Technology Stack
 
 The following picture shows the set of opensource solutions used for building this cluster:
 
 ![cluster-tech-stack](/assets/img/pi-cluster-tech-stack.png)
 
+|                                                                               | Name                                                                       | Description                                                                                      |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------- |
+| ![ansible-icon](/assets/img/logos/ansible.svg){:width="32"}                   | [Ansible](https://www.ansible.com)                                         | Automate OS configuration, external services installation and k3s installation and bootstrapping |
+| ![fluxcd-icon](/assets/img/logos/flux-cd.png){:width="32"}                    | [FluxCD](https://fluxcd.io/)                                               | GitOps tool for deploying applications to Kubernetes                                             |
+| ![cloudinit-icon](/assets/img/logos/cloud-init.svg){:width="32"}              | [Cloud-init](https://cloudinit.readthedocs.io/en/latest/)                  | Automate OS initial installation                                                                 |
+| ![ubuntu-icon](/assets/img/logos/ubuntu.svg){:width="32"}                     | [Ubuntu](https://ubuntu.com/)                                              | Cluster nodes OS                                                                                 |
+| ![openwrt-icon](/assets/img/logos/openwrt-icon.png){:width="32"}              | [OpenWrt](https://openwrt.org/)                                            | Router/Firewall OS                                                                               |
+| ![K3s-icon](/assets/img/logos/k3s.svg){:width="32"}                           | [K3S](https://k3s.io/)                                                     | Lightweight distribution of Kubernetes                                                           |
+| ![containerd-icon](/assets/img/logos/containerd.svg){:width="32"}             | [Containerd](https://containerd.io/)                                       | Container runtime integrated with K3S                                                            |
+| ![cilium-icon](/assets/img/logos/cilium.svg){:width="32"}                     | [Cilium CNI](https://cilium.io)                                            | Kubernetes Networking (CNI) and Load Balancer                                                    |
+| ![coredns-icon](/assets/img/logos/coredns.svg){:width="32"}                   | [CoreDNS](https://coredns.io/)                                             | Kubernetes DNS                                                                                   |
+| ![external-dns-icon](/assets/img/logos/external-dns.png){:width="32"}         | [External-DNS](https://kubernetes-sigs.github.io/external-dns/)            | External DNS synchronization                                                                     |
+| ![haproxy-icon](/assets/img/logos/haproxy.svg){:width="32"}                   | [HAProxy](https://www.haproxy.org/)                                        | Kubernetes API Load-balancer                                                                     |
+| ![nginx-icon](/assets/img/logos/nginx.svg){:width="32"}                       | [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/)    | Kubernetes Ingress Controller                                                                    |
+| ![longhorn-icon](/assets/img/logos/longhorn.svg){:width="32"}                 | [Longhorn](https://longhorn.io/)                                           | Kubernetes distributed block storage                                                             |
+| ![minio-icon](/assets/img/logos/minio.svg){:width="20"}                       | [Minio](https://min.io/)                                                   | S3 Object Storage solutio                                                                        |
+| ![cert-manager-icon](/assets/img/logos/cert-manager.svg){:width="32"}         | [Cert-Manager](https://cert-manager.io)                                    | TLS Certificates management                                                                      |
+| ![vault-icon](/assets/img/logos/vault.svg){:width="32"}                       | [Hashicorp Vault](https://www.vaultproject.io/)                            | Secrets Management solution                                                                      |
+| ![external-secrets-icon](/assets/img/logos/external-secrets.svg){:width="32"} | [External Secrets Operator](https://external-secrets.io/)                  | Sync Kubernetes Secrets from Hashicorp                                                           |
+| ![keycloak-icon](/assets/img/logos/keycloak.svg){:width="32"}                 | [Keycloak](https://www.keycloak.org/)                                      | Identity Access Managemen                                                                        |
+| ![OAuth2-proxy-icon](/assets/img/logos/OAuth2-proxy.svg){:width="32"}         | [OAuth2 Proxy](https://oauth2-proxy.github.io/oauth2-proxy/)               | OAuth2.0 Proxy                                                                                   |
+| ![velero-icon](/assets/img/logos/velero.svg){:width="32"}                     | [Velero](https://velero.io/)                                               | Kubernetes Backup and Restore solution                                                           |
+| ![restic-icon](/assets/img/logos/restic.png){:width="32"}                     | [Restic](https://restic.net/)                                              | OS Backup and Restore solution                                                                   |
+| ![prometheus-icon](/assets/img/logos/prometheus.svg){:width="32"}             | [Prometheus](https://prometheus.io/)                                       | Metrics monitoring and alerting                                                                  |
+| ![fluentd-icon](/assets/img/logos/fluentd.svg){:width="32"}                   | [Fluentd](https://www.fluentd.org/)                                        | Logs forwarding and distribution                                                                 |
+| ![fluentbit-icon](/assets/img/logos/fluentbit.svg){:width="32"}               | [Fluent-bit](https://fluentbit.io/)                                        | Logs collection                                                                                  |
+| ![loki-icon](/assets/img/logos/loki.png){:width="32"}                         | [Grafana Loki](https://grafana.com/oss/loki/)                              | Logs aggregation                                                                                 |
+| ![elastic-icon](/assets/img/logos/elastic.svg){:width="32"}                   | [ElasticSearch](https://www.elastic.co/elasticsearch/)                     | Log analytics                                                                                    |
+| ![kibana-icon](/assets/img/logos/kibana.svg){:width="32"}                     | [Kibana](https://www.elastic.co/kibana/)                                   | Logs analytics Dashboards                                                                        |
+| ![tempo-icon](/assets/img/logos/tempo.svg){:width="32"}                       | [Grafana Tempo](https://grafana.com/oss/tempo/)                            | Distributed tracing monitoring                                                                   |
+| ![grafana-icon](/assets/img/logos/grafana.svg){:width="32"}                   | [Grafana](https://grafana.com/oss/grafana/)                                | Monitoring Dashboards                                                                            |
+| ![istio-icon](/assets/img/logos/istio-icon-color.svg){:width="32"}            | [Istio](https://istio.io/)                                                 | Kubernetes Service Mesh                                                                          |
+| ![kafka-icon](/assets/img/logos/apache_kafka.svg){:width="32"}                | [Kafka Strimzi Operator](https://strimzi.io/)                              | Kubermetes Operator for running Kafka, Event Streaming and distribution                          |
+| ![cloudnative-pg-icon](/assets/img/logos/cloudnative-pg.png){:width="32"}     | [CloudNative-PG](https://cloudnative-pg.io/)                               | Kubernetes Operator for running PosgreSQL                                                        |
+| ![mongodb-icon](/assets/img/logos/mongodb.svg){:width="32"}                   | [MongoDB Operator](https://github.com/mongodb/mongodb-kubernetes-operator) | [[Kubernetes Operator]] for running MongoDB                                                      |
 
-|                      | Name         | Description                                                                                                             |
-| -------------------- | ------------ |:----------------------------------------------------------------------------------------------------------------------- |
-| ![ansible-icon](/assets/img/logos/ansible.svg){:width="32"}      | [Ansible](https://www.ansible.com) | Automate OS configuration, external services installation and k3s installation and bootstrapping |
-| ![fluxcd-icon](/assets/img/logos/flux-cd.png){:width="32"}       | [FluxCD](https://fluxcd.io/) | GitOps tool for deploying applications to Kubernetes |
-| ![cloudinit-icon](/assets/img/logos/cloud-init.svg){:width="32"} | [Cloud-init](https://cloudinit.readthedocs.io/en/latest/) | Automate OS initial installation |
-| ![ubuntu-icon](/assets/img/logos/ubuntu.svg){:width="32"}        | [Ubuntu](https://ubuntu.com/)                    | Cluster nodes  OS                          |
-| ![openwrt-icon](/assets/img/logos/openwrt-icon.png){:width="32"} | [OpenWrt](https://openwrt.org/)                   | Router/Firewall OS                        |
-| ![K3s-icon](/assets/img/logos/k3s.svg){:width="32"}              | [K3S](https://k3s.io/)                       | Lightweight distribution of Kubernetes         |
-| ![containerd-icon](/assets/img/logos/containerd.svg){:width="32"}| [Containerd](https://containerd.io/)         | Container runtime integrated with K3S          |
-| ![cilium-icon](/assets/img/logos/cilium.svg){:width="32"}        | [Cilium CNI](https://cilium.io)              | Kubernetes Networking (CNI) and Load Balancer  |
-| ![coredns-icon](/assets/img/logos/coredns.svg){:width="32"}      | [CoreDNS](https://coredns.io/)               | Kubernetes DNS                                 |
-| ![external-dns-icon](/assets/img/logos/external-dns.png){:width="32"} | [External-DNS](https://kubernetes-sigs.github.io/external-dns/) | External DNS synchronization   |
-| ![haproxy-icon](/assets/img/logos/haproxy.svg){:width="32"} | [HAProxy](https://www.haproxy.org/)   | Kubernetes API Load-balancer                                       |
-| ![nginx-icon](/assets/img/logos/nginx.svg){:width="32"}     | [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/)  | Kubernetes Ingress Controller   |
-| ![longhorn-icon](/assets/img/logos/longhorn.svg){:width="32"} | [Longhorn](https://longhorn.io/)    | Kubernetes distributed block storage |
-| ![minio-icon](/assets/img/logos/minio.svg){:width="20"}     | [Minio](https://min.io/)              | S3 Object Storage solutio            |
-| ![cert-manager-icon](/assets/img/logos/cert-manager.svg){:width="32"} | [Cert-Manager](https://cert-manager.io) | TLS Certificates management  |
-| ![vault-icon](/assets/img/logos/vault.svg){:width="32"} | [Hashicorp Vault](https://www.vaultproject.io/) | Secrets Management solution |
-| ![external-secrets-icon](/assets/img/logos/external-secrets.svg){:width="32"} | [External Secrets Operator](https://external-secrets.io/) | Sync Kubernetes Secrets from Hashicorp |
-| ![keycloak-icon](/assets/img/logos/keycloak.svg){:width="32"}         | [Keycloak](https://www.keycloak.org/)   | Identity Access Managemen     |
-| ![OAuth2-proxy-icon](/assets/img/logos/OAuth2-proxy.svg){:width="32"}     | [OAuth2 Proxy](https://oauth2-proxy.github.io/oauth2-proxy/)  | OAuth2.0 Proxy |
-| ![velero-icon](/assets/img/logos/velero.svg){:width="32"}           | [Velero](https://velero.io/)        | Kubernetes Backup and Restore solution   |
-| ![restic-icon](/assets/img/logos/restic.png){:width="32"}           | [Restic](https://restic.net/)       | OS Backup and Restore solution           |
-| ![prometheus-icon](/assets/img/logos/prometheus.svg){:width="32"}   | [Prometheus](https://prometheus.io/)  | Metrics monitoring and alerting        |
-| ![fluentd-icon](/assets/img/logos/fluentd.svg){:width="32"}         | [Fluentd](https://www.fluentd.org/)   | Logs forwarding and distribution       |
-| ![fluentbit-icon](/assets/img/logos/fluentbit.svg){:width="32"}     | [Fluent-bit](https://fluentbit.io/)   | Logs collection                        |
-| ![loki-icon](/assets/img/logos/loki.png){:width="32"}             | [Grafana Loki](https://grafana.com/oss/loki/)    | Logs aggregation              |
-| ![elastic-icon](/assets/img/logos/elastic.svg){:width="32"}       | [ElasticSearch](https://www.elastic.co/elasticsearch/)      | Log analytics      |
-| ![kibana-icon](/assets/img/logos/kibana.svg){:width="32"}           | [Kibana](https://www.elastic.co/kibana/)      | Logs analytics Dashboards      |
-| ![tempo-icon](/assets/img/logos/tempo.svg){:width="32"}            | [Grafana Tempo](https://grafana.com/oss/tempo/)     | Distributed tracing monitoring   |
-| ![grafana-icon](/assets/img/logos/grafana.svg){:width="32"}          | [Grafana](https://grafana.com/oss/grafana/)    | Monitoring Dashboards        |
-| ![istio-icon](/assets/img/logos/istio-icon-color.svg){:width="32"} | [Istio](https://istio.io/)    | Kubernetes Service Mesh     |
-| ![kafka-icon](/assets/img/logos/apache_kafka.svg){:width="32"}   | [Kafka Strimzi Operator](https://strimzi.io/)   | Kubermetes Operator for running Kafka, Event Streaming and distribution  |
-| ![cloudnative-pg-icon](/assets/img/logos/cloudnative-pg.png){:width="32"}  | [CloudNative-PG](https://cloudnative-pg.io/)  | Kubernetes Operator for running PosgreSQL  |
-| ![mongodb-icon](/assets/img/logos/mongodb.svg){:width="32"}         | [MongoDB Operator](https://github.com/mongodb/mongodb-kubernetes-operator)     | [[Kubernetes Operator]] for running MongoDB |
 {: .table .border-dark }
-
 
 ## Deprecated Technology
 
 The following technologies have been used in previous releases of PiCluster but they have been deprecated and not longer maintained
 
+|                                                             | Name                                                | Description                                                                                                         |
+| ----------------------------------------------------------- | --------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------ |
+| ![metallb-icon](/assets/img/logos/metallb.svg){:width="32"} | [Metal-LB](https://metallb.universe.tf)             | Load-balancer implementation for bare metal Kubernetes clusters. Replaced by Cilium CNI load balancing capabilities |
+| ![traefik-icon](/assets/img/logos/traefik.svg){:width="32"} | [Traefik](https://traefik.io/traefik/)              | Kubernetes Ingress Controller. Replaced by NGINX Ingress Controller                                                 |
+| ![argocd-icon](/assets/img/logos/argocd.svg){:width="32"}   | [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) | GitOps tool. Replaced by FluxCD                                                                                     |
+| ![flannel-icon](/assets/img/logos/flannel.svg){:width="20"} | [Flannel](https://github.com/flannel-io/flannel/)   | Kubernetes CNI plugin. Embedded into K3s. Replaced by Cilium CNI                                                    |
 
-|                      | Name         | Description                                                                                                             |
-| -------------------- | ------------ |:----------------------------------------------------------------------------------------------------------------------- |
-| ![metallb-icon](/assets/img/logos/metallb.svg){:width="32"} | [Metal-LB](https://metallb.universe.tf) | Load-balancer implementation for bare metal Kubernetes clusters. Replaced by Cilium CNI load balancing capabilities |
-| ![traefik-icon](/assets/img/logos/traefik.svg){:width="32"} | [Traefik](https://traefik.io/traefik/)  | Kubernetes Ingress Controller. Replaced by NGINX Ingress Controller  |
-| ![argocd-icon](/assets/img/logos/argocd.svg){:width="32"}  | [ArgoCD](https://argo-cd.readthedocs.io/en/stable/)  | GitOps tool. Replaced by FluxCD |
-| ![flannel-icon](/assets/img/logos/flannel.svg){:width="20"}  | [Flannel](https://github.com/flannel-io/flannel/) | Kubernetes CNI plugin. Embedded into K3s. Replaced by Cilium CNI |
 {: .table .border-dark }
-
-
-
 
 ## External Resources and Services
 
@@ -109,13 +104,14 @@ Even whe the premise is to deploy all services in the kubernetes cluster, there 
 ### Cloud external services
 
 {{site.data.alerts.note}}
- These resources are optional, the homelab still works without them but it won't have trusted certificates.
+These resources are optional, the homelab still works without them but it won't have trusted certificates.
 {{site.data.alerts.end}}
 
-|  |Provider | Resource | Purpose |
-| --- | --- | --- | --- |
-| ![letsencrypt-icon](/assets/img/logos/letsencrypt.svg){:width="60"}| [Letsencrypt](https://letsencrypt.org/) | TLS CA Authority | Signed valid TLS certificates |
-| ![ionos-icon](/assets/img/logos/ionos.png){:width="60"} |[IONOS](https://www.ionos.es/) | DNS | DNS and [DNS-01 challenge](https://letsencrypt.org/docs/challenge-types/#dns-01-challenge) for certificates |
+|                                                                     | Provider                                | Resource         | Purpose                                                                                                     |
+| ------------------------------------------------------------------- | --------------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------- |
+| ![letsencrypt-icon](/assets/img/logos/letsencrypt.svg){:width="60"} | [Letsencrypt](https://letsencrypt.org/) | TLS CA Authority | Signed valid TLS certificates                                                                               |
+| ![ionos-icon](/assets/img/logos/ionos.png){:width="60"}             | [IONOS](https://www.ionos.es/)          | DNS              | DNS and [DNS-01 challenge](https://letsencrypt.org/docs/challenge-types/#dns-01-challenge) for certificates |
+
 {: .table .border-dark }
 
 **Alternatives:**
@@ -130,21 +126,20 @@ Even whe the premise is to deploy all services in the kubernetes cluster, there 
 
    Currently only acme issuer (letsencytp) using IONOS as dns-01 challenge provider is configured. Check list of [supported dns01 providers](https://cert-manager.io/docs/configuration/acme/dns01/#supported-dns01-providers).
 
-### Self-hosted external services 
+### Self-hosted external services
 
 There is another list of services that I have decided to run outside the kubernetes cluster selfhosting them.
 
-|  |External Service | Resource | Purpose |
-| --- | --- | --- | --- |
-| ![minio-icon](/assets/img/logos/minio.svg){:width="20"} |[Minio](https://min.io) | S3 Object Store | Cluster Backup  |
-| ![vault-icon](/assets/img/logos/vault.svg){:width="32"} |[Hashicorp Vault](https://www.vaultproject.io/) | Secrets Management | Cluster secrets management |
-{: .table .border-dark .align-middle }
+|                                                         | External Service                                | Resource           | Purpose                    |
+| ------------------------------------------------------- | ----------------------------------------------- | ------------------ | -------------------------- |
+| ![minio-icon](/assets/img/logos/minio.svg){:width="20"} | [Minio](https://min.io)                         | S3 Object Store    | Cluster Backup             |
+| ![vault-icon](/assets/img/logos/vault.svg){:width="32"} | [Hashicorp Vault](https://www.vaultproject.io/) | Secrets Management | Cluster secrets management |
 
+{: .table .border-dark .align-middle }
 
 Minio backup servive is hosted in a VM running in Public Cloud, using [Oracle Cloud Infrastructure (OCI) free tier](https://www.oracle.com/es/cloud/free/).
 
 Vault service is running in one of the cluster nodes, `node1`, since Vault kubernetes authentication method need access to Kuberentes API, I won't host Vault service in Public Cloud.
-
 
 ## What I have built so far
 
@@ -162,14 +157,12 @@ From hardware perspective I built two different versions of the cluster
 
 ![!Cluster-3.0](/assets/img/pi-cluster-3.0.png)
 
-
 ## What I have developed so far
 
 {{site.data.alerts.important}}
 All source code can be found in the project's github repository [{{site.data.icons.github}}]({{site.git_address}}).
 
 {{site.data.alerts.end}}
-
 
 From software perspective, I have developed the following:
 
@@ -179,84 +172,85 @@ From software perspective, I have developed the following:
 
 2. Automate initial OS installation in x86_64 nodes using PXE server and Ubuntu's **auto-install** template files.
 
-3. **Ansible** playbook and roles for configuring cluster nodes and installating and bootstraping K3S cluster  
-   
+3. **Ansible** playbook and roles for configuring cluster nodes and installating and bootstraping K3S cluster
+
    Source code can be found in Pi Cluster Git repository under [`/ansible`]({{site.git_address}}/tree/master/ansible) directory.
 
    Aditionally several ansible roles have been developed to automate different configuration tasks on Ubuntu-based servers that can be reused in other projects. These roles are used by Pi-Cluster Ansible Playbooks
 
    Each ansible role source code can be found in its dedicated Github repository and is published in Ansible-Galaxy to facilitate its installation with `ansible-galaxy` command.
 
-   | Ansible role | Description | Github |
-   | ---| --- | --- | 
-   |  [ricsanfre.security](https://galaxy.ansible.com/ricsanfre/security) | Automate SSH hardening configuration tasks  | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-security)|
-   | [ricsanfre.ntp](https://galaxy.ansible.com/ricsanfre/ntp)  | Chrony NTP service configuration | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-ntp) |
-   | [ricsanfre.firewall](https://galaxy.ansible.com/ricsanfre/firewall) | NFtables firewall configuration | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-firewall) |
-   | [ricsanfre.dnsmasq](https://galaxy.ansible.com/ricsanfre/dnsmasq) | Dnsmasq configuration | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-dnsmasq) |
-   | [ricsanfre.bind9](https://galaxy.ansible.com/ricsanfre/bind9) | Bind9 configuration | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-bind9) |
-   | [ricsanfre.storage](https://galaxy.ansible.com/ricsanfre/storage)| Configure LVM | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-storage) |
-   | [ricsanfre.iscsi_target](https://galaxy.ansible.com/ricsanfre/iscsi_target)| Configure iSCSI Target| [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-iscsi_target) |
-   | [ricsanfre.iscsi_initiator](https://galaxy.ansible.com/ricsanfre/iscsi_initiator)| Configure iSCSI Initiator | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-iscsi_initiator) |
-   | [ricsanfre.k8s_cli](https://galaxy.ansible.com/ricsanfre/k8s_cli)| Install kubectl and Helm utilities | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-k8s_cli) |
-   | [ricsanfre.fluentbit](https://galaxy.ansible.com/ricsanfre/fluentbit)| Configure fluentbit | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-fluentbit) |
-   | [ricsanfre.minio](https://galaxy.ansible.com/ricsanfre/minio)| Configure Minio S3 server | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-minio) |
-   | [ricsanfre.backup](https://galaxy.ansible.com/ricsanfre/backup)| Configure Restic | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-backup) |
-   | [ricsanfre.vault](https://galaxy.ansible.com/ricsanfre/vault)| Configure Hashicorp Vault | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-vault) |
-   {: .table .border-dark } 
+   | Ansible role                                                                      | Description                                | Github                                                                                  |
+   | --------------------------------------------------------------------------------- | ------------------------------------------ | --------------------------------------------------------------------------------------- |
+   | [ricsanfre.security](https://galaxy.ansible.com/ricsanfre/security)               | Automate SSH hardening configuration tasks | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-security)        |
+   | [ricsanfre.ntp](https://galaxy.ansible.com/ricsanfre/ntp)                         | Chrony NTP service configuration           | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-ntp)             |
+   | [ricsanfre.firewall](https://galaxy.ansible.com/ricsanfre/firewall)               | NFtables firewall configuration            | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-firewall)        |
+   | [ricsanfre.dnsmasq](https://galaxy.ansible.com/ricsanfre/dnsmasq)                 | Dnsmasq configuration                      | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-dnsmasq)         |
+   | [ricsanfre.bind9](https://galaxy.ansible.com/ricsanfre/bind9)                     | Bind9 configuration                        | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-bind9)           |
+   | [ricsanfre.storage](https://galaxy.ansible.com/ricsanfre/storage)                 | Configure LVM                              | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-storage)         |
+   | [ricsanfre.iscsi_target](https://galaxy.ansible.com/ricsanfre/iscsi_target)       | Configure iSCSI Target                     | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-iscsi_target)    |
+   | [ricsanfre.iscsi_initiator](https://galaxy.ansible.com/ricsanfre/iscsi_initiator) | Configure iSCSI Initiator                  | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-iscsi_initiator) |
+   | [ricsanfre.k8s_cli](https://galaxy.ansible.com/ricsanfre/k8s_cli)                 | Install kubectl and Helm utilities         | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-k8s_cli)         |
+   | [ricsanfre.fluentbit](https://galaxy.ansible.com/ricsanfre/fluentbit)             | Configure fluentbit                        | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-fluentbit)       |
+   | [ricsanfre.minio](https://galaxy.ansible.com/ricsanfre/minio)                     | Configure Minio S3 server                  | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-minio)           |
+   | [ricsanfre.backup](https://galaxy.ansible.com/ricsanfre/backup)                   | Configure Restic                           | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-backup)          |
+   | [ricsanfre.vault](https://galaxy.ansible.com/ricsanfre/vault)                     | Configure Hashicorp Vault                  | [{{site.data.icons.github}}](https://github.com/ricsanfre/ansible-role-vault)           |
+
+   {: .table .border-dark }
 
 4. **Packaged Kuberentes applications** (Helm, Kustomize, manifest files) to be deployed using FluxCD
 
    Source code can be found in Pi Cluster Git repository under [`/kubernetes`]({{site.git_address}}/tree/master/kubernetes) directory.
 
-5. This **documentation website**, *picluster.ricsanfre.com*, hosted in Github pages.
+5. This **documentation website**, _picluster.ricsanfre.com_, hosted in Github pages.
 
    Static website generated with [Jekyll](https://jekyllrb.com/).
 
    Source code can be found in the Pi-cluster repository under [`/docs`]({{site.git_address}}/tree/master/docs) directory.
 
-
 ## Software used and latest version tested
 
 The software used and the latest version tested of each component
 
-| Type | Software | Latest Version tested | Notes |
-|-----------| ------- |-------|----|
-| OS | Ubuntu | 22.04.2 | |
-| Control | Ansible | 2.17.2  | |
-| Control | cloud-init | 23.1.2 | version pre-integrated into Ubuntu 22.04.2 |
-| Kubernetes | K3S | v1.31.4 | K3S version|
-| Kubernetes | Helm | v3.15.3 ||
-| Kubernetes | etcd | v3.5.16-k3s1 | version pre-integrated into K3S |
-| Computing | containerd | v1.7.23-k3s2 | version pre-integrated into K3S |
-| Networking | Cilium | 1.17.1 | |
-| Networking | CoreDNS | v1.12.0 | Helm chart version: 1.39.0 |
-| Networking | External-DNS | 0.15.1 | Helm chart version: 1.15.1 |
-| Metric Server | Kubernetes Metrics Server | v0.7.2 | Helm chart version: 3.12.2|
-| Service Mesh | Istio | v1.24.3 | Helm chart version: 1.24.3 |
-| Service Proxy | Ingress NGINX | v1.12.0 | Helm chart version: 4.12.0 |
-| Storage | Longhorn | v1.8.0 | Helm chart version: 1.8.0 |
-| Storage | Minio | RELEASE.2024-12-18T13-15-44Z | Helm chart version: 5.4.0 |
-| TLS Certificates | Certmanager | v1.17.1 | Helm chart version: v1.17.1  |
-| Logging | ECK Operator |  2.16.1 | Helm chart version: 2.16.1 |
-| Logging | Elastic Search | 8.17.1 | Deployed with ECK Operator |
-| Logging | Kibana | 8.17.1 | Deployed with ECK Operator |
-| Logging | Fluentbit | 3.2.6 | Helm chart version: 0.48.6 |
-| Logging | Fluentd | 1.15.3 | Helm chart version: 0.5.2 [Custom docker image](https://github.com/ricsanfre/fluentd-aggregator) from official v1.17.1|
-| Logging | Loki | 3.4.0 | Helm chart grafana/loki version: 6.27.0  |
-| Monitoring | Kube Prometheus Stack | v0.79.2 | Helm chart version: 68.3.2 |
-| Monitoring | Prometheus Operator | v0.79.2 | Installed by Kube Prometheus Stack. Helm chart version: 68.3.2  |
-| Monitoring | Prometheus | v3.1.0 | Installed by Kube Prometheus Stack. Helm chart version: 68.3.2 |   
-| Monitoring | AlertManager | v0.28.0 | Installed by Kube Prometheus Stack. Helm chart version: 68.3.2 |
-| Monitoring | Prometheus Node Exporter | v1.8.2 | Installed as dependency of Kube Prometheus Stack chart. Helm chart version: 68.3.2 |
-| Monitoring | Prometheus Elasticsearch Exporter | 1.8.0 | Helm chart version: prometheus-elasticsearch-exporter-6.6.0 |
-| Monitoring | Grafana | 11.5.1 | Helm chart version: 8.10.0 |
-| Tracing | Grafana Tempo | 2.7.0 | Helm chart: tempo-distributed (v1.32.0) |
-| Backup | Minio External (self-hosted) | RELEASE.2024-11-07T00:52:20Z | |
-| Backup | Restic | 0.17.2 | |
-| Backup | Velero | 1.15.2 | Helm chart version: 8.3.0 |
-| Secrets | Hashicorp Vault | 1.18.4 | |
-| Secrets| External Secret Operator | 0.14.2 | Helm chart version: 0.14.2 |
-| SSO | Keycloak | 26.1.1 | Bitnami Helm chart version: 24.4.9 |
-| SSO| Oauth2.0 Proxy | 7.8.1 | Helm chart version: 7.11.0 |
-| GitOps | Flux CD | v2.4.0 |  |
+| Type             | Software                          | Latest Version tested        | Notes                                                                                                                  |
+| ---------------- | --------------------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| OS               | Ubuntu                            | 22.04.2                      |                                                                                                                        |
+| Control          | Ansible                           | 2.17.2                       |                                                                                                                        |
+| Control          | cloud-init                        | 23.1.2                       | version pre-integrated into Ubuntu 22.04.2                                                                             |
+| Kubernetes       | K3S                               | v1.31.4                      | K3S version                                                                                                            |
+| Kubernetes       | Helm                              | v3.15.3                      |                                                                                                                        |
+| Kubernetes       | etcd                              | v3.5.16-k3s1                 | version pre-integrated into K3S                                                                                        |
+| Computing        | containerd                        | v1.7.23-k3s2                 | version pre-integrated into K3S                                                                                        |
+| Networking       | Cilium                            | 1.17.1                       |                                                                                                                        |
+| Networking       | CoreDNS                           | v1.12.0                      | Helm chart version: 1.39.0                                                                                             |
+| Networking       | External-DNS                      | 0.15.1                       | Helm chart version: 1.15.1                                                                                             |
+| Metric Server    | Kubernetes Metrics Server         | v0.7.2                       | Helm chart version: 3.12.2                                                                                             |
+| Service Mesh     | Istio                             | v1.24.3                      | Helm chart version: 1.24.3                                                                                             |
+| Service Proxy    | Ingress NGINX                     | v1.12.0                      | Helm chart version: 4.12.0                                                                                             |
+| Storage          | Longhorn                          | v1.8.0                       | Helm chart version: 1.8.0                                                                                              |
+| Storage          | Minio                             | RELEASE.2024-12-18T13-15-44Z | Helm chart version: 5.4.0                                                                                              |
+| TLS Certificates | Certmanager                       | v1.17.1                      | Helm chart version: v1.17.1                                                                                            |
+| Logging          | ECK Operator                      | 2.16.1                       | Helm chart version: 2.16.1                                                                                             |
+| Logging          | Elastic Search                    | 8.17.1                       | Deployed with ECK Operator                                                                                             |
+| Logging          | Kibana                            | 8.17.1                       | Deployed with ECK Operator                                                                                             |
+| Logging          | Fluentbit                         | 3.2.6                        | Helm chart version: 0.48.6                                                                                             |
+| Logging          | Fluentd                           | 1.15.3                       | Helm chart version: 0.5.2 [Custom docker image](https://github.com/ricsanfre/fluentd-aggregator) from official v1.17.1 |
+| Logging          | Loki                              | 3.4.0                        | Helm chart grafana/loki version: 6.27.0                                                                                |
+| Monitoring       | Kube Prometheus Stack             | v0.79.2                      | Helm chart version: 68.3.2                                                                                             |
+| Monitoring       | Prometheus Operator               | v0.79.2                      | Installed by Kube Prometheus Stack. Helm chart version: 68.3.2                                                         |
+| Monitoring       | Prometheus                        | v3.1.0                       | Installed by Kube Prometheus Stack. Helm chart version: 68.3.2                                                         |
+| Monitoring       | AlertManager                      | v0.28.0                      | Installed by Kube Prometheus Stack. Helm chart version: 68.3.2                                                         |
+| Monitoring       | Prometheus Node Exporter          | v1.8.2                       | Installed as dependency of Kube Prometheus Stack chart. Helm chart version: 68.3.2                                     |
+| Monitoring       | Prometheus Elasticsearch Exporter | 1.8.0                        | Helm chart version: prometheus-elasticsearch-exporter-6.6.0                                                            |
+| Monitoring       | Grafana                           | 11.5.1                       | Helm chart version: 8.10.0                                                                                             |
+| Tracing          | Grafana Tempo                     | 2.7.0                        | Helm chart: tempo-distributed (v1.32.0)                                                                                |
+| Backup           | Minio External (self-hosted)      | RELEASE.2024-11-07T00:52:20Z |                                                                                                                        |
+| Backup           | Restic                            | 0.17.2                       |                                                                                                                        |
+| Backup           | Velero                            | 1.15.2                       | Helm chart version: 8.3.0                                                                                              |
+| Secrets          | Hashicorp Vault                   | 1.18.4                       |                                                                                                                        |
+| Secrets          | External Secret Operator          | 0.14.2                       | Helm chart version: 0.14.2                                                                                             |
+| SSO              | Keycloak                          | 26.1.1                       | Bitnami Helm chart version: 24.4.9                                                                                     |
+| SSO              | Oauth2.0 Proxy                    | 7.8.1                        | Helm chart version: 7.11.0                                                                                             |
+| GitOps           | Flux CD                           | v2.4.0                       |                                                                                                                        |
+
 {: .table .border-dark }

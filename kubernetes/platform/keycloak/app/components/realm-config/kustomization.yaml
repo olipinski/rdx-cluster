@@ -1,3 +1,4 @@
+---
 apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 
@@ -14,14 +15,15 @@ configMapGenerator:
   - name: keycloak-realm-configmap
     options:
       # Disable hashing.
-      # Automatic replacement does not work with configMaps references in values.yaml
+      # Automatic replacement does not work with configMaps
+      # references in values.yaml
       disableNameSuffixHash: true
     files:
-    - picluster-realm.json  
+      - picluster-realm.json
 
 patches:
-- target:
-    group: helm.toolkit.fluxcd.io
-    kind: HelmRelease
-    name: keycloak
-  path: helm-patch.yaml
+  - target:
+      group: helm.toolkit.fluxcd.io
+      kind: HelmRelease
+      name: keycloak
+    path: helm-patch.yaml

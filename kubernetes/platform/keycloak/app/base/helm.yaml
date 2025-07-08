@@ -28,6 +28,6 @@ spec:
     - name: cloudnative-pg
       namespace: cnpg-system
   valuesFrom:
-  - kind: ConfigMap
-    name: keycloak-helm-values
-    valuesKey: base-values.yaml
+    - kind: ConfigMap
+      name: keycloak-helm-values
+      valuesKey: base-values.yaml

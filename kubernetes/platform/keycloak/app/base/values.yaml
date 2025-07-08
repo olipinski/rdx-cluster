@@ -1,3 +1,4 @@
+---
 # keycloak helm values (base)
 global:
   storageClass: longhorn
@@ -13,7 +14,3 @@ proxyHeaders: xforwarded
 auth:
   existingSecret: keycloak-secret
   adminUser: admin
-
-
-
-

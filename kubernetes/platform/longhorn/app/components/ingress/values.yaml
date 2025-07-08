@@ -1,3 +1,4 @@
+---
 # longhorn helm values (ingress)
 
 # Ingress Resource. Longhorn dashboard.
@@ -6,7 +7,7 @@ ingress:
   enabled: true
   ## Add ingressClassName to the Ingress
   ingressClassName: nginx
- 
+
   # ingress host
   host: longhorn.${CLUSTER_DOMAIN}
 
@@ -21,7 +22,6 @@ ingress:
 
   ## Ingress annotations
   annotations:
-
     # Enable external authentication using Oauth2-proxy
     nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.${CLUSTER_DOMAIN}/oauth2/start?rd=https://$host$request_uri
     nginx.ingress.kubernetes.io/auth-url: http://oauth2-proxy.oauth2-proxy.svc.cluster.local/oauth2/auth
@@ -29,8 +29,8 @@ ingress:
     nginx.ingress.kubernetes.io/auth-response-headers: Authorization
 
     # Enable cert-manager to create automatically the SSL certificate and store in Secret
-    # Possible Cluster-Issuer values: 
-    #   * 'letsencrypt-issuer' (valid TLS certificate using Letsencrypt) 
+    # Possible Cluster-Issuer values:
+    #   * 'letsencrypt-issuer' (valid TLS certificate using Letsencrypt)
     #   * 'ca-issuer' (CA-signed certificate, not valid)
     cert-manager.io/cluster-issuer: letsencrypt-issuer
     cert-manager.io/common-name: longhorn.${CLUSTER_DOMAIN}

@@ -1,3 +1,4 @@
+---
 # kube-prom-stack helm values (ingress)
 
 alertmanager:
@@ -20,7 +21,7 @@ alertmanager:
       - monitoring.${CLUSTER_DOMAIN}
     tls:
       - hosts:
-        - monitoring.${CLUSTER_DOMAIN}
+          - monitoring.${CLUSTER_DOMAIN}
         secretName: monitoring-tls
 
 prometheus:
@@ -44,5 +45,5 @@ prometheus:
       - monitoring.${CLUSTER_DOMAIN}
     tls:
       - hosts:
-        - monitoring.${CLUSTER_DOMAIN}
+          - monitoring.${CLUSTER_DOMAIN}
         secretName: monitoring-tls

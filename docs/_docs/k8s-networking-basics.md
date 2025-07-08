@@ -11,7 +11,6 @@ To facilitate inter-container connectivity across nodes, any networking solution
 
 A CNI plugin is responsible for inserting a network interface into the container network namespace (e.g., one end of a virtual ethernet (veth) pair) and making any necessary changes on the host (e.g., attaching the other end of the veth into a bridge). It then assigns an IP address to the interface and sets up the routes consistent with the IP Address Management section by invoking the appropriate IP Address Management (IPAM) plugin.
 
-
 ## Enabling Kuberentes Services load balancing
 
 `Kubernetes Service` is an abstract way to expose an application running on a set of Pods as a network service. Kubernetes gives Pods their own IP addresses and a single DNS name (and single Virtual IP address) for a set of Pods, and can load-balance across them. Two components are key for this mechanism: `kube-proxy` in charge of implementing the Virtual IP address and load balance mechanism and `kube-dns` responsible for mapping DNS service name to virtual IP address.
@@ -20,7 +19,7 @@ See details in [Kubernetes documentation - Service Concept](https://kubernetes.i
 
 ### kube-proxy: Kuberentes Services internal Load-balancing
 
-kube-proxy is a key component of any Kubernetes deployment.  Its role is to load-balance traffic that is destined for services (via Cluster IPs and Node Ports) to the correct backend pods.
+kube-proxy is a key component of any Kubernetes deployment. Its role is to load-balance traffic that is destined for services (via Cluster IPs and Node Ports) to the correct backend pods.
 
 Kube-proxy can run in one of three modes, each implemented with different data plane technologies available (user-space, iptables, or IPVS).
 
@@ -49,7 +48,6 @@ An Ingress may be configured to give Services externally-reachable URLs, load ba
 Every `Ingress` resource belong to `IngressClass` resource that contains information about the `Ingress Controller` implementing the class. This way Ingresses can be implemented by different controllers.
 
 See detailed information in [Kubernetes documentation - Ingress Contoller Concept](https://kubernetes.io/docs/concepts/services-networking/ingress/).
-
 
 ## Useful references
 

@@ -1,3 +1,4 @@
+---
 # HTTPS Ingress
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -5,7 +6,8 @@ metadata:
   name: elasticsearch-ingress
   namespace: elastic
   annotations:
-    # Enable cert-manager to create automatically the SSL certificate and store in Secret
+    # Enable cert-manager to create automatically the SSL
+    # certificate and store in Secret
     cert-manager.io/cluster-issuer: letsencrypt-issuer
     cert-manager.io/common-name: elasticsearch.${CLUSTER_DOMAIN}
 spec:

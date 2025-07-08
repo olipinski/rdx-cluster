@@ -28,4 +28,3 @@ spec:
         name: cluster-settings
       - kind: ConfigMap
         name: domain-settings
-

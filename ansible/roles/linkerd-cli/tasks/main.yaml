@@ -1,0 +1,13 @@
+---
+- name: Check Linkerd CLI installation status
+  ansible.builtin.stat:
+    path: "{{ linkerd_bin }}"
+  register: _linkerd_bin
+
+- name: Install linkerd CLI
+  ansible.builtin.include_tasks: install_linkerd_cli.yaml
+  args:
+    apply:
+      become: true
+  when:
+    - not _linkerd_bin.stat.exists

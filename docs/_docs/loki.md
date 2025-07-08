@@ -3,7 +3,6 @@ title: Log Aggregation (Loki)
 permalink: /docs/loki/
 description: How to deploy Grafana Loki in our Raspberry Pi Kuberentes cluster.
 last_modified_at: "11-05-2024"
-
 ---
 
 ## Loki architecture
@@ -12,7 +11,7 @@ Loki architecture is displayed in the following picture (source: [Grafana docume
 
 ![LOKI-Architecture-Components](/assets/img/loki_architecture_components.svg)
 
-All Loki components are included within a single binary (docker image) that  supports three different deployments modes where the above components can be started in different PODs 
+All Loki components are included within a single binary (docker image) that supports three different deployments modes where the above components can be started in different PODs
 
 - Monolithic
 
@@ -21,31 +20,30 @@ All Loki components are included within a single binary (docker image) that  sup
 - Simple scalable mode
 
   In this deployment, Loki is deployed in HA, deploying replicas of write and read nodes (processes)
-  - Write nodes: supporting write path. *Distributor* and *Ingestor* components, responsible to store logs and indexes in the back-end storage (Minio S3 storage)
-  - Read nodes: supporting read path. *Ruler*, *Querier* and *Frontend Querier* components, responsible to answer to log queries.
-  - Backend nodes: loki backend services *Compactor*, *Index gateways* and *Query scheduler – Ruler*
+
+  - Write nodes: supporting write path. _Distributor_ and _Ingestor_ components, responsible to store logs and indexes in the back-end storage (Minio S3 storage)
+  - Read nodes: supporting read path. _Ruler_, _Querier_ and _Frontend Querier_ components, responsible to answer to log queries.
+  - Backend nodes: loki backend services _Compactor_, _Index gateways_ and _Query scheduler – Ruler_
   - Gateway node: a load balancer in front of Loki (nginx based), which directs `/loki/api/v1/push` traffic to the write nodes. All other requests go to the read nodes. Traffic should be sent in a round robin fashion.
 
 - Microservices
   In this deployment each individual Loki component can be started in an independent process (container).
-  
 
 Further details in Loki architecture documentation: [Loki components](https://grafana.com/docs/loki/latest/fundamentals/architecture/components/) and [deployment modes](https://grafana.com/docs/loki/latest/fundamentals/architecture/deployment-modes/)
 
 Loki will be installed using Simple scalable deployment mode using as S3 Object Storage Server (Minio) as backend.
 
-
 ![K3S-LOKI-Architecture](/assets/img/loki-architecture.png)
 
 ## Configure S3 Minio Server
 
-Minio Storage server is used as Loki long-term data storage. 
+Minio Storage server is used as Loki long-term data storage.
 
 Grafana Loki needs to store two different types of data: chunks and indexes. Both of them can be stored in S3 server.
 
 {{site.data.alerts.note}}
 
-Loki helm chart is able to install this Minio service as a subchart, but its installation will be disabled and Minio Storage Service already deployed in the cluster will be used as Loki's backend. 
+Loki helm chart is able to install this Minio service as a subchart, but its installation will be disabled and Minio Storage Service already deployed in the cluster will be used as Loki's backend.
 
 As part of Minio Storage Service installation, loki's S3 bucket, policy and user is already configured.
 See documentation: [Minio S3 Object Storage Service](/docs/minio/).
@@ -57,9 +55,10 @@ See documentation: [Minio S3 Object Storage Service](/docs/minio/).
 Use Minio's `mc` command to create loki bucket and user
 
 ```shell
-mc mb <minio_alias>/k3s-loki 
+mc mb <minio_alias>/k3s-loki
 mc admin user add <minio_alias> loki <user_password>
 ```
+
 {{site.data.alerts.note}}
 
 As the Loki's documentation said, when using S3 as object storage, the following permissions are needed:
@@ -69,7 +68,7 @@ As the Loki's documentation said, when using S3 as object storage, the following
 - s3:GetObject
 - s3:DeleteObject (if running the Single Store (boltdb-shipper) compactor)
 
-Over the resources: arn:aws:s3:::<bucket_name>, arn:aws:s3:::<bucket_name>/*
+Over the resources: arn:aws:s3:::<bucket_name>, arn:aws:s3:::<bucket_name>/\*
 
 {{site.data.alerts.end}}
 
@@ -86,21 +85,18 @@ Where `user_policy.json`, contains the following AWS access policies definition:
   "Version": "2012-10-17",
   "Statement": [
     {
-        "Effect": "Allow",
-        "Action": [
-            "s3:DeleteObject",
-            "s3:GetObject",
-            "s3:ListBucket",
-            "s3:PutObject"
-        ],
-        "Resource": [
-            "arn:aws:s3:::k3s-loki",
-            "arn:aws:s3:::k3s-loki/*"
-        ]
-    }  
+      "Effect": "Allow",
+      "Action": [
+        "s3:DeleteObject",
+        "s3:GetObject",
+        "s3:ListBucket",
+        "s3:PutObject"
+      ],
+      "Resource": ["arn:aws:s3:::k3s-loki", "arn:aws:s3:::k3s-loki/*"]
+    }
   ]
 }
-``` 
+```
 
 See further details in [Loki-Storage documentation](https://grafana.com/docs/loki/latest/operations/storage/)
 
@@ -109,7 +105,7 @@ See further details in [Loki-Storage documentation](https://grafana.com/docs/lok
 Installation from helm chart. There are two alternatives:
 
 - [Loki-stack helm chart](https://github.com/grafana/helm-charts/tree/main/charts/loki-stack). With this helm chart the complete PLG stack can be installed.
-  
+
   This helm chart will not be used because we are only interested in deploying Loki component. Promtail will not be used and Grafana will be deployed as part of kube-prometheus-stack.
 
 - [Loki-helm chart v3.x](https://github.com/grafana/loki/tree/main/production/helm/loki). Used for [Monolithic](https://grafana.com/docs/loki/latest/fundamentals/architecture/deployment-modes/#monolithic-mode) and Simple scalable deployment modes](https://grafana.com/docs/loki/latest/fundamentals/architecture/deployment-modes/#simple-scalable-deployment-mode).
@@ -158,13 +154,13 @@ Installation from helm chart. There are two alternatives:
     # Storage Schema
     schemaConfig:
       configs:
-      - from: 2024-04-01
-        store: tsdb
-        index:
-          prefix: loki_index_
-          period: 24h
-        object_store: s3
-        schema: v13
+        - from: 2024-04-01
+          store: tsdb
+          index:
+            prefix: loki_index_
+            period: 24h
+          object_store: s3
+          schema: v13
 
   # Configuration for the write
   write:
@@ -214,7 +210,7 @@ Installation from helm chart. There are two alternatives:
       grafanaAgent:
         installOperator: false
       lokiCanary:
-          enabled: false
+        enabled: false
 
   # Disable helm-test
   test:
@@ -252,8 +248,8 @@ Installation from helm chart. There are two alternatives:
 
 As an alternative, for GitOps deployments, instead of hardcoding minio credentials within Helm chart values, a external secret can be configured leveraging [Loki's capability of using environment variables in config file](https://grafana.com/docs/loki/latest/configuration/#use-environment-variables-in-the-configuration).
 
-
 The following secret need to be created:
+
 ```yml
 apiVersion: v1
 kind: Secret
@@ -294,13 +290,13 @@ loki:
     # Storage Schema
     schemaConfig:
       configs:
-      - from: 2024-04-01
-        store: tsdb
-        index:
-          prefix: loki_index_
-          period: 24h
-        object_store: s3
-        schema: v13
+        - from: 2024-04-01
+          store: tsdb
+          index:
+            prefix: loki_index_
+            period: 24h
+          object_store: s3
+          schema: v13
 
 # Configuration for the write
 write:
@@ -315,7 +311,7 @@ write:
   # Enable environment variables in config file
   # https://grafana.com/docs/loki/latest/configuration/#use-environment-variables-in-the-configuration
   extraArgs:
-    - '-config.expand-env=true'
+    - "-config.expand-env=true"
   extraEnv:
     - name: MINIO_ACCESS_KEY_ID
       valueFrom:
@@ -341,7 +337,7 @@ read:
   # Enable environment variables in config file
   # https://grafana.com/docs/loki/latest/configuration/#use-environment-variables-in-the-configuration
   extraArgs:
-    - '-config.expand-env=true'
+    - "-config.expand-env=true"
   extraEnv:
     - name: MINIO_ACCESS_KEY_ID
       valueFrom:
@@ -367,7 +363,7 @@ backend:
   # Enable environment variables in config file
   # https://grafana.com/docs/loki/latest/configuration/#use-environment-variables-in-the-configuration
   extraArgs:
-    - '-config.expand-env=true'
+    - "-config.expand-env=true"
   extraEnv:
     - name: MINIO_ACCESS_KEY_ID
       valueFrom:
@@ -398,12 +394,11 @@ monitoring:
     grafanaAgent:
       installOperator: false
   lokiCanary:
-      enabled: false
+    enabled: false
 
 # Disable helm-test
 test:
   enabled: false
-
 ```
 
 ## Grafana Configuration
@@ -416,7 +411,7 @@ This can be done automatically when installing kube-prometheus-stack providing t
 grafana:
   # Additional data source
   additionalDataSources:
-  - name: Loki
-    type: loki
-    url: http://loki-gateway.logging.svc.cluster.local
+    - name: Loki
+      type: loki
+      url: http://loki-gateway.logging.svc.cluster.local
 ```

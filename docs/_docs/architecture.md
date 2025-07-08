@@ -5,13 +5,12 @@ description: Homelab architecture of our Pi Kuberentes cluster. Cluster nodes, f
 last_modified_at: "07-12-2024"
 ---
 
-
 The home lab I am building is shown in the following picture
 
 ![Cluster-lab](/assets/img/pi-cluster-architecture.png)
 
-
 A K3S cluster is composed of the following **cluster nodes**:
+
 - 3 master nodes (`node2`, `node3` and `node4`), running on Raspberry Pi 4B (4GB)
 - 5 worker nodes:
   - `node5` and `node6`running on Raspberry Pi 4B (8GB)
@@ -22,21 +21,22 @@ A **LAN switch** (16 Gigabit ports) used to provide L2 connectivity to the clust
 `gateway`, **cluster firewall/router** is connected to LAN Switch using its Gigabit Ethernet port. It is also connected to my home network using its WIFI interface, so it can route and filter traffic comming in/out the cluster. With this architecture my lab network can be isolated from my home network.
 
 `gateway` also provides networking services to my lab network:
- - Internet Access
- - DNS
- - NTP
- - DHCP
+
+- Internet Access
+- DNS
+- NTP
+- DHCP
 
 `node1`, running on Raspberry Pi 4B (4GB), for providing **kubernetes external services**:
-  - Secret Management (Vault)
-  - DNS Authoritative (Bind9)
+
+- Secret Management (Vault)
+- DNS Authoritative (Bind9)
 
 A load balancer is also needed for providing Hight availability to Kubernetes API. In this cases a network load balancer, [HAProxy](https://www.haproxy.org/), will be deployed in `node1` server.
 
 For automating the OS installation of x86 nodes, a **PXE server** will be deployed in `node1` node.
 
-**Ansible control node**, `pimaster` is deployed in a Linux VM or Linux Laptop, so from this node the whole cluster configuration can be managed. `pimaster` is connected to my home network (ip in  192.168.1.0/24 network). In `pimaster`, a IP route to 10.0.0.0/24 network through `gateway` (192.168.1.21) need to be configured, so it can have connectivity to cluster nodes.
-
+**Ansible control node**, `pimaster` is deployed in a Linux VM or Linux Laptop, so from this node the whole cluster configuration can be managed. `pimaster` is connected to my home network (ip in 192.168.1.0/24 network). In `pimaster`, a IP route to 10.0.0.0/24 network through `gateway` (192.168.1.21) need to be configured, so it can have connectivity to cluster nodes.
 
 ## Hardware
 
@@ -52,7 +52,6 @@ For building the cluster, using bare metal servers instead of virtual machines, 
   - RAM: 2GB/4GB/8GB
   - Disk: SDCard or USB disk (Flash Disk or SSD disk through USB to SATA adapter)
 
-
   ![raspberry-pi-4b](/assets/img/raspberrypi4b.png)
 
   I have used the following hardware components to assemble Raspberry PI components of the cluster.
@@ -60,7 +59,7 @@ For building the cluster, using bare metal servers instead of virtual machines, 
   - [4 x Raspberry Pi 4 - Model B (4 GB)](https://www.tiendatec.es/raspberry-pi/gama-raspberry-pi/1100-raspberry-pi-4-modelo-b-4gb-765756931182.html) and [2 x Raspberry Pi 4 - Model B (8 GB)](https://www.tiendatec.es/raspberry-pi/gama-raspberry-pi/1231-raspberry-pi-4-modelo-b-8gb-765756931199.html) as ARM-based cluster nodes (1 master node and 5 worker nodes).
   - [1 x Raspberry Pi 4 - Model B (2 GB)](https://www.tiendatec.es/raspberry-pi/gama-raspberry-pi/1099-raspberry-pi-4-modelo-b-2gb-765756931175.html) as router/firewall for the lab environment connected via wifi to my home network and securing the access to my lab network.
   - [4 x SanDisk Ultra 32 GB microSDHC Memory Cards](https://www.amazon.es/SanDisk-SDSQUA4-064G-GN6MA-microSDXC-Adaptador-Rendimiento-dp-B08GY9NYRM/dp/B08GY9NYRM) (Class 10) for installing Raspberry Pi OS for enabling booting from USB (update Raspberry PI firmware and modify USB partition)
-  - [4 x Samsung USB 3.1 32 GB Fit Plus Flash Disk](https://www.amazon.es/Samsung-FIT-Plus-Memoria-MUF-32AB/dp/B07HPWKS3C) 
+  - [4 x Samsung USB 3.1 32 GB Fit Plus Flash Disk](https://www.amazon.es/Samsung-FIT-Plus-Memoria-MUF-32AB/dp/B07HPWKS3C)
   - [1 x Kingston A400 SSD Disk 480GB](https://www.amazon.es/Kingston-SSD-A400-Disco-s%C3%B3lido/dp/B01N0TQPQB)
   - [5 x Kingston A400 SSD Disk 240GB](https://www.amazon.es/Kingston-SSD-A400-Disco-s%C3%B3lido/dp/B01N5IB20Q)
   - [6 x Startech USB 3.0 to SATA III Adapter](https://www.amazon.es/Startech-USB3S2SAT3CB-Adaptador-3-0-2-5-negro/dp/B00HJZJI84) for connecting SSD disk to USB 3.0 ports.
@@ -70,10 +69,10 @@ For building the cluster, using bare metal servers instead of virtual machines, 
   - [1 x ANKER USB Charging Hub](https://www.amazon.es/Anker-Cargador-USB-6-Puertos/dp/B00PTLSH9G/). 6 port USB power supply (60 w and max 12 A)
   - [7 x USB-C charging cable with ON/OFF switch](https://www.aliexpress.com/item/33049198504.html).
 
-
 #### x86-based old refurbished mini PC
 
 - [HP Elitedesk 800 G3 Desktop mini PC](https://support.hp.com/us-en/product/hp-elitedesk-800-65w-g3-desktop-mini-pc/15497277/manuals)
+
   - CPU: Intel i5 6500T. 4 cores(4 threads) at 2.5 GHz
   - RAM: 16 GB
   - Disk: Integrated SSD disk (SATA or NVMe)
@@ -82,9 +81,9 @@ For building the cluster, using bare metal servers instead of virtual machines, 
 
   I have used the following hardware components
 
-    - [3 x HP EliteDesk 800 G3 i5 6500T 2,5 GHz, 8 GB de RAM, SSD de 256 GB](https://www.amazon.es/HP-EliteDesk-800-G3-reacondicionado/dp/B09TL2N2M8) as x86 cluster nodes.
-      One of the nodes `node-hp-2` has a SSD M.2 NVMe 256 GB. The other, `node-hp-1` has a SATA SSD Kingston 240 GB
-    - [3 x Crucial RAM 8GB DDR4 2400MHz CL17 Memoria](https://www.amazon.es/dp/B01BIWKP58) as RAM expansion for mini PCs. Total memmory 16 GB 
+  - [3 x HP EliteDesk 800 G3 i5 6500T 2,5 GHz, 8 GB de RAM, SSD de 256 GB](https://www.amazon.es/HP-EliteDesk-800-G3-reacondicionado/dp/B09TL2N2M8) as x86 cluster nodes.
+    One of the nodes `node-hp-2` has a SSD M.2 NVMe 256 GB. The other, `node-hp-1` has a SATA SSD Kingston 240 GB
+  - [3 x Crucial RAM 8GB DDR4 2400MHz CL17 Memoria](https://www.amazon.es/dp/B01BIWKP58) as RAM expansion for mini PCs. Total memmory 16 GB
 
 {{site.data.alerts.note}}
 
@@ -101,7 +100,6 @@ The overall cost to build a Raspberry Pi-5-based node for the kubernetes homelab
 As alternative a overall price of refurbished mini PC, intel i5, 16GB RAM + 256 GB NVME disk + power supply, [aprox 150], [base model](https://www.amazon.es/HP-EliteDesk-800-G3-reacondicionado/dp/B09TL2N2M8/)(aprox 130 €) + 8GB RAM expansion(aprox. 20 €).
 
 {{site.data.alerts.end}}
-
 
 ### Networking
 
@@ -129,7 +127,7 @@ For networking, I have used the following hardware components:
 
 - [1 x GL-Inet Slate Plus (GL-A1300)](https://www.amazon.es/GL-iNet-GL-A1300-Slate-Enrutador-inal%C3%A1mbrico/dp/B0B4ZSR2PX), wifi router/firewall.
 
-- [10 x Ethernet Cable](https://www.aliexpress.com/item/32821735352.html). Flat Cat 6,  15 cm length
+- [10 x Ethernet Cable](https://www.aliexpress.com/item/32821735352.html). Flat Cat 6, 15 cm length
 
 ## Raspberry PI Storage
 
@@ -140,7 +138,6 @@ x86 mini PCs has their own integrated disk (SSD disk or NVME). For Raspberry PIs
 
 ![pi-cluster-rpi4-storage](/assets/img/pi-cluster-rpi4-storage.png)
 
-
 ### Dedicated Disks
 
 `gateway` uses local storage attached directly to USB 3.0 port (Flash Disk) for hosting the OS, avoiding the use of less reliable SDCards.
@@ -149,13 +146,12 @@ For having better cluster performance all Raspberry PI nodes will use SSDs attac
 
 ![pi-cluster-HW-2.0](/assets/img/pi-cluster-2.0.png)
 
-
 ### Centralized SAN
 
 A cheaper alternative architecture, instead of using dedicated SSD disks for each cluster node, one single SSD disk can be used for configuring a SAN service.
 
 Each raspberry pi in the cluster node can use local storage attached directly to USB 3.0 port (USB Flash Disk) for hosting the OS, avoiding the use of less reliable SDCards.
- 
+
 As additional storage (required by distributed storage solution), iSCSI SAN can be deployed instead of attaching an additional USB Flash Disks to each of the nodes.
 
 A SAN (Storage Access Network) can be configured using one of the nodes, `san` node, as iSCSI Storage Server, providing additional storage (LUNs) to the rest of the Raspberry PI nodes.
@@ -167,7 +163,6 @@ As storage device, a SSD disk was attached to `san` node. This SSD disk was used
 This alternative setup is worth it from educational point of view, to test the different storage options for RaspberryPI and to learn about iSCSI configuration and deployment on bare-metal environments. As well it can be used as a cheaper solution for deploying centralized storage solution.
 
 See [SAN configuration document](/docs/san/) further details about the configuration of SAN using a Raspeberry PIs, `san`, as iSCSI Target exposing LUNs to cluster nodes.
-
 
 ### Raspberry PI Storage benchmarking
 
@@ -183,7 +178,7 @@ Different Raspberry PI storage configurations have been tested:
 
 #### Testing procedure
 
-Sequential and random I/O tests have been executed with the different storage configurations. 
+Sequential and random I/O tests have been executed with the different storage configurations.
 
 For the testing a tweaked version of the script provided by James A. Chambers (https://jamesachambers.com/) has been used
 
@@ -193,12 +188,11 @@ Tests execution has been automated with Ansible. See `pi-storage-benchmark` [rep
 
 Test sequential I/O with `dd` and `hdparam` tools. `hdparm` can be installed through `sudo apt install -y hdparm`
 
-
 - Read speed (Use `hdparm` command)
-    
+
   ```shell
   sudo hdparm -t /dev/sda1
-    
+
   Timing buffered disk reads:  72 MB in  3.05 seconds =  23.59 MB/sec
 
   sudo hdparm -T /dev/sda1
@@ -240,13 +234,13 @@ Tools used `fio` and `iozone`.
 
   ```shell
   sudo fio --minimal --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=80M --readwrite=randwrite
-   ```
+  ```
 
   Random Read
 
   ```shell
   sudo fio --minimal --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=80M --readwrite=randread
-   ```
+  ```
 
 - Check random I/O with `iozone`
 
@@ -272,7 +266,6 @@ Average-metrics obtained during the tests removing the worst and the best result
 
   ![sequential_i_o](/assets/img/benchmarking_sequential_i_o.png)
 
-
 - Random I/O (FIO)
 
   ![random_i_o](/assets/img/benchmarking_random_i_o.png)
@@ -280,7 +273,6 @@ Average-metrics obtained during the tests removing the worst and the best result
 - Random I/O (IOZONE)
 
   ![random_i_o_iozone](/assets/img/benchmarking_random_i_o_iozone.png)
-
 
 - Global Score
 
@@ -293,5 +285,3 @@ Conclusions:
 3. `FlashDisk` and `iSCSI` get similar performance metrics
 
 The performace obtained using local attached USB3.0 Flash Disk is quite similar to the one obtained using iSCSI with RaspberryPI+SSD Disk as central storage.
-
-

@@ -10,20 +10,19 @@ last_modified_at: "09-09-2024"
 In a Kubernetes cluster, Cilium can be used as,
 
 - High performance CNI
-  
+
   See details in [Cilium Use-case: Layer 4 Load Balancer](https://cilium.io/use-cases/load-balancer/)
 
-
 - Kube-proxy replacement
-  
+
   Kube-proxy is a component running in the nodes of the cluster which provides load-balancing traffic targeted to kubernetes services (via Cluster IPs and Node Ports), routing the traffic to the proper backend pods.
-  
+
   Cilium can be used to replace kube-proxy component, replacing kube-proxy's iptables based routing by [eBFP](https://ebpf.io/) technology.
 
   See details in [Cilium Use-case: Kube-proxy Replacement](https://cilium.io/use-cases/kube-proxy/)
 
 - Layer 4 Load Balancer
- 
+
   Software based load-balancer for the kubernetes cluster which is able to announce the routes to kubernetes services using BGP or L2 protocols
 
   Cilium's LB IPAM is a feature that allows Cilium to assign IP addresses to Kubernetes Services of type LoadBalancer.
@@ -41,12 +40,11 @@ For further information about basic networking in Kuberenetes check out ["Kubern
 In the Pi Cluster, Cilium can be used as a replacement for the following networking components of in the cluster
 
 - Flannel CNI, installed by default by K3S, which uses an VXLAN overlay as networking protocol. Cilium CNI networking using eBPF technology.
-  
+
 - Kube-proxy, so eBPF based can be used to increase performance.
 
-- Metal-LB, load balancer. MetalLB was used for LoadBalancer IP Address Management (LB-IPAM) and L2 announcements for Address Resolution Protocol (ARP) requests over the local network. 
+- Metal-LB, load balancer. MetalLB was used for LoadBalancer IP Address Management (LB-IPAM) and L2 announcements for Address Resolution Protocol (ARP) requests over the local network.
   Cilium 1.13 introduced LB-IPAM support and 1.14 added L2 announcement capabilities, making possible to replace MetalLB in my homelab. My homelab does not have a BGP router and so new L2 aware functionality can be used.
-
 
 ## K3S installation
 
@@ -57,7 +55,6 @@ By default K3s install and configure basic Kubernetes networking packages:
 - [Traefik](https://traefik.io/) as ingress controller
 - [Klipper Load Balancer](https://github.com/k3s-io/klipper-lb) as embedded Service Load Balancer
 
-
 K3S master nodes need to be installed with the following additional options:
 
 - `--flannel-backend=none`: to disable Fannel instalation
@@ -66,7 +63,6 @@ K3S master nodes need to be installed with the following additional options:
 - `--disable servicelb` to disable default service load balancer installed by K3S (Klipper Load Balancer). Cilium will be used instead.
 
 See complete intallation procedure and other configuration settings in ["K3S Installation"](/docs/k3s-installation/)
-
 
 {{site.data.alerts.note}}
 
@@ -80,14 +76,15 @@ Installation using `Helm` (Release 3):
 
 - Step 1: Add Cilium Helm repository:
 
-    ```shell
-    helm repo add cilium https://helm.cilium.io/
-    ```
+  ```shell
+  helm repo add cilium https://helm.cilium.io/
+  ```
+
 - Step 2: Fetch the latest charts from the repository:
 
-    ```shell
-    helm repo update
-    ```
+  ```shell
+  helm repo update
+  ```
 
 - Step 3: Create helm values file `cilium-values.yml`
 
@@ -125,7 +122,7 @@ Installation using `Helm` (Release 3):
   externalIPs:
     enabled: true
 
-  # Increase the k8s api client rate limit to avoid being limited due to increased API usage 
+  # Increase the k8s api client rate limit to avoid being limited due to increased API usage
   k8sClientRateLimit:
     qps: 50
     burst: 200
@@ -133,18 +130,17 @@ Installation using `Helm` (Release 3):
 
 - Step 4: Install Cilium in kube-system namespace
 
-    ```shell
-    helm install cilium cilium/cilium --namespace kube-system -f cilium-values.yaml
-    ```
+  ```shell
+  helm install cilium cilium/cilium --namespace kube-system -f cilium-values.yaml
+  ```
 
 - Step 5: Confirm that the deployment succeeded, run:
 
-    ```shell
-    kubectl -n kube-system get pod
-    ```
+  ```shell
+  kubectl -n kube-system get pod
+  ```
 
 ### Helm chart configuration details
-
 
 - Configure Cilium Operator, to run on master nodes and roll out automatically when configuration is updated
 
@@ -176,7 +172,7 @@ Installation using `Helm` (Release 3):
   Further details about kube-proxy replacement mode in [Cilium doc](https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/)
 
 - Cilium LB-IPAM configuration
-  
+
   ```yaml
   l2announcements:
     enabled: true
@@ -194,17 +190,18 @@ Installation using `Helm` (Release 3):
   k8sServiceHost: 127.0.0.1
   k8sServicePort: 6444
   ```
+
   This variables should point to Kuberentes API listening in a Virtual IP configured in `haproxy` (10.0.0.11) and port 6443.
   K3s has an API server proxy listening in 127.0.0.1:6444 on all nodes in the cluster, so it is not needed to point to external virtual IP address.
 
-
 - Increase the k8s api client rate limit to avoid being limited due to increased API usage
-  
-  ```yaml 
+
+  ```yaml
   k8sClientRateLimit:
     qps: 50
     burst: 200
   ```
+
   The leader election process, used by L2 annoucements, continually generates API traffic, so API request. The default client rate limit is 5 QPS (query per second) with allowed bursts up to 10 QPS. this default limit is quickly reached when utilizing L2 announcements and thus users should size the client rate limit accordingly.
 
   See details in [Cilium L2 announcements documentation](https://docs.cilium.io/en/latest/network/l2-announcements/#sizing-client-rate-limit)
@@ -268,7 +265,6 @@ Finally, when installing kube-prometheus-stack helm chart, installation of the C
     enabled: true
     annotations:
       grafana_folder: Cilium
-
   ```
 
 - Enable Huble UI
@@ -336,7 +332,7 @@ Finally, when installing kube-prometheus-stack helm chart, installation of the C
         hosts: ["hubble.picluster.ricsanfre.com"]
         tls:
           - hosts:
-            - hubble.picluster.ricsanfre.com
+              - hubble.picluster.ricsanfre.com
             secretName: hubble-tls
   ```
 
@@ -347,35 +343,35 @@ See further details in [Cilium Monitoring and Metrics](https://docs.cilium.io/en
 - Step 1: Configure IP addess pool and the announcement method (L2 configuration)
 
   Create the following manifest file: `cilium-config.yaml`
-    ```yml
-    ---
-    apiVersion: "cilium.io/v2alpha1"
-    kind: CiliumLoadBalancerIPPool
-    metadata:
-      name: "first-pool"
-      namespace: kube-system
-    spec:
-      blocks:
-        - start: "10.0.0.100"
-          stop: "10.0.0.200"
 
-    ---
-    apiVersion: cilium.io/v2alpha1
-    kind: CiliumL2AnnouncementPolicy
-    metadata:
-      name: default-l2-announcement-policy
-      namespace: kube-system
-    spec:
-      externalIPs: true
-      loadBalancerIPs: true
+  ```yml
+  ---
+  apiVersion: "cilium.io/v2alpha1"
+  kind: CiliumLoadBalancerIPPool
+  metadata:
+    name: "first-pool"
+    namespace: kube-system
+  spec:
+    blocks:
+      - start: "10.0.0.100"
+        stop: "10.0.0.200"
 
-    ```
-   
-   Apply the manifest file
+  ---
+  apiVersion: cilium.io/v2alpha1
+  kind: CiliumL2AnnouncementPolicy
+  metadata:
+    name: default-l2-announcement-policy
+    namespace: kube-system
+  spec:
+    externalIPs: true
+    loadBalancerIPs: true
+  ```
 
-   ```shell
-   kubectl apply -f cilium-config.yaml
-   ```
+  Apply the manifest file
+
+  ```shell
+  kubectl apply -f cilium-config.yaml
+  ```
 
 #### Configuring LoadBalancer Services
 
@@ -383,11 +379,9 @@ See further details in [Cilium Monitoring and Metrics](https://docs.cilium.io/en
 Service's `.spec.loadBalancerIP` was the method used to specify the external IP, from load balancer Ip Pool, to be assigned to the service. It has been deprecated since [Kubernetes v1.24](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.24.md) and might be removed in a future release. It is recommended to use implementation-specific annotations when available
 {{site.data.alerts.end}}
 
-
 Services can request specific IPs. The legacy way of doing so is via `.spec.loadBalancerIP` which takes a single IP address. This method has been deprecated in k8s v1.24.
 
 With Cilium LB IPAM, the way of requesting specific IPs is to use annotation, `io.cilium/lb-ipam-ips`. This annotation takes a comma-separated list of IP addresses, allowing for multiple IPs to be requested at once.
-
 
 ```yaml
 apiVersion: v1
@@ -402,27 +396,25 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 1234
+    - port: 1234
 ```
 
 See further details in [Cilium LB IPAM documentation](https://docs.cilium.io/en/stable/network/lb-ipam/).
-
 
 ## Cilium and ArgoCD
 
 ArgoCD automatic synchornization and pruning of resources might might delete some of the Resources automatically created by Cilium. This is a well-known behaviour of ArgoCD. Check ["Argocd installation"](/docs/argocd/) document.
 
-
-ArgoCD need to be configured to exclude the synchronization of  CiliumIdentity resources:
+ArgoCD need to be configured to exclude the synchronization of CiliumIdentity resources:
 
 ```yaml
 resource.exclusions: |
- - apiGroups:
-     - cilium.io
-   kinds:
-     - CiliumIdentity
-   clusters:
-     - "*"
+  - apiGroups:
+      - cilium.io
+    kinds:
+      - CiliumIdentity
+    clusters:
+      - "*"
 ```
 
 Also other issues related to Hubble's rotation of certificates need to be considere and add the following configuration to Cilium's ArgoCd Application resource
@@ -433,27 +425,24 @@ ignoreDifferences:
     kind: ConfigMap
     name: hubble-ca-cert
     jsonPointers:
-    - /data/ca.crt
+      - /data/ca.crt
   - group: ""
     kind: Secret
     name: hubble-relay-client-certs
     jsonPointers:
-    - /data/ca.crt
-    - /data/tls.crt
-    - /data/tls.key
+      - /data/ca.crt
+      - /data/tls.crt
+      - /data/tls.key
   - group: ""
     kind: Secret
     name: hubble-server-certs
     jsonPointers:
-    - /data/ca.crt
-    - /data/tls.crt
-    - /data/tls.key
+      - /data/ca.crt
+      - /data/tls.crt
+      - /data/tls.key
 ```
 
-
 See further details in Cilium documentation: [Troubleshooting Cilium deployed with Argo CD](https://docs.cilium.io/en/latest/configuration/argocd-issues/).
-
-
 
 ## K3S Uninstallation
 

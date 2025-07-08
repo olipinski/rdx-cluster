@@ -3,20 +3,18 @@ title: Service Mesh (Istio)
 permalink: /docs/istio/
 description: How to deploy service-mesh architecture based on Istio. Adding observability, traffic management and security to our Kubernetes cluster.
 last_modified_at: "07-03-2025"
-
 ---
-
 
 ## Why a Service Mesh
 
 Introduce Service Mesh architecture to add observability, traffic management, and security capabilities to internal communications within the cluster.
-
 
 {{site.data.alerts.important}}
 
 I have been testing and using [Linkerd](https://linkerd.io/) as Service Mesh solution for my cluster since release 1.3 (April 2022). See ["Service Mesh (Linkerd)"](/docs/service-mesh/) document.
 
 Main reasons for selecting Linkerd over Istio were:
+
 - ARM64 architecture support. Istio did not support ARM architectures at that time.
 - Better performance and reduced memory/cpu footprint. Linkerd Proxy vs Istio's Envoy Proxy
 
@@ -30,7 +28,7 @@ Since the initial evaluation was made:
 
 For those reasons, Service Mesh solution in the cluster has been migrated to Istio since release 1.9.
 
-{{site.data.alerts.end}} 
+{{site.data.alerts.end}}
 
 ## Istio vs Linkerd
 
@@ -56,16 +54,15 @@ For those reasons, Service Mesh solution in the cluster has been migrated to Ist
 
   Preliminary comparison, made by [solo-io](https://www.solo.io/), main contributor to Istio's new Ambient mode, shows reduced Istio footprint and better performance results than Likerd. See comparison analysis ["Istio in Ambient Mode - Doing More for Less!"](https://github.com/solo-io/service-mesh-for-less-blog)
 
-
 ## Istio Architecture
 
 An Istio service mesh is logically split into a data plane and a control plane.
-
 
 - The **data plane** is the set of proxies that mediate and control all network communication between microservices. They also collect and report telemetry on all mesh traffic.
 - The **control plane** manages and configures the proxies in the data plane.
 
 Istio supports two main data plane modes:
+
 - **sidecar mode**, which deploys an Envoy proxy along with each pod that you start in your cluster, or running alongside services running on VMs.
   sidecar mode is similar to the one providers by other Service Mesh solutions like linkerd.
 
@@ -80,16 +77,13 @@ See [Istio ambient mode beta release announcement](https://www.cncf.io/blog/2024
 
 {{site.data.alerts.end}}
 
-
 ## Istio Sidecar Mode
 
 ![istio-sidecar-architecture](/assets/img/istio-architecture-sidecar.png)
 
 In sidecar mode, Istio implements its features using a per-pod L7 proxy,[Envoy proxy](https://www.envoyproxy.io/). This is a transparent proxy running as sidecar container within the pods. Proxies automatically intercept Pod's inbound/outbound TCP traffic and add transparantly encryption (mTLS), Later-7 load balancing, routing, retries, telemetry, etc.
 
-
 ## Istio Ambient Mode
-
 
 ![istio-sidecar-architecture](/assets/img/istio-architecture-ambient-L4.png)
 
@@ -97,17 +91,16 @@ In ambient mode, Istio deploys a shared agent, running on each node in the Kuber
 
 Ztunnels enable the core functionality of a service mesh: zero trust. A secure overlay is created when ambient is enabled for a namespace. It provides workloads with mTLS, telemetry, authentication, and L4 authorization, without terminating or parsing HTTP.
 
-After ambient mesh is enabled and a secure overlay is created, a namespace can be configured to utilize L7 features. 
+After ambient mesh is enabled and a secure overlay is created, a namespace can be configured to utilize L7 features.
 
 Namespaces operating in this mode use one or more Envoy-based waypoint proxies to handle L7 processing for workloads in that namespace. Istio’s control plane configures the ztunnels in the cluster to pass all traffic that requires L7 processing through the waypoint proxy. Importantly, from a Kubernetes perspective, waypoint proxies are just regular pods that can be auto-scaled like any other Kubernetes deployment.
 
 ![istio-sidecar-architecture](/assets/img/istio-architecture-ambient-L7.png)
 
-
 In ambient mode, Istio implements its features using two different proxies, a per-node Layer 4 (L4) proxy, ztunnel, and optionally a per-namespace Layer 7 (L7) proxy, waypoint proxy.
 
-
 - `ztunnel` proxy, providing basic L4 secured connectivity and authenticating workloads within the mesh (i.e.:mTLS).
+
   - L4 routing
   - Encryption and authentication via mTLS
   - L4 telemetry (metrics, logs)
@@ -118,15 +111,13 @@ In ambient mode, Istio implements its features using two different proxies, a pe
 
 See further details in [Istio Ambient Documentation](https://istio.io/latest/docs/ambient/)
 
-
 ## Istio Installation
-
 
 ### Cilium CNI configuration
 
 The main goal of Cilium configuration is to ensure that traffic redirected to Istio’s sidecar proxies (sidecar mode) or node proxy (ambient mode) is not disrupted. That disruptions can happen when enabling Cilium’s kubeProxyReplacement which uses socket based load balancing inside a Pod. SocketLB need to be disabled for non-root namespaces (helm chart option `socketLB.hostNamespacesOnly=true`).
 
-Kube-proxy-replacement option is mandatory when using L2 announcing feature, which is used in Pi Cluster. 
+Kube-proxy-replacement option is mandatory when using L2 announcing feature, which is used in Pi Cluster.
 
 Also Istio uses a CNI plugin to implement functionality for both sidecar and ambient modes. To ensure that Cilium does not interfere with other CNI plugins on the node, it is important to set the cni-exclusive parameter to false.
 
@@ -138,11 +129,10 @@ The following options need to be added to Cilium helm values.yaml.
 # Disable socket lb for non-root ns. This is used to enable Istio routing rules
 socketLB:
   hostNamespaceOnly: true
-# Istio uses a CNI plugin to implement functionality for both sidecar and ambient modes. 
+# Istio uses a CNI plugin to implement functionality for both sidecar and ambient modes.
 # To ensure that Cilium does not interfere with other CNI plugins on the node,
 cni:
   exclusive: false
-
 ```
 
 Due to how Cilium manages node identity and internally allow-lists node-level health probes to pods, applying default-DENY NetworkPolicy in a Cilium CNI install underlying Istio in ambient mode, will cause kubelet health probes (which are by-default exempted from NetworkPolicy enforcement by Cilium) to be blocked.
@@ -158,9 +148,10 @@ spec:
   description: "Allows SNAT-ed kubelet health check probes into ambient pods"
   endpointSelector: {}
   ingress:
-  - fromCIDR:
-    - "169.254.7.127/32"
+    - fromCIDR:
+        - "169.254.7.127/32"
 ```
+
 See [istio issue #49277](https://github.com/istio/istio/issues/49277) for more details.
 
 {{site.data.alerts.important}}
@@ -168,7 +159,6 @@ This policy override is _not_ required unless you already have other default-den
 {{site.data.alerts.end}}
 
 See further details in [Cilium Istio Configuration](https://docs.cilium.io/en/latest/network/servicemesh/istio/) and [Istio Cilium CNI Requirements](https://istio.io/latest/docs/ambient/install/platform-prerequisites/#cilium)
-
 
 ### istioctl installation
 
@@ -186,10 +176,7 @@ Add the istioctl client to your path, on a macOS or Linux system:
 export PATH=$HOME/.istioctl/bin:$PATH
 ```
 
-
 ### Istio control plane installation
-
-
 
 Installation using `Helm` (Release 3):
 
@@ -198,11 +185,13 @@ Installation using `Helm` (Release 3):
   ```shell
   helm repo add istio https://istio-release.storage.googleapis.com/charts
   ```
+
 - Step2: Fetch the latest charts from the repository:
 
   ```shell
   helm repo update
   ```
+
 - Step 3: Create namespace
 
   ```shell
@@ -233,7 +222,6 @@ Installation using `Helm` (Release 3):
   helm install ztunnel istio/ztunnel -n istio-system
   ```
 
-
 - Step 6: Confirm that the deployment succeeded, run:
 
   ```shell
@@ -241,7 +229,6 @@ Installation using `Helm` (Release 3):
   ```
 
 https://istio.io/latest/docs/ambient/install/helm-installation/
-
 
 ### Istio Gateway installation
 
@@ -271,13 +258,11 @@ ztunnel proxies also generate by default operational and access logs.
 
 See further details in [Istio Observability Logs](https://istio.io/latest/docs/tasks/observability/logs/)
 
-
 #### Traces
 
 Istio leverages Envoy's proxy distributed tracing capabilities. Since Istio Ambient mode is only using Envoy proxy for waypoint proxy.
 
 By default in Ambient mode, using Istio's [book-info](https://istio.io/latest/docs/examples/bookinfo/) testing application, traces are only generated from istio-gateway. No Spans are generated by different microservices since there is no any Envoy Proxy exporting traces.
-
 
 To enable Open Telemetry traces to be generated by Istio ingress gateway and other proxies:
 
@@ -286,16 +271,16 @@ To enable Open Telemetry traces to be generated by Istio ingress gateway and oth
   Add following configuration to istiod helm chart `values.yaml`
 
   ```yaml
-  meshConfig:  
+  meshConfig:
     # Enabling distributed traces
     enableTracing: true
     extensionProviders:
-    - name: opentelemetry
-      opentelemetry:
-        port: 4317
-        service: tempo-distributor.tempo.svc.cluster.local
-        resource_detectors:
-          environment: {}
+      - name: opentelemetry
+        opentelemetry:
+          port: 4317
+          service: tempo-distributor.tempo.svc.cluster.local
+          resource_detectors:
+            environment: {}
   ```
 
   That configuration enables globallly OpenTelemetry provider using Grafana's Tempo Open Telemetry collector.
@@ -310,27 +295,24 @@ To enable Open Telemetry traces to be generated by Istio ingress gateway and oth
     namespace: istio-system
   spec:
     tracing:
-    - providers:
-      - name: opentelemetry
-      randomSamplingPercentage: 100
-      customTags:
-        "my-attribute":
-          literal:
-            value: "default-value"  
+      - providers:
+          - name: opentelemetry
+        randomSamplingPercentage: 100
+        customTags:
+          "my-attribute":
+            literal:
+              value: "default-value"
   ```
-  
-  A specific configuration, per namespace or workload can be also configured. 
+
+  A specific configuration, per namespace or workload can be also configured.
 
   See details in [Istio's Telemetry API doc](https://istio.io/latest/docs/tasks/observability/telemetry/)
 
-
 See furhter details in [Istio Distributed Tracing](https://istio.io/latest/docs/tasks/observability/distributed-tracing/)
-
 
 #### Metrics (Prometheus configuration)
 
 Metrics from control plane (istiod) and proxies (ztunnel) can be extracted from Prometheus sever:
-
 
 - Create following manifest file to create Prometheus Operator monitoring resources
 
@@ -348,16 +330,15 @@ Metrics from control plane (istiod) and proxies (ztunnel) can be extracted from 
     targetLabels: [app]
     selector:
       matchExpressions:
-      - {key: istio, operator: In, values: [pilot]}
+        - { key: istio, operator: In, values: [pilot] }
     namespaceSelector:
       matchNames:
         - istio-system
     endpoints:
-    - port: http-monitoring
-      interval: 60s
-
+      - port: http-monitoring
+        interval: 60s
   ```
-  
+
   ```yaml
   apiVersion: monitoring.coreos.com/v1
   kind: PodMonitor
@@ -376,10 +357,9 @@ Metrics from control plane (istiod) and proxies (ztunnel) can be extracted from 
         - istio-system
     jobLabel: ztunnel-proxy
     podMetricsEndpoints:
-    - path: /stats/prometheus
-      interval: 60s
+      - path: /stats/prometheus
+        interval: 60s
   ```
-
 
 ## Kiali installation
 
@@ -396,6 +376,7 @@ Installation using `Helm` (Release 3):
   ```shell
   helm repo add kiali https://istio-release.storage.googleapis.com/charts
   ```
+
 - Step 2: Fetch the latest charts from the repository:
 
   ```shell
@@ -409,63 +390,63 @@ Installation using `Helm` (Release 3):
     create: true
     namespace: istio-system
     spec:
-        auth:
-          strategy: "anonymous"
-        external_services:
-          prometheus:
-            # Prometheus service
-            url: "http://kube-prometheus-stack-prometheus.monitoring:9090/"
-          grafana:
-            enabled: true
-            # Grafana service name is "grafana" and is in the "monitoring" namespace.
-            in_cluster_url: 'http://grafana.monitoring.svc.cluster.local/grafana/'
-            # Public facing URL of Grafana
-            url: 'https://monitoring.picluster.ricsanfre.com/grafana/'
-            auth:
-              # Use same OAuth2.0 token used for accesing Kiali
-              type: bearer
-              use_kiali_token: true
-          tracing:
-            # Enabled by default. Kiali will anyway fallback to disabled if
-            # Tempo is unreachable.
-            enabled: true
-            # Tempo service name is "query-frontend" and is in the "tempo" namespace.
-            in_cluster_url: "http://tempo-query-frontend.tempo.svc.cluster.local:3100/"
-            provider: "tempo"
-            tempo_config:
-              org_id: "1"
-              datasource_uid: "a8d2ef1c-d31c-4de5-a90b-e7bc5252cd00"
-            # Use grpc to speed up the download of metrics
-            use_grpc: true
-            grpc_port: 9095
-        deployment:
-          ingress:
-            class_name: "nginx"
-            enabled: true
-            override_yaml:
-              metadata:
-                annotations:
-                  # Enable cert-manager to create automatically the SSL certificate and store in Secret
-                  # Possible Cluster-Issuer values:
-                  #   * 'letsencrypt-issuer' (valid TLS certificate using IONOS API)
-                  #   * 'ca-issuer' (CA-signed certificate, not valid)
-                  cert-manager.io/cluster-issuer: letsencrypt-issuer
-                  cert-manager.io/common-name: kiali.picluster.ricsanfre.com
-              spec:
-                rules:
+      auth:
+        strategy: "anonymous"
+      external_services:
+        prometheus:
+          # Prometheus service
+          url: "http://kube-prometheus-stack-prometheus.monitoring:9090/"
+        grafana:
+          enabled: true
+          # Grafana service name is "grafana" and is in the "monitoring" namespace.
+          in_cluster_url: "http://grafana.monitoring.svc.cluster.local/grafana/"
+          # Public facing URL of Grafana
+          url: "https://monitoring.picluster.ricsanfre.com/grafana/"
+          auth:
+            # Use same OAuth2.0 token used for accesing Kiali
+            type: bearer
+            use_kiali_token: true
+        tracing:
+          # Enabled by default. Kiali will anyway fallback to disabled if
+          # Tempo is unreachable.
+          enabled: true
+          # Tempo service name is "query-frontend" and is in the "tempo" namespace.
+          in_cluster_url: "http://tempo-query-frontend.tempo.svc.cluster.local:3100/"
+          provider: "tempo"
+          tempo_config:
+            org_id: "1"
+            datasource_uid: "a8d2ef1c-d31c-4de5-a90b-e7bc5252cd00"
+          # Use grpc to speed up the download of metrics
+          use_grpc: true
+          grpc_port: 9095
+      deployment:
+        ingress:
+          class_name: "nginx"
+          enabled: true
+          override_yaml:
+            metadata:
+              annotations:
+                # Enable cert-manager to create automatically the SSL certificate and store in Secret
+                # Possible Cluster-Issuer values:
+                #   * 'letsencrypt-issuer' (valid TLS certificate using IONOS API)
+                #   * 'ca-issuer' (CA-signed certificate, not valid)
+                cert-manager.io/cluster-issuer: letsencrypt-issuer
+                cert-manager.io/common-name: kiali.picluster.ricsanfre.com
+            spec:
+              rules:
                 - host: kiali.picluster.ricsanfre.com
                   http:
                     paths:
-                    - backend:
-                        service:
-                          name: kiali
-                          port:
-                            number: 20001
-                      path: /
-                      pathType: Prefix
-                tls:
+                      - backend:
+                          service:
+                            name: kiali
+                            port:
+                              number: 20001
+                        path: /
+                        pathType: Prefix
+              tls:
                 - hosts:
-                  - kiali.picluster.ricsanfre.com
+                    - kiali.picluster.ricsanfre.com
                   secretName: kiali-tls
   ```
 
@@ -489,7 +470,6 @@ Installation using `Helm` (Release 3):
   helm install kiali-operator kiali/kiali-operator --namespace istio-system -f kiali-operator-values.yaml
   ```
 
-
 ### Kiali OpenID Authentication configuration
 
 Kiali can be configured to use as authentication mechanism Open Id Connect server.
@@ -497,7 +477,6 @@ Kiali can be configured to use as authentication mechanism Open Id Connect serve
 Kiali only supports the authorization code flow of the OpenId Connect spec.
 
 See further details in [Kiali OpenID Connect Strategy](https://kiali.io/docs/configuration/authentication/openid/).
-
 
 - Step 1: Create a new OIDC client in 'picluster' Keycloak realm by navigating to:
   Clients -> Create client
@@ -540,6 +519,7 @@ See further details in [Kiali OpenID Connect Strategy](https://kiali.io/docs/con
 
   kubectl create secret generic kiali --from-literal="oidc-secret=$CLIENT_SECRET" -n istio-system
   ```
+
 - Step 4: Configure's kiali openId Connect authentication
 
   Add following to Kiali's helm chart operator values.yaml.
@@ -575,11 +555,11 @@ See further details in [Kiali OpenID Connect Strategy](https://kiali.io/docs/con
     kind: Kustomization
     namespace: book-info
     resources:
-    - ns.yaml
-      # https://istio.io/latest/docs/examples/bookinfo/
-    - https://raw.githubusercontent.com/istio/istio/release-1.24/samples/bookinfo/platform/kube/bookinfo.yaml
-    - https://raw.githubusercontent.com/istio/istio/release-1.24/samples/bookinfo/platform/kube/bookinfo-versions.yaml
-    - https://raw.githubusercontent.com/istio/istio/release-1.24/samples/bookinfo/networking/bookinfo-gateway.yaml
+      - ns.yaml
+        # https://istio.io/latest/docs/examples/bookinfo/
+      - https://raw.githubusercontent.com/istio/istio/release-1.24/samples/bookinfo/platform/kube/bookinfo.yaml
+      - https://raw.githubusercontent.com/istio/istio/release-1.24/samples/bookinfo/platform/kube/bookinfo-versions.yaml
+      - https://raw.githubusercontent.com/istio/istio/release-1.24/samples/bookinfo/networking/bookinfo-gateway.yaml
     ```
 
   - Create book-info-app/ns.yaml file
@@ -591,33 +571,31 @@ See further details in [Kiali OpenID Connect Strategy](https://kiali.io/docs/con
       name: book-info
     ```
 
-
 - Deploy book info app
 
   ```shell
-  kubectl kustomize book-info-app | kubectl apply -f -  
+  kubectl kustomize book-info-app | kubectl apply -f -
   ```
 
 - Label namespace to enable automatic sidecar injection
 
   See [Ambient Mode - Add workloads to the mesh"](https://istio.io/latest/docs/ambient/usage/add-workloads/)
-  
+
   ```shell
   kubectl label namespace book-info istio.io/dataplane-mode=ambient
   ```
 
   Ambient mode can be seamlessly enabled (or disabled) completely transparently as far as the application pods are concerned. Unlike the sidecar data plane mode, there is no need to restart applications to add them to the mesh, and they will not show as having an extra container deployed in their pod.
 
+- Validate configuration
 
- - Validate configuration
-
-   ```shell
-   istioctl validate
-   ```
+  ```shell
+  istioctl validate
+  ```
 
 ## References
 
-- Install istio using Helm chart: https://istio.io/latest/docs/setup/install/helm/ 
+- Install istio using Helm chart: https://istio.io/latest/docs/setup/install/helm/
 - Istio getting started: https://istio.io/latest/docs/setup/getting-started/
 - Kiali: https://kiali.io/
 - NGINX Ingress vs Istio gateway: https://imesh.ai/blog/kubernetes-nginx-ingress-vs-istio-ingress-gateway/

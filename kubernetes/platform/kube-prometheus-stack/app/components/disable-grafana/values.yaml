@@ -1,3 +1,4 @@
+---
 # kube-prometheus-stack helm values (disable-grafana)
 # Disabling instalation of Grafana sub-chart
 grafana:

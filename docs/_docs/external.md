@@ -5,7 +5,7 @@ description: How to configure a Raspberry Pi to host external services needed in
 last_modified_at: "08-12-2024"
 ---
 
-One of the Raspeberry Pi (4GB), `node1`, is used to run external services like authoritative DNS, PXE Server, Vault or external Kuberentes API Load Balancer (HA Proxy). 
+One of the Raspeberry Pi (4GB), `node1`, is used to run external services like authoritative DNS, PXE Server, Vault or external Kuberentes API Load Balancer (HA Proxy).
 
 In case of deployment using centralized SAN storage architectural option, `node1` is providing SAN services also.
 
@@ -13,14 +13,12 @@ This Raspberry Pi (gateway), is connected to my home network using its WIFI inte
 
 In order to ease the automation with Ansible, OS installed on **gateway** is the same as the one installed in the nodes of the cluster: Ubuntu 22.04 64 bits.
 
-
 ## Storage Configuration
 
 `node1` node is based on a Raspberry Pi 4B $GB booting from a USB Flash Disk or SSD Disk depending on storage architectural option selected.
 
 - Dedicated disks storage architecture: A Samsung USB 3.1 32 GB Fit Plus Flash Disk will be used connected to one of the USB 3.0 ports of the Raspberry Pi.
 - Centralized SAN architecture: Kingston A400 480GB SSD Disk and a USB3.0 to SATA adapter will be used connected to `node1`. SSD disk for hosting OS and iSCSI LUNs.
-
 
 ## Network Configuration
 
@@ -38,17 +36,18 @@ The installation procedure followed is the described in ["Ubuntu OS Installation
 
 `user-data` depends on the storage architectural option selected:
 
-| Dedicated Disks | Centralized SAN    |
-|--------------------| ------------- |
-|  [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/node1/user-data) | [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/node1/user-data-centralizedSAN) |
+| Dedicated Disks                                                               | Centralized SAN                                                                              |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/node1/user-data) | [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/node1/user-data-centralizedSAN) |
+
 {: .table .border-dark }
 
 `network-config` is the same in both architectures:
 
-
-| Network configuration |
-|---------------------- |
+| Network configuration                                                                   |
+| --------------------------------------------------------------------------------------- |
 | [network-config]({{ site.git_edit_address }}/metal/rpi/cloud-init/node1/network-config) |
+
 {: .table .border-dark }
 
 ### cloud-init partitioning configuration (Centralized SAN)
@@ -60,7 +59,6 @@ By default, during first boot, cloud image partitions grow to fill the whole cap
 As a reference of how cloud images partitions grow in boot time check this blog [entry](https://elastisys.com/how-do-virtual-images-grow/).
 
 {{ site.data.alerts.end }}
-
 
 In case of centralized SAN, node1's SSD Disk will be partitioned in boot time reserving 30 GB for root filesystem (OS installation) and the rest will be used for creating logical volumes (LVM), SAN LUNs to be mounted using iSCSI by the other nodes.
 
@@ -74,7 +72,18 @@ bootcmd:
   # Second moves the GPT backup block to the end of the disk where it belongs (-e option)
   # Then creates a new partition starting 10GiB into the disk filling the rest of the disk (-n=0:10G:0 option)
   # And labels it as an LVM partition (-t option)
-  - [cloud-init-per, once, addpartition, sgdisk, /dev/sda, "-g", "-e", "-n=0:30G:0", -t, "0:8e00"]
+  - [
+      cloud-init-per,
+      once,
+      addpartition,
+      sgdisk,
+      /dev/sda,
+      "-g",
+      "-e",
+      "-n=0:30G:0",
+      -t,
+      "0:8e00",
+    ]
 
 runcmd:
   # reload partition table
@@ -88,18 +97,17 @@ sgdisk /dev/sda -e .g -n=0:30G:0 -t 0:8e00
 ```
 
 This command:
-  - First convert MBR partition to GPT (-g option)
-  - Second moves the GPT backup block to the end of the disk  (-e option)
-  - then creates a new partition starting 30GiB into the disk filling the rest of the disk (-n=0:10G:0 option)
-  - And labels it as an LVM partition (-t option)
+
+- First convert MBR partition to GPT (-g option)
+- Second moves the GPT backup block to the end of the disk (-e option)
+- then creates a new partition starting 30GiB into the disk filling the rest of the disk (-n=0:10G:0 option)
+- And labels it as an LVM partition (-t option)
 
 LVM logical volumes creation using the new partition,`/dev/sda3`, (LUNs) have been automated with Ansible developing the ansible role: **ricsanfre.storage** for managing LVM.
 
 Specific ansible variables to be used by this role are stored in [`ansible/vars/centralized_san/centralized_san_target.yml`]({{ site.git_edit_address }}/ansible/vars/centralized_san/centralized_san_target.yml)
 
-
 ### cloud-init: network configuration
-
 
 Ubuntu's netplan yaml configuration file used, part of cloud-init boot `/boot/network-config` is the following:
 
@@ -160,7 +168,6 @@ For automating configuration tasks, ansible role [**ricsanfre.bind9**](https://g
 ## PXE Server
 
 As described in ["PiCluster - PXE Server"](/docs/pxe-server), PXE server, to automate OS installation of x86 nodes, is installed in `node1`
-
 
 ## Vault Installation
 

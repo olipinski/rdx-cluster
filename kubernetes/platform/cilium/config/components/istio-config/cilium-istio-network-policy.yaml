@@ -1,3 +1,4 @@
+---
 apiVersion: "cilium.io/v2"
 kind: CiliumClusterwideNetworkPolicy
 metadata:
@@ -6,5 +7,5 @@ spec:
   description: "Allows SNAT-ed kubelet health check probes into ambient pods"
   endpointSelector: {}
   ingress:
-  - fromCIDR:
-    - "169.254.7.127/32"
+    - fromCIDR:
+        - "169.254.7.127/32"

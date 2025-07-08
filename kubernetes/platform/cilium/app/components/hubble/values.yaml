@@ -1,3 +1,4 @@
+---
 # cilium helm values (hubble)
 
 # Enable Hubble
@@ -60,5 +61,5 @@ hubble:
       hosts: ["hubble.${CLUSTER_DOMAIN}"]
       tls:
         - hosts:
-          - hubble.${CLUSTER_DOMAIN}
+            - hubble.${CLUSTER_DOMAIN}
           secretName: hubble-tls

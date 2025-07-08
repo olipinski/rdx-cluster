@@ -1,0 +1,32 @@
+---
+- name: Clean masters
+  hosts: k3s_master
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Clean ciliun
+      ansible.builtin.import_tasks: tasks/clean_cilium.yaml
+
+    - name: Uninstall k3s
+      ansible.builtin.command: /usr/local/bin/k3s-uninstall.sh
+      changed_when: true
+
+    - name: Cleaning
+      ansible.builtin.import_tasks: tasks/cleaning.yaml
+      tags: ["clean"]
+
+- name: Clean workers
+  hosts: k3s_worker
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Clean ciliun
+      ansible.builtin.import_tasks: tasks/clean_cilium.yaml
+
+    - name: Uninstall k3s
+      ansible.builtin.command: /usr/local/bin/k3s-agent-uninstall.sh
+      changed_when: true
+
+    - name: Cleaning
+      ansible.builtin.import_tasks: tasks/cleaning.yaml
+      tags: ["clean"]

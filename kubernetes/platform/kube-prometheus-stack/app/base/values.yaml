@@ -1,3 +1,4 @@
+---
 # kube-prometheus-stack helm values (base)
 
 # Produce cleaner resources names
@@ -249,7 +250,7 @@ grafana:
       - monitoring.${CLUSTER_DOMAIN}
     tls:
       - hosts:
-        - monitoring.${CLUSTER_DOMAIN}
+          - monitoring.${CLUSTER_DOMAIN}
         secretName: monitoring-tls
 
 ## Kubernetes metrics
@@ -364,4 +365,3 @@ coreDns:
   # Enable service monitor
   serviceMonitor:
     enabled: true
-

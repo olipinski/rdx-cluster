@@ -5,7 +5,6 @@ description: How to install K3s, a lightweight kubernetes distribution, in our P
 last_modified_at: "21-02-2025"
 ---
 
-
 K3S is a lightweight kubernetes built for IoT and edge computing, provided by the company Rancher. The following picture shows the K3S architecture (source [K3S](https://k3s.io/)).
 
 ![K3S Architecture](/assets/img/how-it-works-k3s-revised.svg)
@@ -19,23 +18,22 @@ Control-plane nodes will be configured so no load is deployed in it.
 
 ## Nodes preconfiguration
 
-
 - Step 1: Enable iptables to see bridged traffic
 
-    Load `br_netfilter` kernel module an modify settings to let `iptables` see bridged traffic
+  Load `br_netfilter` kernel module an modify settings to let `iptables` see bridged traffic
 
-    ```shell
-    cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
-    br_netfilter
-    EOF
-    
-    cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
-    net.bridge.bridge-nf-call-ip6tables = 1
-    net.bridge.bridge-nf-call-iptables = 1
-    EOF
+  ```shell
+  cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+  br_netfilter
+  EOF
 
-    sudo sysctl --system
-    ```
+  cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+  net.bridge.bridge-nf-call-ip6tables = 1
+  net.bridge.bridge-nf-call-iptables = 1
+  EOF
+
+  sudo sysctl --system
+  ```
 
 - Step 2: Disable swap memory (only x86 nodes)
 
@@ -55,7 +53,6 @@ Control-plane nodes will be configured so no load is deployed in it.
 
 - Step 4: Reboot the server
 
-
 ## Single-server Setup with an Embedded DB
 
 In this case a single node will be configured as master node. K3s embedded sqlite database is used in this case.
@@ -63,7 +60,6 @@ In this case a single node will be configured as master node. K3s embedded sqlit
 In this configuration, each agent node is registered to the same server node. A K3s user can manipulate Kubernetes resources by calling the K3s API on the server node.
 
 ![K3S Architecture](/assets/img/k3s-single-master.png)
-
 
 ### Master node installation
 
@@ -82,70 +78,69 @@ In this configuration, each agent node is registered to the same server node. A 
 
   See further details in ["Kuberentes documentation: Graceful-shutdown"](https://kubernetes.io/docs/concepts/architecture/nodes/#graceful-node-shutdown).
 
-
   {{site.data.alerts.note}}
 
   After installation, we will see that `kubelet` (k3s-server process) has taken [systemd's inhibitor lock](https://www.freedesktop.org/wiki/Software/systemd/inhibit/), which is the mechanism used by Kubernetes to implement the gracefully shutdown the pods.
 
-    ```shell  
-    sudo systemd-inhibit --list
-    WHO                          UID USER PID  COMM            WHAT     WHY                                                       MODE 
-    ModemManager                 0   root 728  ModemManager    sleep    ModemManager needs to reset devices                       delay
-    Unattended Upgrades Shutdown 0   root 767  unattended-upgr shutdown Stop ongoing upgrades or perform upgrades before shutdown delay
-    kubelet                      0   root 4474 k3s-server      shutdown Kubelet needs time to handle node shutdown                delay
-    ```
+  ```shell
+  sudo systemd-inhibit --list
+  WHO                          UID USER PID  COMM            WHAT     WHY                                                       MODE
+  ModemManager                 0   root 728  ModemManager    sleep    ModemManager needs to reset devices                       delay
+  Unattended Upgrades Shutdown 0   root 767  unattended-upgr shutdown Stop ongoing upgrades or perform upgrades before shutdown delay
+  kubelet                      0   root 4474 k3s-server      shutdown Kubelet needs time to handle node shutdown                delay
+  ```
 
   {{site.data.alerts.end}}
 
 - Step 2: Installing K3S control plane node
 
-    For installing the master node execute the following command:
+  For installing the master node execute the following command:
 
-    ```shell
-    curl -sfL https://get.k3s.io | K3S_TOKEN=<server_token> sh -s - server --write-kubeconfig-mode '0644' --node-taint 'node-role.kubernetes.io/control-plane:NoSchedule' --disable 'servicelb' --disable 'traefik' --disable 'local-storage' --kube-controller-manager-arg 'bind-address=0.0.0.0' --kube-proxy-arg 'metrics-bind-address=0.0.0.0' --kube-scheduler-arg 'bind-address=0.0.0.0' --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config' --kube-controller-manager-arg 'terminated-pod-gc-threshold=10'
-    ```
-    Where:
-    - `server_token` is shared secret within the cluster for allowing connection of worker nodes
-    - `--write-kubeconfig-mode '0644'` gives read permissions to kubeconfig file located in `/etc/rancher/k3s/k3s.yaml`
-    - `--node-taint 'node-role.kubernetes.io/control-plane:NoSchedule'` makes master node not schedulable to run any pod. Only pods marked with specific tolerance will be scheduled on master node.
-    - `--disable servicelb` to disable default service load balancer installed by K3S (Klipper Load Balancer). Metallb will be used instead.
-    - `--disable local-storage` to disable local storage persistent volumes provider installed by K3S (local-path-provisioner). Longhorn will be used instead
-    - `--disable traefik` to disable default ingress controller installed by K3S (Traefik). Traefik will be installed from helm chart.
-    - `--kube-controller-manager.arg`, `--kube-scheduler-arg` and `--kube-proxy-arg` to bind those components not only to 127.0.0.1 and enable metrics scraping from a external node.
-    - `--kubelet-arg 'config=/etc/rancher/k3s/kubelet.config'` provides kubelet configuraion parameters. See [Kubernetes Doc: Kubelet Config File](https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/)
-    - `--kube-controller-manager-arg 'terminated-pod-gc-threshold=10'`. Setting limit to 10  terminated pods that can exist before the terminated pod garbage collector starts deleting terminated pods. See [Kubernetes Doc: Pod Garbage collection](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-garbage-collection)
+  ```shell
+  curl -sfL https://get.k3s.io | K3S_TOKEN=<server_token> sh -s - server --write-kubeconfig-mode '0644' --node-taint 'node-role.kubernetes.io/control-plane:NoSchedule' --disable 'servicelb' --disable 'traefik' --disable 'local-storage' --kube-controller-manager-arg 'bind-address=0.0.0.0' --kube-proxy-arg 'metrics-bind-address=0.0.0.0' --kube-scheduler-arg 'bind-address=0.0.0.0' --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config' --kube-controller-manager-arg 'terminated-pod-gc-threshold=10'
+  ```
 
+  Where:
+
+  - `server_token` is shared secret within the cluster for allowing connection of worker nodes
+  - `--write-kubeconfig-mode '0644'` gives read permissions to kubeconfig file located in `/etc/rancher/k3s/k3s.yaml`
+  - `--node-taint 'node-role.kubernetes.io/control-plane:NoSchedule'` makes master node not schedulable to run any pod. Only pods marked with specific tolerance will be scheduled on master node.
+  - `--disable servicelb` to disable default service load balancer installed by K3S (Klipper Load Balancer). Metallb will be used instead.
+  - `--disable local-storage` to disable local storage persistent volumes provider installed by K3S (local-path-provisioner). Longhorn will be used instead
+  - `--disable traefik` to disable default ingress controller installed by K3S (Traefik). Traefik will be installed from helm chart.
+  - `--kube-controller-manager.arg`, `--kube-scheduler-arg` and `--kube-proxy-arg` to bind those components not only to 127.0.0.1 and enable metrics scraping from a external node.
+  - `--kubelet-arg 'config=/etc/rancher/k3s/kubelet.config'` provides kubelet configuraion parameters. See [Kubernetes Doc: Kubelet Config File](https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/)
+  - `--kube-controller-manager-arg 'terminated-pod-gc-threshold=10'`. Setting limit to 10 terminated pods that can exist before the terminated pod garbage collector starts deleting terminated pods. See [Kubernetes Doc: Pod Garbage collection](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-garbage-collection)
 
     <br>
-    
-    {{site.data.alerts.important}}
 
-    Avoid the use of documented taint `k3s-controlplane=true:NoExecute` used to avoid deployment of pods on master node. We are interested on running certain pods on master node, like the ones needed to collect logs/metrics from the master node.
+  {{site.data.alerts.important}}
 
-    Instead, use the taint `node-role.kubernetes.io/control-plane:NoSchedule`.
+  Avoid the use of documented taint `k3s-controlplane=true:NoExecute` used to avoid deployment of pods on master node. We are interested on running certain pods on master node, like the ones needed to collect logs/metrics from the master node.
 
-    K3S common services: core-dns, metric-service, service-lb are configured with tolerance to `node-role.kubernetes.io/control-plane` taint, so they will be scheduled on master node.
+  Instead, use the taint `node-role.kubernetes.io/control-plane:NoSchedule`.
 
-    Metal-lb, load balancer to be used within the cluster, uses this tolerance as well, so daemonset metallb-speaker can be deployed on master node.
+  K3S common services: core-dns, metric-service, service-lb are configured with tolerance to `node-role.kubernetes.io/control-plane` taint, so they will be scheduled on master node.
 
-    Other Daemonset pods, like fluent-bit, have to specify this specific tolerance to be able to get logs from master nodes.
-    
-    See this [K3S PR](https://github.com/k3s-io/k3s/pull/1275) where this feature was introduced.  
-    {{site.data.alerts.end}}
+  Metal-lb, load balancer to be used within the cluster, uses this tolerance as well, so daemonset metallb-speaker can be deployed on master node.
+
+  Other Daemonset pods, like fluent-bit, have to specify this specific tolerance to be able to get logs from master nodes.
+
+  See this [K3S PR](https://github.com/k3s-io/k3s/pull/1275) where this feature was introduced.
+  {{site.data.alerts.end}}
 
 - Step 3: Install Helm utility
 
-    Kubectl is installed as part of the k3s server installation (`/usr/local/bin/kubectl`), but helm need to be installed following this [instructions](https://helm.sh/docs/intro/install/).
+  Kubectl is installed as part of the k3s server installation (`/usr/local/bin/kubectl`), but helm need to be installed following this [instructions](https://helm.sh/docs/intro/install/).
 
 - Step 4: Copy k3s configuration file to Kubernets default directory (`$HOME/.kube/config`), so `kubectl` and `helm` utilities can find the way to connect to the cluster.
 
-   ```shell
-   mkdir $HOME/.kube
-   cp /etc/rancher/k3s/k3s.yaml $HOME/.kube/.
-   ```
+  ```shell
+  mkdir $HOME/.kube
+  cp /etc/rancher/k3s/k3s.yaml $HOME/.kube/.
+  ```
 
 ### Workers installation
-
 
 - Step 1: Prepare K3S kubelet configuration file
 
@@ -165,7 +160,9 @@ In this configuration, each agent node is registered to the same server node. A 
   ```shell
   curl -sfL https://get.k3s.io | K3S_URL='https://<k3s_master_ip>:6443' K3S_TOKEN=<server_token> sh -s - --node-label 'node_type=worker' --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config' --kube-proxy-arg 'metrics-bind-address=0.0.0.0'
   ```
+
   Where:
+
   - `server_token` is shared secret within the cluster for allowing connection of worker nodes
   - `k3s_master_ip` is the k3s master node ip
   - `--node-label 'node_type=worker'` add a custom label `node_type` to the worker node.
@@ -173,7 +170,7 @@ In this configuration, each agent node is registered to the same server node. A 
   - `--kube-proxy-arg 'metrics-bind-address=0.0.0.0'` to enable kube-proxy metrics scraping from a external node
 
   <br>
- 
+
 - Step 3: Specify role label for worker nodes
 
   From master node, assign a role label to worker nodes, so when executing `kubectl get nodes` command ROLE column show worker role for workers nodes.
@@ -189,7 +186,6 @@ An embedded etcd datastore (as opposed to the embedded SQLite datastore used in 
 
 A load balancer is needed for providing High availability to Kubernetes API. In this case, a network load balancer, [HAProxy](https://www.haproxy.org/) , will be used.
 
-
 ![K3S Architecture](/assets/img/k3s-HA-configuration.png)
 
 {{site.data.alerts.note}}
@@ -197,7 +193,6 @@ A load balancer is needed for providing High availability to Kubernetes API. In 
 For the HA installation, instead of providing arguments/environment variables to K3s' installation script, installation parameters will be provide through [config files](https://docs.k3s.io/installation/configuration#configuration-file).
 
 {{site.data.alerts.end}}
-
 
 ### Load Balancer (HAProxy)
 
@@ -210,7 +205,6 @@ In this configuration we will have a single point of failure, HAProxy is not dep
 {{site.data.alerts.end}}
 
 To install and configure HAProxy:
-
 
 - Step 1. Install haproxy
 
@@ -280,7 +274,7 @@ To install and configure HAProxy:
 
   With this configuration haproxy will balance requests to API server (TCP port 6443), following a round-robin balancing method, between the 3 master nodes configured.
 
-  IP address to be used for kubernetes API, will be gateway's IP address. 
+  IP address to be used for kubernetes API, will be gateway's IP address.
 
 - Step 3: Restart HAProxy
 
@@ -298,12 +292,11 @@ To install and configure HAProxy:
 
 Embedded etcd data store will be used. Installation procedure is described in K3S documentation: [High Availability Embedded etcd](https://docs.k3s.io/datastore/ha-embedded).
 
-
 - Step 1: Create config directory
 
   ```shell
   sudo mkdir -p /etc/rancher/k3s
-  ``` 
+  ```
 
 - Step 2: Create token file in all nodes
 
@@ -328,31 +321,30 @@ Embedded etcd data store will be used. Installation procedure is described in K3
 
   This kubelet configuration enables new kubernetes feature [Graceful node shutdown](https://kubernetes.io/blog/2021/04/21/graceful-node-shutdown-beta/). This has been explained in the previous section: single master node installation.
 
-
 - Step 4: Prepare K3s config file
 
-  Create file `/etc/rancher/k3s/config.yaml` containing all configuration options needed. They are equivalent to the K3s arguments 
+  Create file `/etc/rancher/k3s/config.yaml` containing all configuration options needed. They are equivalent to the K3s arguments
 
   ```yml
   token-file: /etc/rancher/k3s/cluster-token
   disable:
-  - local-storage
-  - servicelb
-  - traefik
+    - local-storage
+    - servicelb
+    - traefik
   etcd-expose-metrics: true
   kube-controller-manager-arg:
-  - bind-address=0.0.0.0
-  - terminated-pod-gc-threshold=10
+    - bind-address=0.0.0.0
+    - terminated-pod-gc-threshold=10
   kube-proxy-arg:
-  - metrics-bind-address=0.0.0.0
+    - metrics-bind-address=0.0.0.0
   kube-scheduler-arg:
-  - bind-address=0.0.0.0
+    - bind-address=0.0.0.0
   kubelet-arg:
-  - config=/etc/rancher/k3s/kubelet.config
+    - config=/etc/rancher/k3s/kubelet.config
   node-taint:
-  - node-role.kubernetes.io/master=true:NoSchedule
+    - node-role.kubernetes.io/master=true:NoSchedule
   tls-san:
-  - 10.0.0.11
+    - 10.0.0.11
   write-kubeconfig-mode: 644
   ```
 
@@ -380,7 +372,6 @@ Embedded etcd data store will be used. Installation procedure is described in K3
   - `tls-san` parameter to add k3s api load balancer ip as Subject Alternative Names on TLS cert created by K3S.
   - `etcd-expose-metrics` to expose etcd metrics
 
-
 - Step 5. Install primary master node
 
   ```shell
@@ -393,15 +384,13 @@ Embedded etcd data store will be used. Installation procedure is described in K3
   curl -sfL https://get.k3s.io | sh -s - server --server https://<ip or hostname of first master node>:6443
   ```
 
-
 ### Worker nodes installation
-
 
 - Step 1: Create config directory
 
   ```shell
   sudo mkdir -p /etc/rancher/k3s
-  ``` 
+  ```
 
 - Step 2: Create token file in all nodes
 
@@ -431,11 +420,11 @@ Embedded etcd data store will be used. Installation procedure is described in K3
   ```yml
   token-file: /etc/rancher/k3s/cluster-token
   node-label:
-    - 'node_type=worker'
+    - "node_type=worker"
   kubelet-arg:
-    - 'config=/etc/rancher/k3s/kubelet.config'
+    - "config=/etc/rancher/k3s/kubelet.config"
   kube-proxy-arg:
-    - 'metrics-bind-address=0.0.0.0'
+    - "metrics-bind-address=0.0.0.0"
   ```
 
   This configuration is equivalent to the following k3s arguments:
@@ -464,7 +453,6 @@ K3S master nodes need to be installed with the following additional options:
 - `--flannel-backend=none`: to disable Fannel instalation
 - `--disable-network-policy`: Most CNI plugins come with their own network policy engine, so it is recommended to set --disable-network-policy as well to avoid conflicts.
 
-
 ## Enabling Embedded Registry Mirror
 
 K3s embeds [Spegel](https://spegel.dev/), a stateless distributed OCI registry mirror that allows peer-to-peer sharing of container images between nodes in a Kubernetes cluster.
@@ -488,12 +476,13 @@ In order to enable mirroring of images from an upstream container registry, node
 The `"*"` wildcard mirror entry can be used to enable distributed mirroring of all registries. Note that the asterisk MUST be quoted:
 
 ```yaml
-mirrors:  "*": 
+mirrors:  "*":
 ```
 
 If no registries are enabled for mirroring on a node, that node does not participate in the distributed registry in any capacity.
 
 ### Verifying Spegel is working
+
 Verify if Spegel is working in K3s
 
 Check exposed metrics:
@@ -502,12 +491,11 @@ Check exposed metrics:
 kubectl get --raw /api/v1/nodes/<NODENAME>/proxy/metrics | grep -F 'spegel'
 ```
 
-
 ## K3S Packaged Components
 
 ### Auto-deployed Manifests (Add-ons)
 
-K3s provides the capability to automatically deploy manifest files (AddOns). 
+K3s provides the capability to automatically deploy manifest files (AddOns).
 
 On server nodes, any file found in `/var/lib/rancher/k3s/server/manifests` is automatically deployed to Kubernetes in a manner similar to `kubectl apply` command, both on startup and when the file is changed on disk. Deleting files out of this directory will not delete the corresponding resources from the cluster.
 
@@ -535,14 +523,13 @@ If HelmChart controller is disabled Traefik add-ons need to be disabled as well
 
 - `--disable 'traefik'`: to disable Traefik installation
 
-
 See further details in [K3s documentationt - Managing k3s packaged components](https://docs.k3s.io/installation/packaged-components)
 
 ## Remote Access
 
 To enable remote access to the cluster using `kubectl` and `helm` applications follow the following procedure
 
-- Step 1:  Install `helm` and `kubectl` utilities
+- Step 1: Install `helm` and `kubectl` utilities
 
 - Step 2: Copy k3s configuration file, located in `/etc/rancher/k3s/k3s.yaml`, to `$HOME/.kube/config`.
 
@@ -551,7 +538,6 @@ To enable remote access to the cluster using `kubectl` and `helm` applications f
 - Step 4: Enable HTTPS connectivity on port 6443 between the server and the k3s control node
 
 In case of HA deployment, k3s api load balancer ip can be used instead of the IP of any of the single nodes.
-
 
 ## K3S Automatic Upgrade
 
@@ -592,6 +578,7 @@ See more details in [K3S Automated Upgrades documentation](https://docs.k3s.io/u
       image: rancher/k3s-upgrade
     version: <new_version>
   ```
+
   Plan for worker: `k3s-agent-upgrade.yml`
 
   ```yml
@@ -621,6 +608,7 @@ See more details in [K3S Automated Upgrades documentation](https://docs.k3s.io/u
       image: rancher/k3s-upgrade
     version: <new_version>
   ```
+
 - Step 3. Execute upgrade plans
 
   ```shell
@@ -636,6 +624,7 @@ On each worker node, execute:
 ```shell
 /usr/local/bin/k3s-agent-uninstall.sh
 ```
+
 On each master node, execute
 
 ```shell
@@ -646,12 +635,14 @@ On each master node, execute
 
 K3s cluster installation and reset procedures have been automated with Asible playbooks
 
-For installing the cluster execute: 
+For installing the cluster execute:
+
 ```shell
 ansible-playbook k3s_install.yml
 ```
 
 For resetting the cluster execute:
+
 ```shell
 ansible-playbook k3s_reset.yml
 ```
