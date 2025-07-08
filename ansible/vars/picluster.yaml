@@ -94,7 +94,6 @@ k3s_agent_config:
 k3s_registries:
   mirrors:
     "*":
-
 ##########
 # FluxCD #
 ##########

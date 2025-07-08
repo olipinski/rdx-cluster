@@ -1,7 +1,7 @@
 ---
 - name: Clean Longhorn storage | get content
   become: true
-  find:
+  ansible.builtin.find:
     paths: /storage
     patterns: "*"
     file_type: any
@@ -18,7 +18,7 @@
   when: "'k3s_worker' in group_names"
 
 - name: Clean longhorn iscsi targets and nodes
-  shell: |
+  ansible.builtin.shell: |
     set -o pipefail
     for i in `sudo iscsiadm -m discovery -o show | grep -v 10.20.0.1 | awk '{print $1}'`
     do
@@ -42,7 +42,7 @@
     - "/etc/cni/net.d"
 
 - name: Clean fluentd pos files | get pos files
-  find:
+  ansible.builtin.find:
     paths: /var/log
     patterns: "*.pos"
   register: files_to_delete

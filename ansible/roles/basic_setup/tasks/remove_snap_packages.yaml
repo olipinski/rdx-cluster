@@ -24,4 +24,4 @@
       ansible.builtin.debug:
         msg: "Removing snap package failed, let's give it another shot"
     - name: Retrying deletion
-      ansible.builtin.include_tasks: remove_snap_packages.yml
+      ansible.builtin.include_tasks: remove_snap_packages.yaml

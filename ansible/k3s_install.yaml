@@ -10,10 +10,10 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
+      include_vars: "vars/vault.yaml"
       tags: ["always"]
     - name: Include picluster variables
-      include_vars: "vars/picluster.yml"
+      include_vars: "vars/picluster.yaml"
       tags: ["always"]
   roles:
     - role: haproxy
@@ -25,10 +25,10 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      ansible.builtin.: "vars/vault.yml"
+      ansible.builtin.: "vars/vault.yaml"
       tags: ["always"]
     - name: Include picluster variables
-      ansible.builtin.: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yaml"
       tags: ["always"]
   roles:
     - role: k3s/prereq
@@ -39,10 +39,10 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      ansible.builtin.: "vars/vault.yml"
+      ansible.builtin.: "vars/vault.yaml"
       tags: ["always"]
     - name: Include picluster variables
-      ansible.builtin.: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yaml"
       tags: ["always"]
   roles:
     - role: k3s/master
@@ -54,10 +54,10 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      ansible.builtin.: "vars/vault.yml"
+      ansible.builtin.: "vars/vault.yaml"
       tags: ["always"]
     - name: Include picluster variables
-      ansible.builtin.: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yaml"
       tags: ["always"]
   roles:
     - role: k3s/worker
@@ -67,10 +67,10 @@
   tags: [config]
   pre_tasks:
     - name: Include vault variables
-      ansible.builtin.: "vars/vault.yml"
+      ansible.builtin.: "vars/vault.yaml"
       tags: ["always"]
     - name: Include picluster variables
-      ansible.builtin.: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yaml"
       tags: ["always"]
   tasks:
     # - name: "Wait for worker nodes to be ready"

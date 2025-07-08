@@ -24,7 +24,7 @@
   become: true
   pre_tasks:
     - name: Include picluster variables
-      ansible.builtin.include_vars: "vars/picluster.yml"
+      ansible.builtin.include_vars: "vars/picluster.yaml"
       tags: ["always"]
   roles:
     - role: fluxcd-cli

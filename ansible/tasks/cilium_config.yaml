@@ -11,7 +11,7 @@
 
 - name: Wait for Cilium CRDs to be ready
   become: false
-  shell: |
+  ansible.builtin.shell: |
     set -o pipefail
     while ! kubectl wait --for condition=established --timeout=60s crd/ciliuml2announcementpolicies.cilium.io crd/ciliuml2announcementpolicies.cilium.io
     do
@@ -23,7 +23,7 @@
 
 - name: Cilium configuration
   become: false
-  shell: |
+  ansible.builtin.shell: |
     set -o pipefail
     kubectl kustomize --enable-helm --load-restrictor=LoadRestrictionsNone \
      ../kubernetes/platform/cilium/config/overlays/"{{overlay}}" | kubectl apply -f -

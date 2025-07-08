@@ -34,10 +34,10 @@
       become: true
 
     - name: Include vault variables
-      ansible.builtin.include_vars: "vars/vault.yml"
+      ansible.builtin.include_vars: "vars/vault.yaml"
 
     - name: Include picluster variables
-      ansible.builtin.include_vars: "vars/picluster.yml"
+      ansible.builtin.include_vars: "vars/picluster.yaml"
 
   tasks:
     - name: Set overlay to prod in case not defined by an input argument
@@ -46,4 +46,4 @@
       when: overlay is undefined
 
     - name: Configure Vault integration
-      include_tasks: tasks/configure_vault_integration.yml
+      include_tasks: tasks/configure_vault_integration.yaml

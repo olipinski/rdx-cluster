@@ -13,7 +13,7 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      ansible.builtin.include_vars: "vars/vault.yml"
+      ansible.builtin.include_vars: "vars/vault.yaml"
       tags: ["always"]
   tasks:
     # OS basic setup tasks
@@ -72,7 +72,7 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      ansible.builtin.include_vars: "vars/vault.yml"
+      ansible.builtin.include_vars: "vars/vault.yaml"
       tags: ["always"]
   roles:
     # OS basic setup tasks
@@ -94,7 +94,7 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      ansible.builtin.include_vars: "vars/vault.yml"
+      ansible.builtin.include_vars: "vars/vault.yaml"
       tags: ["always"]
   roles:
     # OS basic setup tasks

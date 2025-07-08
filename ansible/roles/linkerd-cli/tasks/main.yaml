@@ -5,7 +5,7 @@
   register: _linkerd_bin
 
 - name: Install linkerd CLI
-  include_tasks: install_linkerd_cli.yml
+  ansible.builtin.include_tasks: install_linkerd_cli.yaml
   args:
     apply:
       become: true

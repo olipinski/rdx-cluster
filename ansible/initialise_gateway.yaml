@@ -12,10 +12,10 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
+      include_vars: "vars/vault.yaml"
       tags: ["always"]
     - name: Include gateway variables
-      include_vars: "host_vars/gateway0.yml"
+      include_vars: "host_vars/gateway0.yaml"
       tags: ["always"]
   tasks:
     # OS basic setup tasks
@@ -82,7 +82,7 @@
     # This reboot does not use ansible because
     # we need to ignore the reconnecting to the node.
     # The gateway node will never be back under this IP address.
-    # Now we can continue to setup_picluster.yml
+    # Now we can continue to setup_picluster.yaml
     - name: Reboot if required
       command: "sleep 5 && reboot"
       async: 1

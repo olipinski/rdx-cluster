@@ -15,4 +15,4 @@
         definition: "{{ lookup('template', 'templates/' + item ) }}"
         state: absent
       with_items:
-        - testing_longhorn_manifest.yml
+        - testing_longhorn_manifest.yaml

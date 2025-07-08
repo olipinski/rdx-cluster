@@ -8,4 +8,4 @@
         definition: "{{ lookup('file', 'files/' + item ) }}"
         state: present
       with_items:
-        - nginx_test_application.yml
+        - nginx_test_application.yaml

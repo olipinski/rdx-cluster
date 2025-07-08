@@ -11,16 +11,16 @@
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
-      ansible.builtin.include_vars: "vars/vault.yml"
+      ansible.builtin.include_vars: "vars/vault.yaml"
     # Include picluster variables
     - name: Include picluster variables
-      ansible.builtin.: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yaml"
 
     - name: Copy OVH secret file
       ansible.builtin.template:
         src: "{{ item.template }}"
         dest: "{{ item.dest }}"
-        mode: 0600
+        mode: "0600"
       with_items:
         - ansible.builtin.template: ovh-credentials.ini.j2
           dest: "~/.secrets/ovh-credentials.ini"
@@ -56,20 +56,20 @@
           ansible.builtin.file:
             path: "{{ selfsigned_certificates_path }}"
             state: directory
-            mode: 0750
+            mode: "0750"
         # Include selfsigned certificates variables
         - name: Include selfsigned certificates variables
-          ansible.builtin.: "vars/selfsigned-certificates.yml"
+          ansible.builtin.: "vars/selfsigned-certificates.yaml"
         # Generate custom CA
         - name: Generate custom CA
-          include_tasks: tasks/generate_custom_ca.yml
+          include_tasks: tasks/generate_custom_ca.yaml
           args:
             apply:
               delegate_to: localhost
               become: false
         # Generate selfsigned TLS certificate
         - name: Generate customCA-signed SSL certificates
-          include_tasks: tasks/generate_ca_signed_cert.yml
+          include_tasks: tasks/generate_ca_signed_cert.yaml
           args:
             apply:
               delegate_to: localhost
@@ -93,10 +93,10 @@
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
-      ansible.builtin.: "vars/vault.yml"
+      ansible.builtin.: "vars/vault.yaml"
     # Include picluster variables
     - name: Include picluster variables
-      ansible.builtin.: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yaml"
 
     - name: Load customCA-signed TLS certificate for minio
       set_fact:
@@ -119,8 +119,8 @@
             cert_path: "{{ certbot_certificates.stdout | regex_search(regexp1,'\\1') }}"
             cert_key_path: "{{ certbot_certificates.stdout | regex_search(regexp2,'\\1') }}"
           vars:
-            regexp1: 'Certificate Path: (\S+)'
-            regexp2: 'Private Key Path: (\S+)'
+            regexp1: "Certificate Path: (\\S+)"
+            regexp2: "Private Key Path: (\\S+)"
           when:
             - certbot_certificates.rc==0
             - '"Certificate Name: " + minio_hostname in certbot_certificates.stdout'
@@ -147,11 +147,11 @@
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
-      ansible.builtin.: "vars/vault.yml"
+      ansible.builtin.: "vars/vault.yaml"
 
     # Include picluster variables
     - name: Include picluster variables
-      ansible.builtin.: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yaml"
 
     - name: Load customCA-signed TLS certificate for minio
       set_fact:
@@ -175,8 +175,8 @@
             cert_path: "{{ certbot_certificates.stdout | regex_search(regexp1,'\\1') }}"
             cert_key_path: "{{ certbot_certificates.stdout | regex_search(regexp2,'\\1') }}"
           vars:
-            regexp1: 'Certificate Path: (\S+)'
-            regexp2: 'Private Key Path: (\S+)'
+            regexp1: "Certificate Path: (\\S+)"
+            regexp2: "Private Key Path: (\\S+)"
           when:
             - certbot_certificates.rc==0
             - '"Certificate Name: " + vault_hostname in certbot_certificates.stdout'
@@ -199,7 +199,7 @@
         line: "export VAULT_ADDR='https://{{ vault_hostname }}:8200'"
         owner: "{{ ansible_user }}"
         create: true
-        mode: 0644
+        mode: "0644"
     - name: Insert CA cert export in dotfile
       become: true
       lineinfile:
@@ -208,7 +208,7 @@
         line: "export VAULT_CACERT=/etc/vault/tls/vault-ca.crt"
         owner: "{{ ansible_user }}"
         create: true
-        mode: 0644
+        mode: "0644"
       when: custom_ca
 
     - name: Insert VAULT_TOKEN in dotfile
@@ -219,7 +219,7 @@
         line: "export VAULT_TOKEN=$(sudo jq -r '.root_token' /etc/vault/unseal.json)"
         owner: "{{ ansible_user }}"
         create: true
-        mode: 0644
+        mode: "0644"
 
 ## Load all credentials into Hashicorp Vault Server
 - name: Load Vault Credentials
@@ -230,11 +230,11 @@
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
-      ansible.builtin.: "vars/vault.yml"
+      ansible.builtin.: "vars/vault.yaml"
 
     # Include picluster variables
     - name: Include picluster variables
-      ansible.builtin.: "vars/picluster.yml"
+      ansible.builtin.: "vars/picluster.yaml"
 
     # Install hashicorp vault collection dependencies (hvac python package) using PIP.
     - name: Ensure PIP is installed.
@@ -286,7 +286,7 @@
     # Load ansible vault variables into Hashicorp Vault Server
     - name: Load vault credentials
       include_tasks:
-        ansible.builtin.file: tasks/load_vault_credentials.yml
+        ansible.builtin.file: tasks/load_vault_credentials.yaml
       loop: "{{ vault | dict2items }}"
       loop_control:
         loop_var: secret_group
@@ -296,15 +296,15 @@
 
     - name: Load http auth_basic credentials
       include_tasks:
-        ansible.builtin.file: tasks/create_basic_auth_credentials.yml
+        ansible.builtin.file: tasks/create_basic_auth_credentials.yaml
       no_log: true
 
     - name: Load minio prometheus bearer credentials
       include_tasks:
-        ansible.builtin.file: tasks/create_minio_bearer_token.yml
+        ansible.builtin.file: tasks/create_minio_bearer_token.yaml
       no_log: true
 
     - name: Load bind9 DDNS key
       include_tasks:
-        ansible.builtin.file: tasks/load_ddns_key_into_vault.yml
+        ansible.builtin.file: tasks/load_ddns_key_into_vault.yaml
       no_log: true

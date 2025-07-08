@@ -17,11 +17,11 @@
     state: present
 
 - name: Execute Radxa Rock 5B+ specific setup tasks
-  ansible.builtin.include_tasks: radxa_tasks.yml
+  ansible.builtin.include_tasks: radxa_tasks.yaml
   when: "'radxa' in group_names"
 
 - name: Load required Kernel modules
-  ansible.builtin.include_tasks: load_kernel_modules.yml
+  ansible.builtin.include_tasks: load_kernel_modules.yaml
 
 - name: Blacklist storage devices in multipath configuration
-  ansible.builtin.include_tasks: multipath_blacklist.yml
+  ansible.builtin.include_tasks: multipath_blacklist.yaml

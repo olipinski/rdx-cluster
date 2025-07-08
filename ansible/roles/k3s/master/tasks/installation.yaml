@@ -6,9 +6,8 @@
       when:
         - k3s_primary_control_node
       block:
-        - name: install master
-          include_tasks: k3s_install.yml
-
+        - name: Install master
+          ansible.builtin.include_tasks: k3s_install.yaml
     - name: Install secondary masters in case of HA mode
       # Secondary masters need to be added sequentially
       # otherwise, "ETCD join failed: etcdserver: too many learner members in cluster" appears.
@@ -17,11 +16,10 @@
       throttle: 1
       block:
         - name: Wait for primary master
-          include_tasks: wait_for_primary_master.yml
+          ansible.builtin.include_tasks: wait_for_primary_master.yaml
         - name: Install k3s
-          include_tasks: k3s_install.yml
-
+          ansible.builtin.include_tasks: k3s_install.yaml
 - name: Install master non HA
   when:
     - not k3s_build_cluster
-  include_tasks: k3s_install.yml
+  include_tasks: k3s_install.yaml
