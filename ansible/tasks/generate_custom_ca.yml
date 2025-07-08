@@ -3,13 +3,13 @@
   openssl_privatekey:
     path: "{{ selfsigned_certificates_path }}/CA.key"
     size: "{{ ssl_key_size | int }}"
-    mode: 0644
+    mode: '0644'
   register: ca_key
 
 - name: create the CA CSR
   openssl_csr:
     privatekey_path: "{{ selfsigned_certificates_path }}/CA.key"
-    common_name: "{{ vault.general.org }}" CA
+    common_name: "{{ vault.general.org }} CA"
     use_common_name_for_san: false  # since we do not specify SANs, don't use CN as a SAN
     basic_constraints:
       - 'CA:TRUE'
