@@ -1,67 +1,67 @@
 - title: Getting Started
   docs:
-  - home
-  - architecture
-  - ansible
-  - dev
+    - home
+    - architecture
+    - ansible
+    - dev
 - title: Cluster Setup
   docs:
-  - pimaster
-  - gateway
-  - external
-  - node
-  - dns
+    - pimaster
+    - gateway
+    - external
+    - node
+    - dns
 - title: Node Provisioning
   docs:
-  - maas-setup
-  - radxa-prep
+    - maas-setup
+    - radxa-prep
 - title: External Services
   docs:
-  - s3-backup
-  - vault
+    - s3-backup
+    - vault
 - title: K3S Installation
   docs:
-  - k3s-installation
+    - k3s-installation
 - title: Networking
   docs:
-  - k3s-networking
-  - cilium
-  - kube-dns
-  - nginx
+    - k3s-networking
+    - cilium
+    - kube-dns
+    - nginx
 - title: Certificate Management
   docs:
-  - certmanager
+    - certmanager
 - title: Single Sign-On
   docs:
-  - sso
+    - sso
 - title: Storage
   docs:
-  - longhorn
-  - minio
+    - longhorn
+    - minio
 - title: Monitoring
   docs:
-  - metrics-server
-  - observability
-  - logging
-  - loki
-  - elasticsearch
-  - logging-forwarder-aggregator
-  - prometheus
-  - tracing
+    - metrics-server
+    - observability
+    - logging
+    - loki
+    - elasticsearch
+    - logging-forwarder-aggregator
+    - prometheus
+    - tracing
 - title: Backup
   docs:
-  - backup
+    - backup
 - title: GitOps
   docs:
-  - fluxcd
+    - fluxcd
 - title: Microservices
   docs:
-  - databases
-  - service-mesh
-  - istio
-  - kafka
+    - databases
+    - service-mesh
+    - istio
+    - kafka
 - title: Reference Docs
   docs:
-  - k8s-networking
-  - k8s-commands
-  - iscsi-commands
+    - k8s-networking
+    - k8s-commands
+    - iscsi-commands

@@ -49,8 +49,8 @@
       tags: [security]
       register: ssh_result
       vars:
-        sshd_allow_reload: false  # Don't apply new SSH config, might also kill the connection
-        sshd_allow_restart: false  # Same as above.
+        sshd_allow_reload: false # Don't apply new SSH config, might also kill the connection
+        sshd_allow_restart: false # Same as above.
     # Setup the authoritative DNS
     - name: DNS setup
       ansible.builtin.include_role:
@@ -64,7 +64,7 @@
       tags: [networking]
       register: netplan_result
       vars:
-        netplan_apply: false  # Don't apply netplan, it will kill this connection
+        netplan_apply: false # Don't apply netplan, it will kill this connection
     # Firewall (nftables) configuration
     - name: Firewall config
       ansible.builtin.include_role:
@@ -72,7 +72,7 @@
       tags: [firewall]
       register: firewall_result
       vars:
-        firewall_apply: false  # Don't apply firewall, only stage
+        firewall_apply: false # Don't apply firewall, only stage
     # NTP Server configuration
     - name: NTP setup
       ansible.builtin.include_role:

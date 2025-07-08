@@ -16,4 +16,4 @@
       tags: ["always"]
   roles:
     - role: logging/external_node
-      tags: ['logging']
+      tags: ["logging"]

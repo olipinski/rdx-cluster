@@ -1,5 +1,4 @@
 ---
-
 - name: Configure rdxcluster nodes backup
   hosts: rdxcluster
   gather_facts: true

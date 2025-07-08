@@ -9,8 +9,8 @@ configMapGenerator:
       - otel-values.yaml=values.yaml
 
 patches:
-- target:
-    group: helm.toolkit.fluxcd.io
-    kind: HelmRelease
-    name: ingress-nginx
-  path: helm-patch.yaml
+  - target:
+      group: helm.toolkit.fluxcd.io
+      kind: HelmRelease
+      name: ingress-nginx
+    path: helm-patch.yaml

@@ -1,7 +1,6 @@
 // Vapor 5.1.3
 // Bootswatch
 
-
 // Variables
 
 $web-font-path: "https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" !default;
@@ -12,19 +11,32 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Lato:wght@400;700&disp
 $outrun: false !default;
 
 @mixin text-shadow($color) {
-  text-shadow: 0 0 1px rgba($color, .6), 0 0 3px rgba($color, .5), 0 0 .5rem rgba($color, .3), 0 0 2rem rgba($color, .2);
+  text-shadow:
+    0 0 1px rgba($color, 0.6),
+    0 0 3px rgba($color, 0.5),
+    0 0 0.5rem rgba($color, 0.3),
+    0 0 2rem rgba($color, 0.2);
 }
 
 @mixin text-shadow-sm($color) {
-  text-shadow: 0 0 1px rgba($color, .3), 0 0 2px rgba($color, .3), 0 0 5px rgba($color, .2);
+  text-shadow:
+    0 0 1px rgba($color, 0.3),
+    0 0 2px rgba($color, 0.3),
+    0 0 5px rgba($color, 0.2);
 }
 
 @mixin box-shadow($color) {
-  box-shadow: 0 0 2px rgba($color, .9), 0 0 4px rgba($color, .4), 0 0 1rem rgba($color, .3), 0 0 4rem rgba($color, .1);
+  box-shadow:
+    0 0 2px rgba($color, 0.9),
+    0 0 4px rgba($color, 0.4),
+    0 0 1rem rgba($color, 0.3),
+    0 0 4rem rgba($color, 0.1);
 }
 
 @mixin box-shadow-lg($color) {
-  box-shadow: 0 0 2rem rgba(tint-color($color, 10%), .4), 0 0 8rem rgba(tint-color($color, 10%), .3);
+  box-shadow:
+    0 0 2rem rgba(tint-color($color, 10%), 0.4),
+    0 0 8rem rgba(tint-color($color, 10%), 0.3);
 }
 
 @mixin header-shadow($color) {
@@ -47,7 +59,12 @@ $outrun: false !default;
 // Body
 
 body {
-  background-image: linear-gradient(shade-color($body-bg, 10%) 0%, $body-bg 7%, $body-bg 80%, shade-color(#173e98, 50%) 100%);
+  background-image: linear-gradient(
+    shade-color($body-bg, 10%) 0%,
+    $body-bg 7%,
+    $body-bg 80%,
+    shade-color(#173e98, 50%) 100%
+  );
   @include text-shadow-sm($body-color);
 
   @if ($outrun) {
@@ -62,9 +79,18 @@ body {
       width: 200vw;
       height: 100vh;
       display: block;
-      background-image: repeating-linear-gradient(rgba($blue, .6) 0 1px, transparent 1px 100%), repeating-linear-gradient(90deg, rgba($blue, .6) 0 1px, transparent 1px 100%);
+      background-image:
+        repeating-linear-gradient(rgba($blue, 0.6) 0 1px, transparent 1px 100%),
+        repeating-linear-gradient(
+          90deg,
+          rgba($blue, 0.6) 0 1px,
+          transparent 1px 100%
+        );
       background-size: 200px 200px;
-      transform: perspective(50vh) rotateX(50deg) translateY(-11.3vh) translateZ(10px);
+      transform: perspective(50vh)
+        rotateX(50deg)
+        translateY(-11.3vh)
+        translateZ(10px);
       transform-origin: center center;
       z-index: -1;
     }
@@ -97,7 +123,6 @@ a {
 }
 
 .blockquote {
-
   &-footer {
     @include text-shadow-sm(shade-color($blockquote-footer-color, 20%));
   }
@@ -264,7 +289,6 @@ legend {
 }
 
 .tooltip {
-
   &-inner,
   .arrow {
     @include box-shadow-lg($primary);
@@ -292,7 +316,6 @@ legend {
 // Containers
 
 .list-group {
-
   &-item.active {
     @include header-shadow($white);
   }

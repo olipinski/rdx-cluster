@@ -3,7 +3,6 @@ title: Kubernetes development environment
 permalink: /docs/dev/
 description: How to configure a development environment for the Pi Cluster using K3D.
 last_modified_at: "31-12-2024"
-
 ---
 
 The development setup is the following:
@@ -26,7 +25,6 @@ The following need to be installed in your local development environment
 - helm
 
 ### Docker
-
 
 Follow official [installation guide](https://docs.docker.com/engine/install/ubuntu/).
 
@@ -102,15 +100,16 @@ Follow official [installation guide](https://docs.docker.com/engine/install/ubun
 
     ```json
     {
-        "exec-opts": ["native.cgroupdriver=systemd"],
-        "log-driver": "json-file",
-        "log-opts": {
+      "exec-opts": ["native.cgroupdriver=systemd"],
+      "log-driver": "json-file",
+      "log-opts": {
         "max-size": "100m"
-        },
-        "storage-driver": "overlay2",
-        "data-root": "/data/docker"
+      },
+      "storage-driver": "overlay2",
+      "data-root": "/data/docker"
     }
     ```
+
   - Restart docker
 
     ```shell
@@ -127,7 +126,6 @@ Follow official [K3D installation guide](https://docs.docker.com/engine/install/
   wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
   ```
 
-
 - Step 3. Check k3d version installed
 
   ```shell
@@ -138,7 +136,6 @@ Follow official [K3D installation guide](https://docs.docker.com/engine/install/
 
 ### Kubectl
 
-
 Follow official [kubectl installation guide](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
 
 - Step 1: Download latest stable version
@@ -146,7 +143,6 @@ Follow official [kubectl installation guide](https://kubernetes.io/docs/tasks/to
   ```shell
   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
   ```
-
 
 - Step 2: Install kubectl in /usr/local/bin
 
@@ -180,11 +176,13 @@ Follow official [kubectl installation guide](https://kubernetes.io/docs/tasks/to
   $ chmod 700 get_helm.sh
   $ ./get_helm.sh
   ```
+
 - Step 2: Give it executable permissions
 
   ```shell
   chmod 700 get_helm.sh
   ```
+
 - Step 3: Install helm
 
   ```shell
@@ -207,7 +205,6 @@ k3s cluster can be created using K3D. The cluster will be configured with same o
 - kube-proxy is disabled (Cilium Kube-proxy replacement feature will be used)
 - Cilium L2 LB announcement will be used
 
-
 ### Prerequisites
 
 #### Enable kernel modules
@@ -222,6 +219,7 @@ sudo modprobe -v iptable_raw
 sudo modprobe -v iptable_nat
 sudo modprobe -v xt_socket
 ```
+
 Add this configuration in kernel modules configuration file to persist the modules after restart
 
 ```shell
@@ -243,7 +241,6 @@ net.ipv4.conf.all.forwarding = 1 | sudo tee /etc/sysctl.d/01-sysctl.conf > /dev/
 sudo sysctl -p
 ```
 
-
 ### Creating docker network
 
 A specific docker network, 172.30.0.0/16, will be created for the k3d dev environment
@@ -257,9 +254,7 @@ docker network create \
       "picluster"
 ```
 
-
 ### Creating K3D cluster
-
 
 - Step 1. Create k3d-config.yaml file
 
@@ -314,15 +309,15 @@ docker network create \
         # Disable network-policy
         - arg: --disable-network-policy
           nodeFilters:
-          - server:*
+            - server:*
         # Disable kube-proxy
         - arg: --disable-kube-proxy
           nodeFilters:
-          - server:*
+            - server:*
         # Disable flannel-backend
         - arg: --flannel-backend=none
           nodeFilters:
-          - server:*
+            - server:*
         # Adding cluster PODs and Services CIDRs
         - arg: --cluster-cidr=10.42.0.0/16
           nodeFilters:
@@ -348,13 +343,11 @@ docker network create \
     - k3d-picluster-agent-0, with IP 172.30.0.3
     - k3d-picluster-agent-1, with IP 172.30.0.4
 
-
   - k3s version is defined through the corresponding docker image label (`image: rancher/k3s:v1.30.6-k3s1`)
 
   - Following k3s services are disabled: `kube-proxy`, `traefik`, `servicelb`, `flannel` and `network-policy`
 
   - k3d default load balancer is also disabled (`k3d.disableLoadbalancer: true`)
-
 
 - Step 2: Create K3d cluster
 
@@ -376,7 +369,6 @@ docker network create \
 
   However, DNS fix (K3D_FIX_DNS=1) breaks DNS resolution for external domain names (Internet)": See details in open k3d issue: [#1515](https://github.com/k3d-io/k3d/issues/1515)
 
-
   {{site.data.alerts.end}}
 
 - Step 3: Check cluster is running
@@ -387,19 +379,19 @@ docker network create \
 
 ### Installing Cilium CNI
 
-
 Installation using `Helm` (Release 3):
 
 - Step 1: Add Cilium Helm repository:
 
-    ```shell
-    helm repo add cilium https://helm.cilium.io/
-    ```
+  ```shell
+  helm repo add cilium https://helm.cilium.io/
+  ```
+
 - Step2: Fetch the latest charts from the repository:
 
-    ```shell
-    helm repo update
-    ```
+  ```shell
+  helm repo update
+  ```
 
 - Step 4: Create helm values file `cilium-values.yml`
 
@@ -463,35 +455,35 @@ Installation using `Helm` (Release 3):
 - Step 1: Configure Cilium LB-IPAM
 
   Create the following manifest file: `cilium-config.yaml`
-    ```yml
-    ---
-    apiVersion: "cilium.io/v2alpha1"
-    kind: CiliumLoadBalancerIPPool
-    metadata:
-      name: "first-pool"
-      namespace: kube-system
-    spec:
-      blocks:
-        - start: "172.30.200.1"
-          stop: "172.30.200.254"
 
-    ---
-    apiVersion: cilium.io/v2alpha1
-    kind: CiliumL2AnnouncementPolicy
-    metadata:
-      name: default-l2-announcement-policy
-      namespace: kube-system
-    spec:
-      externalIPs: true
-      loadBalancerIPs: true
-    ```
+  ```yml
+  ---
+  apiVersion: "cilium.io/v2alpha1"
+  kind: CiliumLoadBalancerIPPool
+  metadata:
+    name: "first-pool"
+    namespace: kube-system
+  spec:
+    blocks:
+      - start: "172.30.200.1"
+        stop: "172.30.200.254"
 
-   Apply the manifest file
+  ---
+  apiVersion: cilium.io/v2alpha1
+  kind: CiliumL2AnnouncementPolicy
+  metadata:
+    name: default-l2-announcement-policy
+    namespace: kube-system
+  spec:
+    externalIPs: true
+    loadBalancerIPs: true
+  ```
 
-   ```shell
-   kubectl apply -f cilium-config.yaml
-   ```
+  Apply the manifest file
 
+  ```shell
+  kubectl apply -f cilium-config.yaml
+  ```
 
 - Step 6: Confirm that the deployment succeeded, run:
 
@@ -504,7 +496,6 @@ Installation using `Helm` (Release 3):
 For details about Cilium installation and configuration see ["Cilium CNI"](/docs/cilium/)
 
 {{site.data.alerts.end}}
-
 
 ## References
 

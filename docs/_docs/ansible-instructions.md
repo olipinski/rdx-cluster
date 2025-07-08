@@ -6,8 +6,9 @@ last_modified_at: "16-01-2025"
 ---
 
 This are the instructions to quickly deploy Kuberentes Pi-cluster using the following tools:
+
 - [cloud-init](https://cloudinit.readthedocs.io/en/latest/): to automate initial OS installation/configuration on each node of the cluster
-- [Ansible](https://docs.ansible.com/): to automatically configure cluster nodes,  install and configure external services (DNS, DHCP, Firewall, S3 Storage server, Hashicorp Vautl) install K3S, and bootstraping cluster through installation and configuration of FluxCD
+- [Ansible](https://docs.ansible.com/): to automatically configure cluster nodes, install and configure external services (DNS, DHCP, Firewall, S3 Storage server, Hashicorp Vautl) install K3S, and bootstraping cluster through installation and configuration of FluxCD
 - [Flux CD](https://fluxcd.io/): to automatically deploy Applications to Kuberenetes cluster from manifest files in Git repository.
 
 {{site.data.alerts.note}}
@@ -40,7 +41,6 @@ Step-by-step manual process to deploy and configure each component is also descr
 
   This will automatically build and start `ansible-runner` docker container (including all packages and its dependencies), generate GPG key for encrypting with ansible-vault and create SSH key for remote connections.
 
-
 ## Ansible configuration
 
 Ansible configuration (variables and inventory files) might need to be adapted to your particular environment
@@ -65,16 +65,15 @@ The UNIX user to be used in remote connections (i.e.: `ricsanfre`) and its SSH k
 
 Modify [`ansible/group_vars/all.yml`]({{ site.git_edit_address }}/ansible/group_vars/all.yml) to set the UNIX user to be used by Ansible in the remote connection, `ansible_user` (default value `ansible`) and its SSH private key, `ansible_ssh_private_key_file`
 
-  ```yml
-  # Remote user name
-  ansible_user: ricsanfre
+```yml
+# Remote user name
+ansible_user: ricsanfre
 
-  # Ansible ssh private key
-  ansible_ssh_private_key_file: ~/.ssh/id_rsa
-  ```
+# Ansible ssh private key
+ansible_ssh_private_key_file: ~/.ssh/id_rsa
+```
 
 By default it uses the ssh key automatically created when initializing ansible-runner (`make ansible-runner-setup`) located at `ansible-runner/runner/.ssh` directory.
-
 
 ### Modify Ansible Playbook variables
 
@@ -82,25 +81,25 @@ Adjust ansible playbooks/roles variables defined within `group_vars`, `host_vars
 
 The following table shows the variable files defined at ansible's group and host levels
 
-| Group/Host Variable file | Nodes affected |
-|----|----|
-| [ansible/group_vars/all.yml]({{ site.git_edit_address }}/ansible/group_vars/all.yml) | all nodes of cluster + pimaster |
-| [ansible/group_vars/control.yml]({{ site.git_edit_address }}/ansible/group_vars/control.yml) | control group: pimaster |
+| Group/Host Variable file                                                                             | Nodes affected                                           |
+| ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| [ansible/group_vars/all.yml]({{ site.git_edit_address }}/ansible/group_vars/all.yml)                 | all nodes of cluster + pimaster                          |
+| [ansible/group_vars/control.yml]({{ site.git_edit_address }}/ansible/group_vars/control.yml)         | control group: pimaster                                  |
 | [ansible/group_vars/k3s_cluster.yml]({{ site.git_edit_address }}/ansible/group_vars/k3s_cluster.yml) | all kubernetes nodes (master and workers) of the cluster |
-| [ansible/group_vars/k3s_master.yml]({{ site.git_edit_address }}/ansible/group_vars/k3s_master.yml) | K3s master nodes |
-| [ansible/host_vars/node1.yml]({{ site.git_edit_address }}/ansible/host_vars/node1.yml) | external services node specific variables|
-{: .table .border-dark }
+| [ansible/group_vars/k3s_master.yml]({{ site.git_edit_address }}/ansible/group_vars/k3s_master.yml)   | K3s master nodes                                         |
+| [ansible/host_vars/node1.yml]({{ site.git_edit_address }}/ansible/host_vars/node1.yml)               | external services node specific variables                |
 
+{: .table .border-dark }
 
 The following table shows the variable files used for configuring the storage, backup server and K3S cluster and services.
 
-| Specific Variable File | Configuration |
-|----|----|
-| [ansible/vars/picluster.yml]({{ site.git_edit_address }}/ansible/vars/picluster.yml) | K3S cluster and external services configuration variables |
-| [ansible/vars/centralized_san/centralized_san_target.yml]({{ site.git_edit_address }}/ansible/vars/centralized_san/centralized_san_target.yml) | Configuration iSCSI target  local storage and LUNs: Centralized SAN setup|
-| [ansible/vars/centralized_san/centralized_san_initiator.yml]({{ site.git_edit_address }}/ansible/vars/centralized_san/centralized_san_initiator.yml) | Configuration iSCSI Initiator: Centralized SAN setup|
-{: .table .border-dark }
+| Specific Variable File                                                                                                                               | Configuration                                                            |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [ansible/vars/picluster.yml]({{ site.git_edit_address }}/ansible/vars/picluster.yml)                                                                 | K3S cluster and external services configuration variables                |
+| [ansible/vars/centralized_san/centralized_san_target.yml]({{ site.git_edit_address }}/ansible/vars/centralized_san/centralized_san_target.yml)       | Configuration iSCSI target local storage and LUNs: Centralized SAN setup |
+| [ansible/vars/centralized_san/centralized_san_initiator.yml]({{ site.git_edit_address }}/ansible/vars/centralized_san/centralized_san_initiator.yml) | Configuration iSCSI Initiator: Centralized SAN setup                     |
 
+{: .table .border-dark }
 
 {{site.data.alerts.important}}: **About Raspberry PI storage configuration**
 
@@ -154,15 +153,16 @@ During Vault credentials generation process, see below, Github PAT will be requi
 
 {{site.data.alerts.end}}
 
-
 ### Vault credentials generation
 
 Generate ansible vault variable file (`var/vault.yml`) containing all credentials/passwords. Random generated passwords will be generated for all cluster services.
 
 Execute the following command:
+
 ```shell
 make ansible-credentials
 ```
+
 Credentials for external cloud services (IONOS DNS API credentials) or Github PAT are asked during the execution of the playbook.
 
 ### Prepare PXE server
@@ -175,7 +175,6 @@ make get-kernel-files
 make get-uefi-files
 ```
 
-
 ## Cluster nodes setup
 
 ### Update Raspberry Pi firmware
@@ -187,8 +186,7 @@ Update firmware in all Raspberry-PIs following the procedure described in ["Rasp
 Install OpenWRT operating system on Raspberry PI or GL-Inet router, `gateway` node
 The installation and configuration process is described in ["Cluster Gateway (OpenWRT)"](/docs/openwrt/)
 
-
-#### Option 2:  Ubuntu OS
+#### Option 2: Ubuntu OS
 
 `gateway` router/firewall can be implemented deploying Linux services on Ubuntu 22.04 OS
 The installation and configuration process is described in ["Cluster Gateway (Ubuntu)"](/docs/gateway/)
@@ -207,19 +205,19 @@ The installation procedure followed is the described in ["Ubuntu OS Installation
 
 `user-data` depends on the storage architectural option selected:
 
-| Dedicated Disks | Centralized SAN    |
-|--------------------| ------------- |
-|  [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/node1/user-data) | [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/node1/user-data-centralizedSAN) |
+| Dedicated Disks                                                               | Centralized SAN                                                                              |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/node1/user-data) | [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/node1/user-data-centralizedSAN) |
+
 {: .table .border-dark }
 
 `network-config` is the same in both architectures:
 
-
-| Network configuration |
-|---------------------- |
+| Network configuration                                                                   |
+| --------------------------------------------------------------------------------------- |
 | [network-config]({{ site.git_edit_address }}/metal/rpi/cloud-init/node1/network-config) |
-{: .table .border-dark }
 
+{: .table .border-dark }
 
 {{site.data.alerts.warning}}**About SSH keys**
 
@@ -250,12 +248,11 @@ Install Operating System on Raspberry Pi nodes `node2-6`
 
 Follow the installation procedure indicated in ["Ubuntu OS Installation"](/docs/ubuntu/rpi/) using the corresponding cloud-init configuration files (`user-data` and `network-config`) depending on the storage setup selected. Since DHCP is used there is no need to change default `/boot/network-config` file located in the ubuntu image.
 
+| Dedicated Disks                                                                             | Centralized SAN                                                               |
+| ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/nodes/user-data-SSD-partition) | [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/nodes/user-data) |
 
-| Dedicated Disks | Centralized SAN  |
-|-----------------| ---------------- |
-| [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/nodes/user-data-SSD-partition) | [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/nodes/user-data)|
 {: .table .border-dark }
-
 
 In above user-data files, `hostname` field need to be changed for each node (node1-node6).
 
@@ -317,6 +314,7 @@ Install and configure S3 Storage server (Minio), and Secret Manager (Hashicorp V
 ```shell
 make external-services
 ```
+
 Ansible Playbook assumes S3 server is installed in a external node `s3` and Hashicorp Vault in `node1` (node belonging to Ansible's host group `vault`).
 
 {{site.data.alerts.note}}
@@ -330,6 +328,7 @@ Automate backup tasks at OS level with restic in all nodes (`node1-node6`) runni
 ```shell
 make configure-os-backup
 ```
+
 Minio S3 server VM, `s3`, hosted in Public Cloud (Oracle Cloud Infrastructure), will be used as backup backend.
 
 {{site.data.alerts.note}}
@@ -388,7 +387,6 @@ make k3s-bootstrap
 
 Flux CD will be installed and it will automatically deploy all cluster applications automatically from git repo.
 
-
 ### K3s Cluster reset
 
 If you mess anything up in your Kubernetes cluster, and want to start fresh, the K3s Ansible playbook includes a reset playbook, that you can use to remove the installation of K3S:
@@ -416,7 +414,6 @@ For doing a controlled shutdown of the cluster execute the following commands
   ```shell
   make shutdown-k3s-master
   ```
-
 
 `shutdown` commands connects to each node in the cluster and execute the command `sudo shutdown -h 1m`, commanding the node to shutdown in 1 minute.
 

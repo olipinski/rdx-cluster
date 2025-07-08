@@ -1,5 +1,4 @@
 ---
-
 - name: Check Linkerd CLI installation status
   ansible.builtin.stat:
     path: "{{ linkerd_bin }}"

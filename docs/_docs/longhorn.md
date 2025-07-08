@@ -16,6 +16,7 @@ A distributed block storage is needed to handle this issue. With distributed blo
 ### Installation requirements
 
 #### Kubernetes version requirements
+
 - A container runtime compatible with Kubernetes (Docker v1.13+, containerd v1.3.7+, etc.)
 - Kubernetes >= v1.21
 - Mount propagation must be supported[^2]
@@ -28,8 +29,7 @@ Longhorn uses internally iSCSI to expose the block device presented by the Longh
 
 ![longhorn](https://github.com/longhorn/longhorn-engine/raw/master/overview.png)
 
-
-Check than  `open-iscsi` is installed, and the `iscsid` daemon is running on all the nodes. This is necessary, since Longhorn relies on `iscsiadm` on the host to provide persistent volumes to Kubernetes.
+Check than `open-iscsi` is installed, and the `iscsid` daemon is running on all the nodes. This is necessary, since Longhorn relies on `iscsiadm` on the host to provide persistent volumes to Kubernetes.
 
 - Install open-iscsi package
 
@@ -44,8 +44,8 @@ Check than  `open-iscsi` is installed, and the `iscsid` daemon is running on 
   sudo systemctl enable iscsid
   ```
 
-
 #### Installing NFSv4 Client
+
 In Longhorn system, backup feature requires NFSv4, v4.1 or v4.2, and ReadWriteMany (RWX) volume feature requires NFSv4.1.[^4]
 
 Make sure the client kernel support is enabled on each Longhorn node.
@@ -68,7 +68,6 @@ Make sure the client kernel support is enabled on each Longhorn node.
   sudo apt install nfs-common
   ```
 
-
 #### Installing Cryptsetup and LUKS
 
 Longhorn supports Volume encryption.
@@ -78,6 +77,7 @@ Longhorn supports Volume encryption.
 To use encrypted volumes, `dm_crypt` kernel module has to be loaded and that `cryptsetup` is installed on all worker nodes.[^5]
 
 - Install `cryptsetup` package
+
   ```shell
   sudo apt install cryptsetup
   ```
@@ -93,7 +93,6 @@ To use encrypted volumes, `dm_crypt` kernel module has to be loaded and that 
   ```shell
   echo "dm_crypt" | sudo tee /etc/modules-load.d/dm_crypt.conf
   ```
-
 
 #### Installing Device Mapper Userspace Tool
 
@@ -122,6 +121,7 @@ blacklist {
 ```
 
 Restart multipathd service
+
 ```shell
 systemctl restart multipathd
 ```
@@ -135,11 +135,13 @@ Installation using `Helm` (Release 3):
   ```shell
   helm repo add longhorn https://charts.longhorn.io
   ```
+
 - Step2: Fetch the latest charts from the repository:
 
   ```shell
   helm repo update
   ```
+
 - Step 3: Create namespace
 
   ```shell
@@ -184,6 +186,7 @@ Installation using `Helm` (Release 3):
       cert-manager.io/cluster-issuer: letsencrypt-issuer
       cert-manager.io/common-name: longhorn.picluster.ricsanfre.com
   ```
+
   With this configuration:
 
   - Longhorn is configured to use `/storage` as default path for storing data (`defaultSettings.    defaultDataPath`)
@@ -208,7 +211,6 @@ Installation using `Helm` (Release 3):
   kubectl -n longhorn-system get pod
   ```
 
-
 ## Configuring acces to Longhorn UI (Only Traefik Ingress)
 
 Create a Ingress rule to make Longhorn front-end available through the Ingress Controller (Traefik) using a specific URL (`longhorn.picluster.ricsanfre.com`), mapped by DNS to Traefik Load Balancer external IP.
@@ -217,7 +219,6 @@ Longhorn backend is providing not secure communications (HTTP traffic) and thus 
 Since Longhorn frontend does not provide any authentication mechanism, Traefik HTTP basic authentication will be configured.
 
 There is a known issue with accessing Longhorn UI from Traefik 2.x that makes Longhorn APIs calls fail. Traefik 2.x ingress controller does not set the WebSocket headers and a specific middleware to route to the Longhorn UI must be specified. See [Longhorn documentation: "Troubleshooting Traefik 2.x as ingress controller"](https://longhorn.io/kb/troubleshooting-traefik-2.x-as-ingress-controller/) to know how to solve this particular issue.
-
 
 - Step 1. Create a manifest file `longhorn_ingress.yml`
 
@@ -256,20 +257,20 @@ There is a known issue with accessing Longhorn UI from Traefik 2.x that makes Lo
       cert-manager.io/common-name: longhorn.picluster.ricsanfre.com
   spec:
     tls:
-    - hosts:
-      - storage.picluster.ricsanfre.com
-      secretName: storage-tls
+      - hosts:
+          - storage.picluster.ricsanfre.com
+        secretName: storage-tls
     rules:
-    - host: longhorn.picluster.ricsanfre.com
-      http:
-        paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: longhorn-frontend
-              port:
-                number: 80
+      - host: longhorn.picluster.ricsanfre.com
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: longhorn-frontend
+                  port:
+                    number: 80
   ---
   # http ingress for http->https redirection
   kind: Ingress
@@ -287,13 +288,13 @@ There is a known issue with accessing Longhorn UI from Traefik 2.x that makes Lo
       - host: longhorn.picluster.ricsanfre.com
         http:
           paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: longhorn-frontend
-                port:
-                  number: 80
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: longhorn-frontend
+                  port:
+                    number: 80
   ```
 
 - Step 2. Apply the manifest file
@@ -327,7 +328,7 @@ Ansible playbook has been developed for automatically create this testing POD `r
     namespace: testing-longhorn
   spec:
     accessModes:
-    - ReadWriteOnce
+      - ReadWriteOnce
     storageClassName: longhorn
     resources:
       requests:
@@ -340,19 +341,20 @@ Ansible playbook has been developed for automatically create this testing POD `r
     namespace: testing-longhorn
   spec:
     containers:
-    - name: longhorn-test
-      image: nginx:stable-alpine
-      imagePullPolicy: IfNotPresent
-      volumeMounts:
-      - name: longhorn-pvc
-        mountPath: /data
-      ports:
-      - containerPort: 80
+      - name: longhorn-test
+        image: nginx:stable-alpine
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: longhorn-pvc
+            mountPath: /data
+        ports:
+          - containerPort: 80
     volumes:
-    - name: longhorn-pvc
-      persistentVolumeClaim:
-        claimName: longhorn-pvc
+      - name: longhorn-pvc
+        persistentVolumeClaim:
+          claimName: longhorn-pvc
   ```
+
 - Step 2. Apply the manifest file
 
   ```shell
@@ -371,6 +373,7 @@ Ansible playbook has been developed for automatically create this testing POD `r
   kubectl get pv -n testing-longhorn
   kubectl get pvc -n testing-longhorn
   ```
+
 - Step 5. Connect to the POD and make use of the created volume
 
   Get a shell to the container and create a file on the persistent volume:
@@ -386,9 +389,7 @@ Ansible playbook has been developed for automatically create this testing POD `r
 
 ![longhorn-ui-replica](/assets/img/longhorn_volume_test_replicas.png)
 
-
 ## Setting Longhorn as default Kubernetes StorageClass
-
 
 {{site.data.alerts.note}}
 
@@ -424,12 +425,14 @@ kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storagec
 
 Procedure is explained in kubernetes documentation: ["Change default Storage Class"](https://kubernetes.io/docs/tasks/administer-cluster/change-default-storage-class/).
 
-
 ## References
 
-
 [^2]: [Mount Propagation](https://kubernetes.io/docs/concepts/storage/volumes/#mount-propagation) is a feature activated by defult since Kubernetes v1.14
+
 [^3]: [Longorn Requirements- Installing open-iscsi](https://longhorn.io/docs/latest/deploy/install/#installing-open-iscsi)
+
 [^4]: [Longorn Requirements- Installing NFSv4 Client](https://longhorn.io/docs/latest/deploy/install/#installing-nfsv4-client)
+
 [^5]: [Longorn Requirements- Installing Cryptsetup and Luks](https://longhorn.io/docs/latest/deploy/install/#installing-cryptsetup-and-luks)
+
 [^6]: [Longorn Requirements- Installing Device Mapper](https://longhorn.io/docs/latest/deploy/install/#installing-device-mapper-userspace-tool)

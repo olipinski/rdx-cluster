@@ -12,9 +12,7 @@
 
 **K3S Kubernetes Cluster at home automated with Ansible and FluxCD**
 
-
 This is an educational project to build a hybrid x86/ARM Kubernetes cluster at home, using Raspberry Pi and refurbished x86 mini PCs, learn to deploy basic kubernetes services and automate its deployment and configuration applying IaC (infrastructure as a code) and GitOps methodologies.
-
 
 The entire process for creating this cluster at home, from cluster design and architecture to step-by-step manual configuration guides, has been documented and it is published in the project website: https://picluster.ricsanfre.com.
 
@@ -27,6 +25,7 @@ Since its deployment is completely automated, the cluster can be re-deployed in 
 The scope of this project is to build a hybrid x86/ARM kubernetes cluster at home, using low cost Raspeberry PIs and old refurbished mini PCs, and automate its deployment and configuration applying **IaC (infrastructure as a code)** and **GitOps** methodologies with tools like [Ansible](https://docs.ansible.com/), [cloud-init](https://cloudinit.readthedocs.io/en/latest/) and [Flux CD](https://fluxcd.io/).
 
 As part of the project, the goal is to use a lightweight Kubernetes flavor based on [K3S](https://k3s.io/) and deploy cluster basic services such as:
+
 - Distributed block storage for POD's persistent volumes, [LongHorn](https://longhorn.io/).
 - S3 Object storage, [Minio](https://min.io/).
 - Backup/restore solution for the cluster, [Velero](https://velero.io/) and [Restic](https://restic.net/).
@@ -34,9 +33,9 @@ As part of the project, the goal is to use a lightweight Kubernetes flavor based
 - Secrets Management solution with [Vault](https://www.vaultproject.io/) and [External Secrets](https://external-secrets.io/)
 - Identity Access Management(IAM) providing Single-sign On, [Keycloak](https://www.keycloak.org/)
 - Observability platform based on:
-   - Metrics monitoring solution, [Prometheus](https://prometheus.io/)
-   - Logging and analytics solution, combined EFK+LG stacks ([Elasticsearch](https://www.elastic.co/elasticsearch/)-[Fluentd](https://www.fluentd.org/)/[Fluentbit](https://fluentbit.io/)-[Kibana](https://www.elastic.co/kibana/) + [Loki](https://grafana.com/oss/loki/)-[Grafana](https://grafana.com/oss/grafana/))
-   - Distributed tracing solution, [Tempo](https://grafana.com/oss/tempo/).
+  - Metrics monitoring solution, [Prometheus](https://prometheus.io/)
+  - Logging and analytics solution, combined EFK+LG stacks ([Elasticsearch](https://www.elastic.co/elasticsearch/)-[Fluentd](https://www.fluentd.org/)/[Fluentbit](https://fluentbit.io/)-[Kibana](https://www.elastic.co/kibana/) + [Loki](https://grafana.com/oss/loki/)-[Grafana](https://grafana.com/oss/grafana/))
+  - Distributed tracing solution, [Tempo](https://grafana.com/oss/tempo/).
 
 Also deployment of services for building a cloud-native microservices architecture are include as part of the scope:
 
@@ -231,14 +230,12 @@ The following picture shows the set of opensource solutions used so far in the c
 
 The following technologies have been used in previous releases of PiCluster but they have been deprecated and not longer maintained
 
-
-|                      | Name         | Description                                                                                                             |
-| -------------------- | ------------ |:----------------------------------------------------------------------------------------------------------------------- |
-| <img width="60" src="docs/assets/img/logos/metallb.svg" > | [Metal-LB](https://metallb.universe.tf) | Load-balancer implementation for bare metal Kubernetes clusters. Replaced by Cilium CNI load balancing capabilities |
-| <img width="32" src="docs/assets/img/logos/traefik.svg" > | [Traefik](https://traefik.io/traefik/)  | Kubernetes Ingress Controller. Replaced by NGINX Ingress Controller  |
-| <img width="32" src="docs/assets/img/logos/argocd.svg" >  | [ArgoCD](https://argo-cd.readthedocs.io/en/stable/)  | GitOps tool. Replaced by FluxCD |
-| <img width="20" src="docs/assets/img/logos/flannel.svg" > | [Flannel](https://github.com/flannel-io/flannel/) | Kubernetes CNI plugin. Embedded into K3s. Replaced by Cilium CNI |
-
+|                                                           | Name                                                | Description                                                                                                         |
+| --------------------------------------------------------- | --------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------ |
+| <img width="60" src="docs/assets/img/logos/metallb.svg" > | [Metal-LB](https://metallb.universe.tf)             | Load-balancer implementation for bare metal Kubernetes clusters. Replaced by Cilium CNI load balancing capabilities |
+| <img width="32" src="docs/assets/img/logos/traefik.svg" > | [Traefik](https://traefik.io/traefik/)              | Kubernetes Ingress Controller. Replaced by NGINX Ingress Controller                                                 |
+| <img width="32" src="docs/assets/img/logos/argocd.svg" >  | [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) | GitOps tool. Replaced by FluxCD                                                                                     |
+| <img width="20" src="docs/assets/img/logos/flannel.svg" > | [Flannel](https://github.com/flannel-io/flannel/)   | Kubernetes CNI plugin. Embedded into K3s. Replaced by Cilium CNI                                                    |
 
 ## External Resources and Services
 
@@ -246,11 +243,10 @@ Even whe the premise is to deploy all services in the kubernetes cluster, there 
 
 ### Cloud external services
 
-
-|  |Provider | Resource | Purpose |
-| --- | --- | --- | --- |
-| <img width="60" src="docs/assets/img/logos/letsencrypt.svg" >| [Letsencrypt](https://letsencrypt.org/) | TLS CA Authority | Signed valid TLS certificates |
-| <img width="60" src="docs/assets/img/logos/ionos.png"> |[IONOS](https://www.ionos.es/) | DNS | DNS and [DNS-01 challenge](https://letsencrypt.org/docs/challenge-types/#dns-01-challenge) for certificates |
+|                                                               | Provider                                | Resource         | Purpose                                                                                                     |
+| ------------------------------------------------------------- | --------------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------- |
+| <img width="60" src="docs/assets/img/logos/letsencrypt.svg" > | [Letsencrypt](https://letsencrypt.org/) | TLS CA Authority | Signed valid TLS certificates                                                                               |
+| <img width="60" src="docs/assets/img/logos/ionos.png">        | [IONOS](https://www.ionos.es/)          | DNS              | DNS and [DNS-01 challenge](https://letsencrypt.org/docs/challenge-types/#dns-01-challenge) for certificates |
 
 > **NOTE:** These resources are optional, the homelab still works without them but it won't have trusted certificates
 
@@ -270,10 +266,10 @@ Even whe the premise is to deploy all services in the kubernetes cluster, there 
 
 There is another list of services that I have decided to run outside the kuberentes cluster selfhosting them.
 
-|  |External Service | Resource | Purpose |
-| --- | --- | --- | --- |
-| <img width="60" src="docs/assets/img/logos/minio.svg"> |[Minio](https://min.io) | S3 Object Store | Cluster Backup  |
-| <img width="32" src="docs/assets/img/logos/vault.svg"> |[Hashicorp Vault](https://www.vaultproject.io/) | Secrets Management | Cluster secrets management |
+|                                                        | External Service                                | Resource           | Purpose                    |
+| ------------------------------------------------------ | ----------------------------------------------- | ------------------ | -------------------------- |
+| <img width="60" src="docs/assets/img/logos/minio.svg"> | [Minio](https://min.io)                         | S3 Object Store    | Cluster Backup             |
+| <img width="32" src="docs/assets/img/logos/vault.svg"> | [Hashicorp Vault](https://www.vaultproject.io/) | Secrets Management | Cluster secrets management |
 
 Minio backup servive is hosted in a VM running in Public Cloud, using [Oracle Cloud Infrastructure (OCI) free tier](https://www.oracle.com/es/cloud/free/).
 
@@ -283,11 +279,9 @@ Vault service is running in `gateway` node, since Vault kubernetes authenticatio
 
 Home lab architecture, showed in the picture below, consist of a Kubernetes cluster of ARM (Rasbperry PI) and x86 (HP elitedesk 800 G3 mini PCs) nodes and a firewall, built with another Raspberry PI, to isolate cluster network from your home network.
 
-
 <p align="center">
   <img src="docs/assets/img/pi-cluster-architecture.png" width="500"/>
 </p>
-
 
 See further details about the architecture and hardware in the [documentation](https://picluster.ricsanfre.com/docs/home/)
 

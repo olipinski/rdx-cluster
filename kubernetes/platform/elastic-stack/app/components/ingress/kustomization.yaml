@@ -6,13 +6,13 @@ resources:
   - kibana-ingress.yaml
 
 patches:
-- target:
-    group: elasticsearch.k8s.elastic.co
-    kind: Elasticsearch
-    name: efk
-  path: elasticsearch-patch.yaml
-- target:
-    group: kibana.k8s.elastic.co
-    kind: Kibana
-    name: efk
-  path: elasticsearch-patch.yaml
+  - target:
+      group: elasticsearch.k8s.elastic.co
+      kind: Elasticsearch
+      name: efk
+    path: elasticsearch-patch.yaml
+  - target:
+      group: kibana.k8s.elastic.co
+      kind: Kibana
+      name: efk
+    path: elasticsearch-patch.yaml

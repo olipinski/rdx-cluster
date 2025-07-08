@@ -1,5 +1,4 @@
 ---
-
 - name: Install flux-cd cli
   ansible.builtin.shell: |
     set -o pipefail

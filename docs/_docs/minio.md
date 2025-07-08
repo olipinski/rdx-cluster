@@ -11,9 +11,7 @@ Official [Minio Kubernetes installation documentation](https://min.io/docs/minio
 
 Instead of using Minio Operator, [Vanilla Minio helm chart](https://github.com/minio/minio/tree/master/helm/minio) will be used. Not need to support multi-tenant installations and Vanilla Minio helm chart supports also the automatic creation of buckets, policies and users. Minio Operator creation does not automate this process.
 
-
 ## Minio installation
-
 
 Installation using `Helm` (Release 3):
 
@@ -22,11 +20,13 @@ Installation using `Helm` (Release 3):
   ```shell
   helm repo add minio https://charts.min.io/
   ```
+
 - Step2: Fetch the latest charts from the repository:
 
   ```shell
   helm repo update
   ```
+
 - Step 3: Create namespace
 
   ```shell
@@ -35,8 +35,8 @@ Installation using `Helm` (Release 3):
 
 - Step 3: Create Minio secret
 
-
   The following secret need to be created, containing Minio's root user and password, and keys from others users that are going to be provisioned automatically when installing the helm chart (loki, tempo):
+
   ```yml
   apiVersion: v1
   kind: Secret
@@ -50,7 +50,6 @@ Installation using `Helm` (Release 3):
     lokiPassword: < minio_loki_key | b64encode >
     tempoPassword: < minio_tempo_key | b64encode >
   ```
-
 
 - Step 4: Create file `minio-values.yml`
 
@@ -70,11 +69,11 @@ Installation using `Helm` (Release 3):
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
-        - matchExpressions:
-          - key: kubernetes.io/arch
-            operator: In
-            values:
-            - amd64
+          - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
 
   # Persistence
   persistence:
@@ -106,8 +105,8 @@ Installation using `Helm` (Release 3):
     - name: loki
       statements:
         - resources:
-            - 'arn:aws:s3:::k3s-loki'
-            - 'arn:aws:s3:::k3s-loki/*'
+            - "arn:aws:s3:::k3s-loki"
+            - "arn:aws:s3:::k3s-loki/*"
           actions:
             - "s3:DeleteObject"
             - "s3:GetObject"
@@ -116,8 +115,8 @@ Installation using `Helm` (Release 3):
     - name: tempo
       statements:
         - resources:
-            - 'arn:aws:s3:::k3s-tempo'
-            - 'arn:aws:s3:::k3s-tempo/*'
+            - "arn:aws:s3:::k3s-tempo"
+            - "arn:aws:s3:::k3s-tempo/*"
           actions:
             - "s3:DeleteObject"
             - "s3:GetObject"
@@ -185,7 +184,6 @@ Installation using `Helm` (Release 3):
       #   * 'ca-issuer' (CA-signed certificate, not valid)
       cert-manager.io/cluster-issuer: letsencrypt-issuer
       cert-manager.io/common-name: minio.picluster.ricsanfre.com
-
   ```
 
   With this configuration:
@@ -205,7 +203,7 @@ Installation using `Helm` (Release 3):
   - Ingress resource (`ingress`) for s3 service API available at `s3.picluster.ricsanfre.com`. Annotated so Cert-Manager generate the TLS certificate automatically.
 
   - Ingress resource (`ingressConsole`) for S3 console available at `minio.picluster.ricsanfre.com`.
-Annotated so Cert-Manager generate the TLS certificate automatically.
+    Annotated so Cert-Manager generate the TLS certificate automatically.
 
 - Step 5: Install Minio in `minio` namespace
   ```shell

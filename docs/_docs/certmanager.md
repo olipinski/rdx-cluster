@@ -33,7 +33,6 @@ This issuer type is typically used in a private Public Key Infrastructure (PKI) 
 
 The ACME Issuer type represents a single account registered with the Automated Certificate Management Environment (ACME) Certificate Authority server. See section [Let's Encrypt certificates](#lets-encrypt-certificates).
 
-
 {{site.data.alerts.important}}
 
 CertManager is configured to deploy in the cluster a private PKI (Public Key Infrastructure) using a self-signed CA to issue auto-signed certificates.
@@ -43,7 +42,6 @@ CertManager also is configured to deliver valid certificates, using your own DNS
 Valid certificates signed by Letscript will be used for cluster exposed services.
 
 {{site.data.alerts.end}}
-
 
 ## Cert Manager Usage
 
@@ -62,7 +60,7 @@ metadata:
   name: example-test-com
 spec:
   dnsNames:
-    - 'example.com'
+    - "example.com"
   issuerRef:
     name: nameOfClusterIssuer
   secretName: example-test-com-tls
@@ -83,7 +81,6 @@ type: kubernetes.io/tls
 ```
 
 See further details in the [cert-manager documentation](https://cert-manager.io/docs/usage/certificate/)
-
 
 ### Securing Ingress resources
 
@@ -106,20 +103,20 @@ metadata:
   namespace: myIngress
 spec:
   rules:
-  - host: example.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: myservice
-            port:
-              number: 80
+    - host: example.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: myservice
+                port:
+                  number: 80
   tls: # < placing a host in the TLS config will determine what ends up in the cert's subjectAltNames
-  - hosts:
-    - example.com
-    secretName: myingress-cert # < cert-manager will store the created certificate in this secret.
+    - hosts:
+        - example.com
+      secretName: myingress-cert # < cert-manager will store the created certificate in this secret.
 ```
 
 ## Cert Manager Installation
@@ -128,19 +125,22 @@ Installation using `Helm` (Release 3):
 
 - Step 1: Add the JetStack Helm repository:
 
-    ```shell
-    helm repo add jetstack https://charts.jetstack.io
-    ```
+  ```shell
+  helm repo add jetstack https://charts.jetstack.io
+  ```
+
 - Step 2: Fetch the latest charts from the repository:
 
-    ```shell
-    helm repo update
-    ```
+  ```shell
+  helm repo update
+  ```
+
 - Step 3: Create namespace
 
-    ```shell
-    kubectl create namespace cert-manager
-    ```
+  ```shell
+  kubectl create namespace cert-manager
+  ```
+
 - Step 4: Create `cert-manager-values.yaml` file
 
   ```yaml
@@ -150,14 +150,15 @@ Installation using `Helm` (Release 3):
 
 - Step 5: Install Cert-Manager
 
-    ```shell
-    helm install cert-manager jetstack/cert-manager --namespace cert-manager -f cert-manager-values.yaml
-    ```
+  ```shell
+  helm install cert-manager jetstack/cert-manager --namespace cert-manager -f cert-manager-values.yaml
+  ```
+
 - Step 6: Confirm that the deployment succeeded, run:
 
-    ```shell
-    kubectl -n cert-manager get pod
-    ```
+  ```shell
+  kubectl -n cert-manager get pod
+  ```
 
 ## Cert-Manager Configuration
 
@@ -226,9 +227,11 @@ Algorithm used for creating private keys is ECDSA P-256. The use of this algorit
 trust ships with a single cluster scoped Bundle resource. A Bundle represents a set of data (configMap, secret) from the trust namespace that should be distributed and made available across the cluster.
 
 To install Trust-Manager, from Helm chart execute the following command:
+
 ```shell
 helm install trust-manager jetstack/cert-manager --namespace cert-manager
 ```
+
 {{site.data.alerts.note}}
 
 Trust Manager can be used to automatically share CA certificate created by Cert-Manager during linkerd installation.
@@ -255,7 +258,7 @@ This method do not require to expose to the Public Internet the web services hos
 
 Cert-manager by default support several DNS providers to automatically configure the requested DNS record challenge. For supporting additional DNS providers webhooks can be developed. See supported list and further documentation in [Certmanager documentation: "ACME DNS01" ](https://cert-manager.io/docs/configuration/acme/dns01/).
 
-IONOS, my DNS server provider, is not supported by Certmanager (neither OOTB support nor through supported external webhooks). Even when it is not officially supported by the community, there is a github project  providing a [IONOS cert-manager webhook](https://github.com/fabmade/cert-manager-webhook-ionos).
+IONOS, my DNS server provider, is not supported by Certmanager (neither OOTB support nor through supported external webhooks). Even when it is not officially supported by the community, there is a github project providing a [IONOS cert-manager webhook](https://github.com/fabmade/cert-manager-webhook-ionos).
 
 This ionos-webhook uses the [IONOS developer API](https://developer.hosting.ionos.es/), allowing the remote configuration of the DNS using a RESTFUL API.
 
@@ -267,7 +270,7 @@ To use IONOS developer API, first API key must be created.
 
 Follow [IONOS developer API: Get Started instructions](https://developer.hosting.ionos.es/docs/getstarted) to obtain API key.
 
-API key is composed of two parts:  Public Prefix (public key) and Secret (private key)
+API key is composed of two parts: Public Prefix (public key) and Secret (private key)
 
 #### Installing Certbot IONOS
 
@@ -367,7 +370,6 @@ Execute all the following commands from $HOME directory.
 
   {{site.data.alerts.end}}
 
-
 #### Configuring Certmanager with Letsencrypt
 
 In case of using DNS split horizong architecture where a internal DNS server is used, cert-manager need to be re-configured so internal DNS server is not used during DNS01 challenge process.
@@ -391,19 +393,20 @@ In case of using DNS split horizong architecture where a internal DNS server is 
 
   ```
 
-#####  IONOS as DNS provider
-
+##### IONOS as DNS provider
 
 - Step 1: Install cert-manager-webhook-ionos chart repo:
 
   ```shell
   helm repo add cert-manager-webhook-ionos https://fabmade.github.io/cert-manager-webhook-ionos
   ```
+
 - Step 2: Fetch the latest charts from the repository:
 
   ```shell
   helm repo update
   ```
+
 - Step 3: Create values.yml file for customizing helm chart
 
   ```yml
@@ -414,6 +417,7 @@ In case of using DNS split horizong architecture where a internal DNS server is 
     namespace: certmanager
     serviceAccountName: certmanager-cert-manager
   ```
+
   `groupName` is a unique identifier that need to be referenced in each Issuer's `webhook` stanza to inform cert-manager of where to send challengePayload resources in order to solve the DNS01 challenge. `acme.<yourdomain>` can be used.
 
   CertManager namespace and its servceAccount name need to be specified.
@@ -448,28 +452,28 @@ In case of using DNS split horizong architecture where a internal DNS server is 
     name: letsencrypt-issuer
     namespace: cert-manager
     spec:
-        acme:
-          # The ACME server URL
-          server: https://acme-v02.api.letsencrypt.org/directory
-          # Email address used for ACME registration
-          email: <your-email-address>
-          # Name of a secret used to store the ACME account private key
-          privateKeySecretRef:
-            name: letsencrypt-ionos-prod
-          # Enable the dns01 challenge provider
-          solvers:
-            - dns01:
-                webhook:
-                  groupName: acme.<your-domain>
-                  solverName: ionos
-                  config:
-                    apiUrl: https://api.hosting.ionos.com/dns/v1
-                    publicKeySecretRef:
-                      key: IONOS_PUBLIC_PREFIX
-                      name: ionos-secret
-                    secretKeySecretRef:
-                      key: IONOS_SECRET
-                      name: ionos-secret
+      acme:
+        # The ACME server URL
+        server: https://acme-v02.api.letsencrypt.org/directory
+        # Email address used for ACME registration
+        email: <your-email-address>
+        # Name of a secret used to store the ACME account private key
+        privateKeySecretRef:
+          name: letsencrypt-ionos-prod
+        # Enable the dns01 challenge provider
+        solvers:
+          - dns01:
+              webhook:
+                groupName: acme.<your-domain>
+                solverName: ionos
+                config:
+                  apiUrl: https://api.hosting.ionos.com/dns/v1
+                  publicKeySecretRef:
+                    key: IONOS_PUBLIC_PREFIX
+                    name: ionos-secret
+                  secretKeySecretRef:
+                    key: IONOS_SECRET
+                    name: ionos-secret
   ```
 
 ### Lets Encrypt HTTP validation method
@@ -477,9 +481,10 @@ In case of using DNS split horizong architecture where a internal DNS server is 
 HTTP validation method requires to actually expose a "challenge URL" in the Public Internet using the DNS domain associated to the TLS certificate.
 
 HTTP validation method is as follows:
+
 1. Cert-manager issues a certificate request to Let's Encrypt.
 2. Let's Encrypt requests an ownership verification challenge in response.
-The challenge will be to put an HTTP resource at a specific URL under the domain name that the certificate is being requested for. The theory is that if we can put that resource at that URL and Let's Encrypt can retrieve it remotely, then we must really be the owners of the domain. Otherwise, either we could not have placed the resource in the correct place, or we could not have manipulated DNS to allow Let's Encrypt to get to it.
+   The challenge will be to put an HTTP resource at a specific URL under the domain name that the certificate is being requested for. The theory is that if we can put that resource at that URL and Let's Encrypt can retrieve it remotely, then we must really be the owners of the domain. Otherwise, either we could not have placed the resource in the correct place, or we could not have manipulated DNS to allow Let's Encrypt to get to it.
 3. Cert-manager puts the resource in the right place and automatically creates a temporary Ingress record that will route traffic to the correct place. If Let's Encrypt can read the challenge and it is correct, it will issue the certificates back to cert-manager.
 4. Cert-manager will then store the certificates as secrets, and our website (or whatever) will use those certificates for securing our traffic with TLS.
 
@@ -524,10 +529,11 @@ To configure DynDNS IONOS provider, follow these [instructions](https://www.iono
 
 Enable port forwarding for TCP ports 80/443 to `gateway` node.
 
-| WAN Port | LAN IP | LAN Port |
-|----------|--------|----------|
-| 80 | `gateway` | 8080 |
-| 443 | `gateway`| 4430 |
+| WAN Port | LAN IP    | LAN Port |
+| -------- | --------- | -------- |
+| 80       | `gateway` | 8080     |
+| 443      | `gateway` | 4430     |
+
 {: .table .table-white .border-dark }
 
 #### Configure Pi cluster Gateway

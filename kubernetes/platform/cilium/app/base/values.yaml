@@ -5,10 +5,9 @@ k8sClientRateLimit:
   qps: 50
   burst: 200
 
-
 # Avoid having to manually restart the Cilium pods on config changes
 operator:
-  replicas: 1  # Uncomment this if you only have one node
+  replicas: 1 # Uncomment this if you only have one node
   rollOutPods: true
 
   # Install operator on master node

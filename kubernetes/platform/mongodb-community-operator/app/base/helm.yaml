@@ -25,6 +25,6 @@ spec:
     - name: longhorn
       namespace: longhorn-system
   valuesFrom:
-  - kind: ConfigMap
-    name: mongodb-community-operator-helm-values
-    valuesKey: base-values.yaml
+    - kind: ConfigMap
+      name: mongodb-community-operator-helm-values
+      valuesKey: base-values.yaml

@@ -1,6 +1,4 @@
 {
-    "origins": [
-      "https://picluster.ricsanfre.com"
-    ],
-    "defaultCommentOrder": "newest"
+  "origins": ["https://picluster.ricsanfre.com"],
+  "defaultCommentOrder": "newest"
 }

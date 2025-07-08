@@ -28,10 +28,12 @@ Instead of installing Vault using official Ubuntu packages, installation will be
 - Step 1. Create vault's UNIX user/group
 
   vault user is a system user, not login allowed
+
   ```shell
   sudo groupadd vault
   sudo useradd vault -g vault -r -s /sbin/nologin
   ```
+
 - Step 2. Create vault's storage directory
 
   ```shell
@@ -58,6 +60,7 @@ Instead of installing Vault using official Ubuntu packages, installation will be
   chown -R vault:vault /var/log/vault
   chmod -R 750 /var/log/vault
   ```
+
 - Step 5. Download server binary (`vault`) and copy them to `/usr/local/bin`
 
   ```shell
@@ -66,8 +69,8 @@ Instead of installing Vault using official Ubuntu packages, installation will be
    chmod +x vault
    sudo mv vault /usr/local/bin/.
   ```
-  where `<arch>` is amd64 or arm64, and `<version>` is vault version (for example: 1.12.2).
 
+  where `<arch>` is amd64 or arm64, and `<version>` is vault version (for example: 1.12.2).
 
 - Step 6. Create Vault TLS certificate
 
@@ -92,11 +95,11 @@ Instead of installing Vault using official Ubuntu packages, installation will be
             -keyout rootCA.key -out rootCA.crt
      ```
 
-    {{site.data.alerts.note}}
+  {{site.data.alerts.note}}
 
-    The one created during Minio installation can be re-used.
+  The one created during Minio installation can be re-used.
 
-    {{site.data.alerts.end}}
+  {{site.data.alerts.end}}
 
   2. Create a TLS certificate for Vault server signed using the custom CA
 
@@ -117,19 +120,20 @@ Instead of installing Vault using official Ubuntu packages, installation will be
 
   Once the certificate is created, public certificate and private key need to be installed in Vault server following this procedure:
 
-
   1. Copy public certificate `vault.crt` as `/etc/vault/tls/vault.crt`
 
      ```shell
      sudo cp vault.crt /etc/vault/tls/public.crt
      sudo chown vault:vault /etc/vault/tls/public.crt
      ```
+
   2. Copy private key `vault.key` as `/etc/vault/tls/vault.key`
 
      ```shell
      cp vault.key /etc/vault/tls/vault.key
      sudo chown vault:vault /etc/vault/tls/vault.key
      ```
+
   3. Copy CA certificate `rootCA.crt` as `/etc/vault/tls/vault-ca.crt`
 
      {{site.data.alerts.note}}
@@ -176,7 +180,6 @@ Instead of installing Vault using official Ubuntu packages, installation will be
   - Client TLS certificates validation is disabled (`tls_disable_client_certs`)
   - Vault is configured to use integrated storage [Raft](https://developer.hashicorp.com/vault/docs/configuration/storage/raft) data dir `/var/lib/vault`
   - Disables the server from executing the mlock syscall (`disable_mlock`) recommended when using Raft storage
-
 
 - Step 8. Create systemd vault service file `/etc/systemd/system/vault.service`
 
@@ -272,7 +275,6 @@ Instead of installing Vault using official Ubuntu packages, installation will be
 
   {{site.data.alerts.end}}
 
-
 ### Vault initialization and useal
 
 During initialization, Vault generates a root key, which is stored in the storage backend alongside all other Vault data. The root key itself is encrypted and requires an unseal key to decrypt it.
@@ -286,15 +288,14 @@ To initialize vault [`vault operator init`](https://developer.hashicorp.com/vaul
 ```shell
 vault operator init -key-shares=1 -key-threshold=1 -format=json > /etc/vault/unseal.json
 ```
+
 where number of key shares (`-key-shares`) and threshold (`-key-threshold`) is set to 1. Only one key is needed to unseal vault.
 
 The vault init command output is redirected to a file (`/etc/vault/unseal.json`) containing unseal keys values and root token needed to connect to vault.
 
 ```json
 {
-  "unseal_keys_b64": [
-    "UEDYFGa/oVUehw5eflXt2mdoE8zJD3QVub8b++rNCm8="
-  ],
+  "unseal_keys_b64": ["UEDYFGa/oVUehw5eflXt2mdoE8zJD3QVub8b++rNCm8="],
   "unseal_keys_hex": [
     "5040d81466bfa1551e870e5e7e55edda676813ccc90f7415b9bf1bfbeacd0a6f"
   ],
@@ -329,7 +330,6 @@ HA Enabled         true
 
 To unseal vault `vault operator unseal` command need to be executed, providing unseal keys generated during initialization process.
 
-
 Using the key stored in `unseal.json` file the following command can be executed:
 
 ```shell
@@ -358,7 +358,6 @@ HA Enabled         true
 ### Vault automatic unseal
 
 A systemd service can be created to automatically unseal vault every time it is started.
-
 
 - Step 1: Create a script (`/etc/vault/vault-unseal.sh`) for automating the unseal process using the keys stored in `/etc/vault/unseal.json`
 
@@ -445,9 +444,7 @@ A systemd service can be created to automatically unseal vault every time it is 
   sudo systemctl start vault-unseal.service
   ```
 
-
 ## Vault configuration
-
 
 Once vault is unsealed following configuration requires to provide vault's root token generated during initialization procces. See `root_token` in `unseal.json` output.
 
@@ -462,6 +459,7 @@ As an alternative to `vault` commands, API can be used. See [Vault API documenta
 `curl` command can be used. Vault token need to be provider as a HTTP header `X-Vault-Token`
 
 Get request
+
 ```shell
 curl -k -H "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/<api_endpoint>
 ```
@@ -497,6 +495,7 @@ Create vault policies to read and read/write KV secrets
     capabilities = [ "create", "read", "update", "delete", "list", "patch" ]
   }
   ```
+
   Add policy to vault
 
   ```shell
@@ -506,6 +505,7 @@ Create vault policies to read and read/write KV secrets
 - Read-only policy
 
   Create file `/etc/vault/policy/secrets-read.hcl`
+
   ```
   path "secret/*" {
     capabilities = [ "read" ]
@@ -549,7 +549,9 @@ Testing policies:
   VAULT_TOKEN=$WRITE_TOKEN
   vault kv put secret/secret1 user="user1" password="s1cret0"
   ```
+
   The secret is stored with success:
+
   ```
   === Secret Path ===
   secret/data/secret1
@@ -593,8 +595,6 @@ Testing policies:
 ### Kubernetes Auth Method
 
 Enabling [Vault kubernetes auth method](https://developer.hashicorp.com/vault/docs/auth/kubernetes) to authenticate with Vault using a Kubernetes Service Account Token. This method of authentication makes it easy to introduce a Vault token into a Kubernetes Pod.
-
-
 
 - Step 1. Create `vault` namespace
 
@@ -703,10 +703,12 @@ Enabling [Vault kubernetes auth method](https://developer.hashicorp.com/vault/do
 
 External Secrets Operator is installed through its helm chart.
 
--  Step 1: Add External sercrets repository:
-  ```shell
-  helm repo add external-secrets https://charts.external-secrets.io
-  ```
+- Step 1: Add External sercrets repository:
+
+```shell
+helm repo add external-secrets https://charts.external-secrets.io
+```
+
 - Step 2: Fetch the latest charts from the repository:
   ```shell
   helm repo update
@@ -739,7 +741,6 @@ External Secrets Operator is installed through its helm chart.
     --data '{ "bound_service_account_names": "external-secrets", "bound_service_account_namespaces": "external-secrets", "policies": ["readonly"], "ttl" : "24h"}' \
     https://vault.picluster.ricsanfre.com:8200/v1/auth/kubernetes/role/external-secrets
   ```
-
 
 - Step 6: Create Cluster Secret Store
 
@@ -780,22 +781,22 @@ External Secrets Operator is installed through its helm chart.
   apiVersion: external-secrets.io/v1
   kind: ExternalSecret
   metadata:
-   name: vault-example
+    name: vault-example
   spec:
-   secretStoreRef:
-     name: vault-backend
-     kind: ClusterSecretStore
-   target:
-     name: mysecret
-   data:
-   - secretKey: password
-     remoteRef:
-       key: secret1
-       property: password
-   - secretKey: user
-     remoteRef:
-       key: secret1
-       property: user
+    secretStoreRef:
+      name: vault-backend
+      kind: ClusterSecretStore
+    target:
+      name: mysecret
+    data:
+      - secretKey: password
+        remoteRef:
+          key: secret1
+          property: password
+      - secretKey: user
+        remoteRef:
+          key: secret1
+          property: user
   ```
 
   Check ExternalSecret status

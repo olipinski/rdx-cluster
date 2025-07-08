@@ -11,7 +11,6 @@ As an alternative a Virtual-BOX VM running on a Windows PC can be used as Ansibl
 
 As OS for `pimaster` a Ubuntu 20.04 LTS or 22.04 LTS server can be used.
 
-
 {{site.data.alerts.tip}}
 
 This server, `pimaster`, can be automatically provisioned as a Virtual Box VM in a Windows Laptop using a ubuntu cloud image using the procedure described in [Github repository ubuntu-clod-vbox](https://github.com/ricsanfre/ubuntu-cloud-vbox).
@@ -20,14 +19,11 @@ Using that provisioning script a cloud-init user-data booting file can be create
 
 {{site.data.alerts.end}}
 
-
 ## Installing Ansible Runtime Environment
 
 Docker is used to build an Ansible Runtime environment, a single docker image containing all ansible packages and its dependencies for executing the automation workflows.
 
-
 ### Installing Docker
-
 
 Follow official [installation guide](https://docs.docker.com/engine/install/ubuntu/).
 
@@ -103,15 +99,16 @@ Follow official [installation guide](https://docs.docker.com/engine/install/ubun
 
     ```json
     {
-        "exec-opts": ["native.cgroupdriver=systemd"],
-        "log-driver": "json-file",
-        "log-opts": {
+      "exec-opts": ["native.cgroupdriver=systemd"],
+      "log-driver": "json-file",
+      "log-opts": {
         "max-size": "100m"
-        },
-        "storage-driver": "overlay2",
-        "data-root": "/data/docker"
+      },
+      "storage-driver": "overlay2",
+      "data-root": "/data/docker"
     }
     ```
+
   - Restart docker
 
     ```shell
@@ -152,7 +149,6 @@ Where:
 - `ansible-runner` directory contains docker image building and running files and host directories mounted as volumes when running the docker container
 - `ansible` directory contains typical directory structure of an ansible project
 
-
 #### Ansible-runner docker image
 
 This docker image contains all packages needed for running ansible and bootstraping the cluster.
@@ -166,6 +162,7 @@ This docker image contains all packages needed for running ansible and bootstrap
 ```
 
 `Dockerfile`:
+
 ```dockerfile
 FROM ghcr.io/helmfile/helmfile:v0.167.1 AS helmfile
 
@@ -226,12 +223,11 @@ The image automatically installs:
 - `helm` and `kubectl` binaries installation using Ansible (`build/ansible_runner_config.yaml`)
 - `helmfile` binary. [Helmfile](https://github.com/helmfile/helmfile) is used during bootstrap process to orchestrate the deployment of some HelmCharts.
 
-
 #### Docker-compose file
 
 `docker-compose.yml`
-```yml
 
+```yml
 services:
   # Ansible-runner
   ansible-runner:
@@ -276,7 +272,6 @@ A shell session can be opened using the same container with:
 docker exec -it ansible-runner /bin/bash
 ```
 
-
 ## Ansible Configuration
 
 Ansible source code is structured following [typical directory layout](https://docs.ansible.com/ansible/latest/tips_tricks/sample_setup.html#sample-directory-layout):
@@ -306,6 +301,7 @@ Where:
 Ansible configuration is in `ansible.cfg` file containing paths to roles, collections and inventory file:
 
 `ansible.cfg`
+
 ```
 [defaults]
 # Inventory file location
@@ -319,15 +315,14 @@ collections_path = ./collections:/usr/share/ansible/collections
 # Disable SSH key host checking
 host_key_checking = false
 ```
+
 {{site.data.alerts.important}}
 
 All ansible commands (`ansible`, `ansible-galaxy`, `ansible-playbook`, `ansible-vault`) need to be executed within [`/ansible`] directory, so the configuration file [`/ansible/ansible.cfg`]({{ site.git_edit_address }}/ansible/ansible.cfg) can be used. Playbooks are configured to be launched from this directory.
 
 {{site.data.alerts.end}}
 
-
 ### Encrypting secrets/key variables
-
 
 [Ansible Vault](https://docs.ansible.com/ansible/latest/user_guide/vault.html) can be used to encrypt secrets and keys stored in ansible variables.
 
@@ -368,6 +363,7 @@ The manual steps to encrypt passwords/keys used in all Playbooks is the followin
    ```shell
    ansible-vault encrypt vault.yml
    ```
+
    The command ask for a ansible vault password to encrypt the file.
    After executing the command the file `vault.yml` is encrypted. Yaml content file is not readable.
 
@@ -378,6 +374,7 @@ The manual steps to encrypt passwords/keys used in all Playbooks is the followin
    ```shell
    ansible-vault decrypt vault.yml
    ```
+
    The password using during encryption need to be provided to decrypt the file
    After executing the command the file `vault.yml` is decrypted and show the content in plain text.
 
@@ -386,8 +383,8 @@ The manual steps to encrypt passwords/keys used in all Playbooks is the followin
    ```shell
    ansible-vault view vault.yaml
    ```
-   {{site.data.alerts.end}}
 
+   {{site.data.alerts.end}}
 
 ### Automate Ansible Vault decryption with GPG
 
@@ -418,6 +415,7 @@ Linux GPG will be used to encrypt Ansible Vault passphrase and automatically obt
     ```
 
     Check if it is installed
+
     ```shell
     gpg --help
     ```
@@ -434,46 +432,45 @@ Linux GPG will be used to encrypt Ansible Vault passphrase and automatically obt
 
     The output of the command is like this:
 
-      ```
-      gpg (GnuPG) 2.2.4; Copyright (C) 2017 Free Software Foundation, Inc.
-      This is free software: you are free to change and redistribute it.
-      There is NO WARRANTY, to the extent permitted by law.
+    ```
+    gpg (GnuPG) 2.2.4; Copyright (C) 2017 Free Software Foundation, Inc.
+    This is free software: you are free to change and redistribute it.
+    There is NO WARRANTY, to the extent permitted by law.
 
-      Note: Use "gpg --full-generate-key" for a full featured key generation dialog.
+    Note: Use "gpg --full-generate-key" for a full featured key generation dialog.
 
-      GnuPG needs to construct a user ID to identify your key.
+    GnuPG needs to construct a user ID to identify your key.
 
-      Real name: Ricardo
-      Email address: ricsanfre@gmail.com
-      You selected this USER-ID:
-          "Ricardo <ricsanfre@gmail.com>"
+    Real name: Ricardo
+    Email address: ricsanfre@gmail.com
+    You selected this USER-ID:
+        "Ricardo <ricsanfre@gmail.com>"
 
-      Change (N)ame, (E)mail, or (O)kay/(Q)uit? O
-      We need to generate a lot of random bytes. It is a good idea to perform
-      some other action (type on the keyboard, move the mouse, utilize the
-      disks) during the prime generation; this gives the random number
-      generator a better chance to gain enough entropy.
-      We need to generate a lot of random bytes. It is a good idea to perform
-      some other action (type on the keyboard, move the mouse, utilize the
-      disks) during the prime generation; this gives the random number
-      generator a better chance to gain enough entropy.
-      gpg: /home/ansible/.gnupg/trustdb.gpg: trustdb created
-      gpg: key D59E854B5DD93199 marked as ultimately trusted
-      gpg: directory '/home/ansible/.gnupg/openpgp-revocs.d' created
-      gpg: revocation certificate stored as '/home/ansible/.gnupg/openpgp-revocs.d/A4745167B84C8C9A227DC898D59E854B5DD93199.rev'
-      public and secret key created and signed.
+    Change (N)ame, (E)mail, or (O)kay/(Q)uit? O
+    We need to generate a lot of random bytes. It is a good idea to perform
+    some other action (type on the keyboard, move the mouse, utilize the
+    disks) during the prime generation; this gives the random number
+    generator a better chance to gain enough entropy.
+    We need to generate a lot of random bytes. It is a good idea to perform
+    some other action (type on the keyboard, move the mouse, utilize the
+    disks) during the prime generation; this gives the random number
+    generator a better chance to gain enough entropy.
+    gpg: /home/ansible/.gnupg/trustdb.gpg: trustdb created
+    gpg: key D59E854B5DD93199 marked as ultimately trusted
+    gpg: directory '/home/ansible/.gnupg/openpgp-revocs.d' created
+    gpg: revocation certificate stored as '/home/ansible/.gnupg/openpgp-revocs.d/A4745167B84C8C9A227DC898D59E854B5DD93199.rev'
+    public and secret key created and signed.
 
-      pub   rsa3072 2021-08-13 [SC] [expires: 2023-08-13]
-            A4745167B84C8C9A227DC898D59E854B5DD93199
-      uid                      Ricardo <ricsanfre@gmail.com>
-      sub   rsa3072 2021-08-13 [E] [expires: 2023-08-13]
+    pub   rsa3072 2021-08-13 [SC] [expires: 2023-08-13]
+          A4745167B84C8C9A227DC898D59E854B5DD93199
+    uid                      Ricardo <ricsanfre@gmail.com>
+    sub   rsa3072 2021-08-13 [E] [expires: 2023-08-13]
 
-      ```
+    ```
 
     During the generation process you will be prompted to provide a passphrase.
 
     This passphrase is needed to decryp
-
 
 - Generate Vault password and store it in GPG
 
@@ -481,9 +478,9 @@ Linux GPG will be used to encrypt Ansible Vault passphrase and automatically obt
 
   - Step 1. Install pwgen packet
 
-      ```shell
-      sudo apt install pwgen
-      ```
+    ```shell
+    sudo apt install pwgen
+    ```
 
   - Step 2: Generate Vault password and encrypt it using GPG. Store the result as a file in $HOME/.vault
 
@@ -500,6 +497,7 @@ Linux GPG will be used to encrypt Ansible Vault passphrase and automatically obt
     #!/bin/sh
     gpg --batch --use-agent --decrypt $HOME/.vault/vault_passphrase.gpg
     ```
+
   - Step 4: Modify `ansible.cfg` file, so you can omit the `--vault-password-file` argument.
 
     ```
@@ -516,8 +514,8 @@ Linux GPG will be used to encrypt Ansible Vault passphrase and automatically obt
   ```shell
   ansible-vault encrypt vault.yaml
   ```
-  This time only your GPG key passphrase will be asked to automatically encrypt/decrypt the file
 
+  This time only your GPG key passphrase will be asked to automatically encrypt/decrypt the file
 
 ## Installing Ansible Development Environment
 
@@ -562,7 +560,7 @@ vboxmanage modifyvm <pimaster-VM> --nested-hw-virt on
 
 #### Vagrant installation in Ubuntu 20.04
 
-- Step 1.  Add hashicorp apt repository
+- Step 1. Add hashicorp apt repository
 
   ```shell
   curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
@@ -596,7 +594,7 @@ In order to run Vagrant virtual machines on KVM, you need to install the vagrant
 
   ```shell
   vagrant plugin install vagrant-mutate
-  ````
+  ```
 
 ### Installing Ansible and Molecule testing environment
 
@@ -670,7 +668,6 @@ In order to improve security, default UNIX user, `ubuntu`, created by cloud imag
 ssh private/public keys will be created for the different purposes (admin SSH connection and Ansible connection). Public ssh keys can be added to the UNIX user created in all servers as ssh-authorized-keys to enable passwordless SSH connection.
 
 Default user in cluster nodes and its authorized SSH public keys will be added to cloud-init configuration (`user-data`), when installing Ubuntu OS.
-
 
 ### SSH keys generation
 

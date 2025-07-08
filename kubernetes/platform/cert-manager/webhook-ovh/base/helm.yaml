@@ -29,6 +29,6 @@ spec:
       retries: 3
       remediateLastFailure: true
   valuesFrom:
-  - kind: ConfigMap
-    name: webhook-ovh-helm-values
-    valuesKey: base-values.yaml
+    - kind: ConfigMap
+      name: webhook-ovh-helm-values
+      valuesKey: base-values.yaml

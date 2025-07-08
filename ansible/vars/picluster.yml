@@ -26,7 +26,6 @@ k3s_kubelet_config: |
   shutdownGracePeriod: 30s
   shutdownGracePeriodCriticalPods: 10s
 
-
 # k3s server-config
 # Equivalent to start master installer with the following options
 # --write-kubeconfig-mode '0644'
@@ -57,7 +56,7 @@ k3s_server_config:
   embedded-registry: true
   # TLS config
   tls-san:
-    - "{{ k3s_api_vip }}"  # IP to HAProxy
+    - "{{ k3s_api_vip }}" # IP to HAProxy
   # Disable K3s addons: coredns, local path, servicelb, traefik and metric-server
   disable:
     - coredns
@@ -67,17 +66,17 @@ k3s_server_config:
     - metrics-server
   write-kubeconfig-mode: 644
   node-taint:
-    - 'node-role.kubernetes.io/control-plane:NoSchedule'
+    - "node-role.kubernetes.io/control-plane:NoSchedule"
   etcd-expose-metrics: true
   kubelet-arg:
-    - 'config=/etc/rancher/k3s/kubelet.config'
+    - "config=/etc/rancher/k3s/kubelet.config"
   # kube-proxy-arg:
   #  - 'metrics-bind-address=0.0.0.0'
   kube-controller-manager-arg:
-    - 'bind-address=0.0.0.0'
-    - 'terminated-pod-gc-threshold=10'
+    - "bind-address=0.0.0.0"
+    - "terminated-pod-gc-threshold=10"
   kube-scheduler-arg:
-    - 'bind-address=0.0.0.0'
+    - "bind-address=0.0.0.0"
 
 # k3s agent-config
 # Equivalent to start agent installer with the following options
@@ -86,16 +85,15 @@ k3s_server_config:
 #  --kube-proxy-arg 'metrics-bind-address=0.0.0.0'
 k3s_agent_config:
   node-label:
-    - 'node_type=worker'
+    - "node_type=worker"
   kubelet-arg:
-    - 'config=/etc/rancher/k3s/kubelet.config'
+    - "config=/etc/rancher/k3s/kubelet.config"
 #  kube-proxy-arg:
 #    - 'metrics-bind-address=0.0.0.0'
 
 k3s_registries:
   mirrors:
     "*":
-
 
 ##########
 # FluxCD #
@@ -254,7 +252,6 @@ minio_users:
       - name: k3s-barman
         policy: read-write
 
-
 ########################
 # Restic configuration #
 ########################
@@ -359,7 +356,6 @@ minio_loki_key: "{{ vault.minio.loki.key }}"
 # Grafana admin user password
 prometheus_grafana_password: "{{ vault.grafana.admin.password}}"
 
-
 #######################
 # Tracing Secrets     #
 #######################
@@ -368,7 +364,6 @@ prometheus_grafana_password: "{{ vault.grafana.admin.password}}"
 minio_tempo_user: "{{ vault.minio.tempo.user }}"
 minio_tempo_key: "{{ vault.minio.tempo.key }}"
 minio_tempo_bucket: k3s-tempo
-
 
 #######################
 # Gateway configuration

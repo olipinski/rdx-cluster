@@ -3,6 +3,5 @@ kind: Kustomization
 
 resources:
   - ../../base
-
 # components:
 #   - ../../components/istio-config

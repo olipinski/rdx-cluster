@@ -1,7 +1,6 @@
 // Sketchy 5.1.3
 // Bootswatch
 
-
 // Variables
 
 $web-font-path: "https://fonts.googleapis.com/css?family=Neucha|Cabin+Sketch&display=swap" !default;
@@ -10,7 +9,7 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Neucha|Cabin+Sketch&dis
 }
 
 // stylelint-disable scss/dollar-variable-default
-$border-radius-sketchy:    255px 25px 225px 25px / 25px 225px 25px 255px;
+$border-radius-sketchy: 255px 25px 225px 25px / 25px 225px 25px 255px;
 $border-radius-lg-sketchy: 55px 225px 15px 25px / 25px 25px 35px 355px;
 $border-radius-sm-sketchy: 255px 25px 225px 25px / 25px 225px 25px 255px;
 // style-enable scss/dollar-variable-default
@@ -143,7 +142,6 @@ table {
   }
 }
 
-
 // Forms
 
 input,
@@ -171,7 +169,7 @@ select.form-control {
     content: "";
     position: absolute;
     left: 0;
-    top: -.1em;
+    top: -0.1em;
     display: inline-block;
     width: 15px;
     height: 16px;
@@ -182,10 +180,10 @@ select.form-control {
   &:checked::after {
     content: "x";
     position: absolute;
-    left: .1em;
+    left: 0.1em;
     top: 0;
     font-size: 1.5rem;
-    line-height: .5;
+    line-height: 0.5;
     color: $gray-800;
   }
 
@@ -208,7 +206,7 @@ select.form-control {
     content: "";
     position: absolute;
     left: 0;
-    top: -.1em;
+    top: -0.1em;
     display: inline-block;
     width: 16px;
     height: 16px;
@@ -256,7 +254,7 @@ select.form-control {
       background-color: $white;
       border: 2px solid #333;
       border-radius: 50% 45% 40% 50% / 40% 50% 50% 45%;
-      transition: left .15s ease-in-out;
+      transition: left 0.15s ease-in-out;
     }
 
     &:checked::after {
@@ -267,7 +265,7 @@ select.form-control {
   }
 
   .form-check-label {
-    margin-left: .5em;
+    margin-left: 0.5em;
   }
 }
 
@@ -453,7 +451,7 @@ pre {
     content: "X";
     position: absolute;
     right: 1rem;
-    top: .8rem;
+    top: 0.8rem;
   }
 }
 

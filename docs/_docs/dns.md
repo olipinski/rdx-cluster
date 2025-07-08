@@ -25,7 +25,6 @@ Homelab DNS Architecture is composed of the following components:
 
   Configured as DNS server in all homelab nodes. It forwards request for `homelab.ricsanfre.com` domain to Authoritative Internal DNS server runing in `node1` and the rest of request to default DNS servers 1.1.1.1 (cloudflare) and 8.8.8.8 (google)
 
-
 ![gateway-dns-dhcp-config](/assets/img/gateway-dns-dhcp-config.png)
 
 This architecture is complemented with the following Kubernetes components:
@@ -38,14 +37,11 @@ This architecture is complemented with the following Kubernetes components:
 
 - [ExternalDNS](https://github.com/kubernetes-sigs/external-dns), to synchronize exposed Kubernetes Services and Ingresses with cluster authoritative DNS, Bind9. So DNS records associated to exposed services can be automatically created and services can be accessed from out-side using their DNS names.
 
-
 See details about Kubernetes DNS services in [PiCluster - Kubernetes DNS](/docs/kube-dns/)
-
 
 ## DNS Internal Authoritative Server (Bind9)
 
 Authoritative DNS server for homelab zone (`homlab.ricsanfre.com`) is deployed in one of the nodes of the cluster: `node1`
-
 
 ### Bind9 Installation
 
@@ -56,7 +52,6 @@ sudo apt-get install bind9 bind9-doc dnsutils
 ```
 
 Ubuntu packages install bind9 with a default configuration in `/etc/bind/named.conf`
-
 
 #### About folders permissions in Ubuntu with AppArmor
 
@@ -69,13 +64,12 @@ The same happens with log directory: `/var/logs/named` directory should be used 
 
 See [https://ubuntu.com/server/docs/domain-name-service-dns](https://ubuntu.com/server/docs/domain-name-service-dns)
 
-
 ### DNS Server Configuration
 
 #### Disabling IPv6
 
-
 - Edit `/etc/default/named` file:
+
   ```shell
   #
   # run resolvconf?
@@ -85,6 +79,7 @@ See [https://ubuntu.com/server/docs/domain-name-service-dns](https://ubuntu.com
   OPTIONS="-u bind"
 
   ```
+
 - Add following `OPTIONS="-u bind -4"`
 
 - Restart bind
@@ -118,13 +113,14 @@ options {
 
 
 ```
+
 DNS server is authoritative server only. Recursive or Forwarder roles are disabled.
+
 - Disable recursive queries: `recursion no` option.
 - It does not contain `forwarders` section.
 - Allow queries from any subnet: `allow-query { any; }`
 - Disable zone transfer by default `allow-transfer { none; }`
 - DNS configured to listen only on IPv4 IP addresses `listen-on { any; }`.
-
 
 #### Adding local zones
 
@@ -133,11 +129,12 @@ In this file it must be specified the DNS zones managed by DNS server
 Zones files are define in dedicated files `/etc/bind.db.x`
 
 Two types of zones need to be created:
+
 - Direct Zone: Used for forward dns lookup (DNS name -> IP)
 - Reverse zone: Used for reververse dns lookup (IP -> DNS name)
 
-
 Edit config file: `/etc/bind/named.conf.local`
+
 ```
 //
 // Do any local configuration here
@@ -160,7 +157,9 @@ zone "0.10.in-addr.arpa" {
     file "/var/lib/bind/zones/db.10.0";  # 10.0.0.0/16 subnet
 };
 ```
+
 #### Creating the Forward Zone File
+
 The forward zone file is where you define DNS records for forward DNS lookups.
 
 - Initial file can be copied from `/etc/bind/db.local`
@@ -194,6 +193,7 @@ node2.homelab.ricsanfre.com.  IN      A      10.0.0.12
 ```
 
 #### Create Reverse Zone File
+
 Used for the reverse DNS lookup (From IP to name)
 
 - Initial file can be copied from `/etc/bind/db.127`
@@ -221,7 +221,6 @@ $TTL    604800
 ...
 ```
 
-
 #### About Zone File syntax
 
 `Resource Records (RR)` follows the following syntax, defined in [RFC1035](https://datatracker.ietf.org/doc/html/rfc1035):
@@ -229,6 +228,7 @@ $TTL    604800
 `{name} {ttl} {class} {type} {data}`
 
 where:
+
 - `name`: domain name
 - `ttl`: TTL of the record
 - `class`: class. (`IN` value)
@@ -238,7 +238,7 @@ where:
 Special symbols:
 
 - **`@`**:
-  Used as RR `name`: it  represents the current origin. At the start of the zone file, it is the <**zone_name**>, followed by a trailing dot (.).
+  Used as RR `name`: it represents the current origin. At the start of the zone file, it is the <**zone_name**>, followed by a trailing dot (.).
 - **`$ORIGIN` Directive:**
   `$ORIGIN <domain>.`: **$ORIGIN** sets the domain name that is appended to any unqualified records.
   When a zone is first read, there is an implicit `$ORIGIN <zone_name>.`
@@ -246,7 +246,6 @@ Special symbols:
   `$TTL <default-ttl>`: This sets the default Time-To-Live (TTL) for subsequent records
 
 See further information about the Zone file structure in https://bind9.readthedocs.io/en/v9.18.30/chapter3.html#soa-rr
-
 
 ## DNS Resolver/Forwarder (Dnsmasq)
 

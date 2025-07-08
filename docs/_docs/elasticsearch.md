@@ -3,7 +3,6 @@ title: Log Analytics (Elasticsearch and Kibana)
 permalink: /docs/elasticsearch/
 description: How to deploy Elasticsearch and Kibana in our Pi Kuberentes cluster.
 last_modified_at: "08-10-2023"
-
 ---
 
 In June 2020, Elastic [announced](https://www.elastic.co/blog/elasticsearch-on-arm) that starting from 7.8 release they will provide multi-architecture docker images supporting AMD64 and ARM64 architectures.
@@ -51,25 +50,24 @@ Basic instructions can be found in [ECK Documentation: "Deploy and elasticsearch
   spec:
     version: 8.1.2
     nodeSets:
-    - name: default
-      count: 1    # One node elastic search cluster
-      config:
-        node.store.allow_mmap: false # Disable memory mapping
-      volumeClaimTemplates:
-        - metadata:
-            name: elasticsearch-data
-          spec:
-            accessModes:
-            - ReadWriteOnce
-            resources:
-              requests:
-                storage: 5Gi
-            storageClassName: longhorn
+      - name: default
+        count: 1 # One node elastic search cluster
+        config:
+          node.store.allow_mmap: false # Disable memory mapping
+        volumeClaimTemplates:
+          - metadata:
+              name: elasticsearch-data
+            spec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 5Gi
+              storageClassName: longhorn
     http:
       tls: # Disabling TLS automatic configuration. Note(3)
         selfSignedCertificate:
           disabled: true
-
   ```
 
   - About Virtual Memory configuration (mmap)
@@ -79,6 +77,7 @@ Basic instructions can be found in [ECK Documentation: "Deploy and elasticsearch
     ```yml
     node.store.allow_nmap: false
     ```
+
     Usually, default values for virtual address space on Linux distributions are too low for Elasticsearch to work properly, which may result in out-of-memory exceptions. This is why `mmap` is disable.
 
     For production workloads, it is strongly recommended to increase the kernel setting `vm.max_map_count` to 262144 and leave `node.store.allow_mmap` unset.
@@ -95,7 +94,7 @@ Basic instructions can be found in [ECK Documentation: "Deploy and elasticsearch
           name: elasticsearch-data
         spec:
           accessModes:
-          - ReadWriteOnce
+            - ReadWriteOnce
           resources:
             requests:
               storage: 5Gi
@@ -104,16 +103,13 @@ Basic instructions can be found in [ECK Documentation: "Deploy and elasticsearch
 
     See how to configure PersistenVolumeTemplates for Elasticsearh using this operator in [ECK Documentation: "Volume claim templates"](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-volume-claim-templates.html)
 
-
   - Disable TLS configuration
-
 
     ```yml
     http:
       tls:
         selfSignedCertificate:
           disabled: true
-
     ```
 
     By default ECK configures secured communications with auto-signed SSL certificates. Access to its service endpoint on port 9200 is only available through https.
@@ -142,17 +138,16 @@ Basic instructions can be found in [ECK Documentation: "Deploy and elasticsearch
     In both scenarios, the limit can be changed in in `Elasticsearch` object (`podTemplate` section).
 
     ```yml
-      podTemplate:
-        # Limiting Resources consumption
-        spec:
-          containers:
+    podTemplate:
+      # Limiting Resources consumption
+      spec:
+        containers:
           - name: elasticsearch
             resources:
               requests:
                 memory: 1Gi
               limits:
                 memory: 1Gi
-
     ```
 
 - Step 2: Apply manifest
@@ -160,6 +155,7 @@ Basic instructions can be found in [ECK Documentation: "Deploy and elasticsearch
   ```shell
   kubectl apply -f manifest.yml
   ```
+
 - Step 3: Check Elasticsearch status
 
   ```shell
@@ -174,7 +170,6 @@ Basic instructions can be found in [ECK Documentation: "Deploy and elasticsearch
 
   {{site.data.alerts.end}}
 
-
 ### Elasticsearch authentication
 
 By default ECK configures user authentication to access elasticsearch service. ECK defines a default admin esaticsearch user (`elastic`) and with a password which is stored within a kubernetes Secret.
@@ -182,6 +177,7 @@ By default ECK configures user authentication to access elasticsearch service. E
 Both to access elasticsearch from Kibana GUI or to configure Fluentd collector to insert data, elastic user/password need to be provided.
 
 Password is stored in a kubernetes secret (`<efk_cluster_name>-es-elastic-user`). Execute this command for getting the password
+
 ```
 kubectl get secret -n logging efk-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo
 ```
@@ -274,7 +270,6 @@ To allow fluentd and prometheus exporter to access our elasticsearch cluster, we
     roles: <`echo -n 'prometheus_role' | base64`>
   ```
 
-
 - Step 3: Modify Elasticsearch yaml file created in step 1 of ES installation.
 
   Add the following lines to ElasticSearch manifest file:
@@ -288,12 +283,11 @@ To allow fluentd and prometheus exporter to access our elasticsearch cluster, we
   spec:
     auth:
       roles:
-      - secretName: es-fluentd-roles-secret
-      - secretName: es-prometheus-roles-secret
+        - secretName: es-fluentd-roles-secret
+        - secretName: es-prometheus-roles-secret
       fileRealm:
-      - secretName: es-fluentd-user-file-realm
-      - secretName: es-prometheus-user-file-realm
-  ...
+        - secretName: es-fluentd-user-file-realm
+        - secretName: es-prometheus-user-file-realm
   ```
 
 In addition to the `elastic` user we can also create an super user account for us to login, we can create the account just like how we created the `fluentd` or `prometheus` user, but instead with the role set to `superuser`.
@@ -346,6 +340,7 @@ This exposure will be useful for doing remote configurations on Elasticsearch th
   ```shell
   kubectl apply -f manifest.yml
   ```
+
 - Step 3. Access to Elastic HTTP service
 
   UI can be access through http://elasticsearch.picluster.ricsanfre.com using loging `elastic` and the password stored in `<efk_cluster_name>-es-elastic-user`.
@@ -354,21 +349,21 @@ This exposure will be useful for doing remote configurations on Elasticsearch th
 
   ```json
   {
-    "name" : "efk-es-default-0",
-    "cluster_name" : "efk",
-    "cluster_uuid" : "w5BUxIY4SKOtxPUDQfb4lQ",
-    "version" : {
-      "number" : "8.1.2",
-      "build_flavor" : "default",
-      "build_type" : "docker",
-      "build_hash" : "31df9689e80bad366ac20176aa7f2371ea5eb4c1",
-      "build_date" : "2022-03-29T21:18:59.991429448Z",
-      "build_snapshot" : false,
-      "lucene_version" : "9.0.0",
-      "minimum_wire_compatibility_version" : "7.17.0",
-      "minimum_index_compatibility_version" : "7.0.0"
+    "name": "efk-es-default-0",
+    "cluster_name": "efk",
+    "cluster_uuid": "w5BUxIY4SKOtxPUDQfb4lQ",
+    "version": {
+      "number": "8.1.2",
+      "build_flavor": "default",
+      "build_type": "docker",
+      "build_hash": "31df9689e80bad366ac20176aa7f2371ea5eb4c1",
+      "build_date": "2022-03-29T21:18:59.991429448Z",
+      "build_snapshot": false,
+      "lucene_version": "9.0.0",
+      "minimum_wire_compatibility_version": "7.17.0",
+      "minimum_index_compatibility_version": "7.0.0"
     },
-    "tagline" : "You Know, for Search"
+    "tagline": "You Know, for Search"
   }
   ```
 
@@ -387,16 +382,18 @@ This exposure will be useful for doing remote configurations on Elasticsearch th
     count: 2 # Elastic Search statefulset deployment with two replicas
     elasticsearchRef:
       name: "efk"
-    http:  # NOTE disabling kibana automatic TLS configuration
+    http: # NOTE disabling kibana automatic TLS configuration
       tls:
         selfSignedCertificate:
           disabled: true
   ```
+
 - Step 2: Apply manifest
   ```shell
   kubectl apply -f manifest.yml
   ```
 - Step 3: Check kibana status
+
   ```shell
   kubectl get kibana -n logging
   NAME   HEALTH   NODES   VERSION   AGE
@@ -459,7 +456,7 @@ Make accesible Kibana UI from outside the cluster through Ingress Controller
 [Kibana's DataView](https://www.elastic.co/guide/en/kibana/master/data-views.html) must be configured in order to access Elasticsearch data.
 
 {{site.data.alerts.note}}
-This configuration must be done once data from fluentd has been inserted in ES: A index (`fluentd-<date>`) containing  data has been created.
+This configuration must be done once data from fluentd has been inserted in ES: A index (`fluentd-<date>`) containing data has been created.
 {{site.data.alerts.end}}
 
 - Step 1: Open Kibana UI
@@ -474,7 +471,7 @@ This configuration must be done once data from fluentd has been inserted in ES: 
 
   ![Kibana-setup-2](/assets/img/kibana-setup-2.png)
 
-- Step 4: Set index pattern to fluentd-* and timestamp field to @timestamp and click on "Create Index"
+- Step 4: Set index pattern to fluentd-\* and timestamp field to @timestamp and click on "Create Index"
 
   ![Kibana-setup-3](/assets/img/kibana-setup-3.png)
 
@@ -489,6 +486,7 @@ For doing the installation [prometheus-elasticsearch-exporter official helm](htt
   ```shell
   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
   ```
+
 - Step 2: Fetch the latest charts from the repository
 
   ```shell
@@ -507,7 +505,6 @@ For doing the installation [prometheus-elasticsearch-exporter official helm](htt
     ES_PASSWORD:
       secret: es-prometheus-user-file-realm
       key: password
-
 
   # Elastic search URI
   es:

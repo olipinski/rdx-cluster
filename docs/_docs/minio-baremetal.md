@@ -23,6 +23,7 @@ Minio installation and configuration tasks have been automated with Ansible deve
   sudo groupadd minio
   sudo useradd minio -g minio
   ```
+
 - Step 2. Create minio's S3 storage directory
 
   ```shell
@@ -51,11 +52,13 @@ Minio installation and configuration tasks have been automated with Ansible deve
    sudo mv minio /usr/local/bin/minio
    sudo mv mc /usr/local/bin/mc
   ```
+
   where `<arch>` is amd64 or arm64.
 
 - Step 5: Create minio Config file `/etc/minio/minio.conf`
 
   This file contains environment variables that will be used by minio server.
+
   ```
   # Minio local volumes.
   MINIO_VOLUMES="/storage/minio"
@@ -120,6 +123,7 @@ Minio installation and configuration tasks have been automated with Ansible deve
   [Install]
   WantedBy=multi-user.target
   ```
+
   This service start minio server using minio UNIX group, loading environment variables located in `/etc/minio/minio.conf` and executing the following startup command:
 
   ```shell
@@ -160,6 +164,7 @@ Minio installation and configuration tasks have been automated with Ansible deve
             -subj "/CN=Ricsanfre CA" \
             -keyout rootCA.key -out rootCA.crt
      ```
+
   2. Create a SSL certificate for Minio server signed using the custom CA
 
      ```shell
@@ -179,19 +184,20 @@ Minio installation and configuration tasks have been automated with Ansible deve
 
   Once the certificate is created, public certificate and private key need to be installed in Minio server following this procedure:
 
-
   1. Copy public certificate `minio.crt` as `/etc/minio/ssl/public.crt`
 
      ```shell
      sudo cp minio.crt /etc/minio/ssl/public.crt
      sudo chown minio:minio /etc/minio/ssl/public.crt
      ```
+
   2. Copy private key `minio.key` as `/etc/minio/ssl/private.key`
 
      ```shell
      cp minio.key /etc/minio/ssl/private.key
      sudo chown minio:minio /etc/minio/ssl/private.key
      ```
+
   3. Restart minio server.
 
      ```shell
@@ -231,6 +237,7 @@ Buckets can be created using Minio's CLI (`mc`)
 ```shell
 mc mb <minio_alias>/<bucket_name>
 ```
+
 Where: `<minio_alias>` is the mc's alias connection to Minio Server using admin user credentials, created during Minio installation in step 9.
 
 ### Users and ACLs
@@ -241,36 +248,36 @@ Following users will be created to grant access to Minio S3 buckets:
 - `velero` with read-write access to `k3s-velero` bucket.
 - `restic` with read-write access to `restic` bucket
 
-
 Users can be created usinng Minio's CLI
+
 ```shell
 mc admin user add <minio_alias> <user_name> <user_password>
 ```
+
 Access policies to the different buckets can be assigned to the different users using the command:
 
 ```shell
 mc admin policy add <minio_alias> <user_name> user_policy.json
 ```
+
 Where `user_policy.json`, contains AWS access policies definition like:
 
 ```json
 {
-"Version": "2012-10-17",
-"Statement": [
-  {
+  "Version": "2012-10-17",
+  "Statement": [
+    {
       "Effect": "Allow",
       "Action": [
-          "s3:DeleteObject",
-          "s3:GetObject",
-          "s3:ListBucket",
-          "s3:PutObject"
+        "s3:DeleteObject",
+        "s3:GetObject",
+        "s3:ListBucket",
+        "s3:PutObject"
       ],
-      "Resource": [
-          "arn:aws:s3:::bucket_name",
-          "arn:aws:s3:::bucket_name/*"
-      ]
-  }
-]
+      "Resource": ["arn:aws:s3:::bucket_name", "arn:aws:s3:::bucket_name/*"]
+    }
+  ]
 }
 ```
+
 This policy grants read-write access to `bucket_name`. For each user a different json need to be created, granting access to dedicated bucket. Those json files can be stored in `/etc/minio/policy` directory.

@@ -5,7 +5,6 @@ description: How to configure a Raspberry Pi as router/firewall for our Kubernet
 last_modified_at: "16-01-2025"
 ---
 
-
 {{site.data.alerts.important}}
 Instead of configuring Ubuntu OS, running on a Raspberry Pi to provide Router/Firewall capabilities, a embedded device or Raspberry Pi running [OpenWRT](https://openwrt.org/) is currently being used in my homelab cluster. See details in ["Cluster Gateway (OpenWRT)"](/docs/openwrt/)
 {{site.data.alerts.end}}
@@ -17,17 +16,14 @@ This Raspberry Pi (gateway), is connected to my home network using its WIFI inte
 
 In order to ease the automation with Ansible, OS installed on **gateway** is the same as the one installed in the nodes of the cluster: Ubuntu 22.04 64 bits.
 
-
 ## Storage Configuration
 
 `gateway` node is based on a Raspberry Pi 4B 2GB booting from a USB Flash Disk.
-
 
 ## Network Configuration
 
 The WIFI interface (wlan0) will be used to be connected to my home network using static IP address (192.168.1.11/24), while ethernet interface (eth0) will be connected to the lan switch, lab network, using static IP address (10.0.0.1/24)
 Static IP addres in home network, will enable the configuration of static routes in my labtop and VM running on it (`pimaster`) to access the cluster nodes without fisically connect the laptop to the lan switch with an ethernet cable.
-
 
 ## Unbuntu OS instalation
 
@@ -41,22 +37,21 @@ The installation procedure followed is the described in ["Ubuntu OS Installation
 
 `user-data` depends on the storage architectural option selected::
 
-| User Data |
-|--------------------|
-|  [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/gateway/user-data) |
+| User Data                                                                       |
+| ------------------------------------------------------------------------------- |
+| [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/gateway/user-data) |
+
 {: .table .border-dark }
 
 `network-config` is the same in both architectures:
 
-
-| Network configuration |
-|---------------------- |
+| Network configuration                                                                     |
+| ----------------------------------------------------------------------------------------- |
 | [network-config]({{ site.git_edit_address }}/metal/rpi/cloud-init/gateway/network-config) |
+
 {: .table .border-dark }
 
-
 ### cloud-init: network configuration
-
 
 Ubuntu's netplan yaml configuration file used, part of cloud-init boot `/boot/network-config` is the following:
 
@@ -68,7 +63,7 @@ ethernets:
     dhcp6: false
     optional: true
     addresses:
-     - 10.0.0.1/24
+      - 10.0.0.1/24
 wifis:
   wlan0:
     dhcp4: false
@@ -78,7 +73,7 @@ wifis:
       <SSID_NAME>:
         password: <SSID_PASSWD>
     addresses:
-     - 192.168.1.11/24
+      - 192.168.1.11/24
     routes:
       - to: default
         via: 192.168.1.1
@@ -98,7 +93,6 @@ After booting from the USB3.0 external storage for the first time, the Raspberry
 
 Initial configuration tasks includes: removal of snap package, and Raspberry PI specific configurations tasks such as: intallation of fake hardware clock, installation of some utility packages scripts and change default GPU Memory plit configuration. See instructions in ["Ubuntu OS initial configurations"](/docs/os-basic/).
 
-
 ## Router/Firewall Configuration
 
 {{site.data.alerts.note}}
@@ -111,6 +105,7 @@ For automating configuration tasks, ansible role [**ricsanfre.firewall**](https:
 
 To convert gateway into a router, Ubuntu need to be configured to enable the forwarding of IP packets.
 This is done by adding to **/etc/sysctl.conf** file:
+
 ```
 net.ipv4.ip_forward=1
 ```
@@ -149,6 +144,7 @@ As a modular example:
 - Global Configuration File
 
   `/etc/nftables.conf`
+
   ```
   #!/usr/sbin/nft -f
 
@@ -177,9 +173,11 @@ As a modular example:
   }
 
   ```
-- Variables  Variables containing the IP address and ports to be used by the rules files
+
+- Variables Variables containing the IP address and ports to be used by the rules files
 
   `/etc/nftables.d/defines.nft`
+
   ```
     # broadcast and multicast
     define badcast_addr = { 255.255.255.255, 224.0.0.1, 224.0.0.251 }
@@ -215,9 +213,11 @@ As a modular example:
     define forward_udp_accept = { domain, ntp }
 
   ```
+
 - Nftables typed and tagged variables, [sets](https://wiki.nftables.org/wiki-nftables/index.php/Sets).
 
   `/etc/nftables.d/sets.nft`
+
   ```
     set blackhole {
           type ipv4_addr;
@@ -260,9 +260,11 @@ As a modular example:
       }
 
   ```
+
 - Input traffic filtering rules
 
   `/etc/nftables.d/filter-input.nft`
+
   ```
   chain input {
           # 000 policy
@@ -288,6 +290,7 @@ As a modular example:
 - Output traffic filtering rules
 
   `/etc/nftables.d/filter-output.nft`
+
   ```
   chain output {
         # 000 policy: Allow any output traffic
@@ -298,6 +301,7 @@ As a modular example:
 - Forwarding traffic rules
 
   `/etc/nftables.d/filter-forward.nft`
+
   ```
   chain forward {
       # 000 policy
@@ -323,7 +327,6 @@ As a modular example:
     - SSH
     - HTTP and HTTPS on standard ports (TCP 80 and 443).
 
-
   {{site.data.alerts.note}}
 
   Additional rules can be configured to enable the traffic to different services running in the cluster. For example:
@@ -336,6 +339,7 @@ As a modular example:
     ```
 
   - To access kubernetes port-forwarding feature from my laptop connected to home network, the following rule need to be enable:
+
     ```
     # 250 port-forwarding from wan
     iifname $wan_interface oifname $lan_interface ip daddr 10.0.0.11 tcp dport 8080 ct state new accept
@@ -352,6 +356,7 @@ As a modular example:
 - NAT pre-routing rules
 
   `/etc/nftables.d/nat-prerouting.nft`
+
   ```
   chain prerouting {
           # 000 policy
@@ -362,6 +367,7 @@ As a modular example:
 
 - NAT post-routing rules
   `/etc/nftables.d/nat-postrouting.nft`
+
   ```
   chain postrouting {
           # 000 policy
@@ -372,9 +378,7 @@ As a modular example:
 
   ```
 
-
 {{site.data.alerts.important}} **About iptables rules persistency**
-
 
 In Ubuntu for having iptables persistent rules across reboots `iptables-persistent` and `netfilter-persistent` packages need to be installed.
 
@@ -385,12 +389,12 @@ Rules can be saved on demand using the command:
 ```shell
 sudo netfilter-persistent save
 ```
+
 Rules are stored in the following location:
 
 `/etc/iptables/rules.v[4-6]`
 
 {{site.data.alerts.end}}
-
 
 ### Configuring static routes to access to cluster from home network
 
@@ -420,12 +424,14 @@ This route need to be added to my Laptop and the VM running `pimaster` node
     enp0s8:
       dhcp4: yes # Home network IP address
       routes:
-      - to: 10.0.0.0/24 #Cluster Lab Network
-        via: 192.168.1.11 #`gateway` static ip address in home network
+        - to: 10.0.0.0/24 #Cluster Lab Network
+          via: 192.168.1.11 #`gateway` static ip address in home network
   ```
+
   {{site.data.alerts.note}}
 
   This is `pimaster` VirutalBOX network configuration:
+
   - **Eth0** (enp0s3) connected to VBox **Host-Only adapter** (laptop only connection)
   - **Eth1** (enp0s8) connected to VBox **Bridge adapter** (home network connection)
 
@@ -447,7 +453,7 @@ Manual installation process is the following:
 
   ```shell
   sudo apt install dnsmasq
-	```
+  ```
 
 - Step 2. Configure dnsmasq
 
@@ -486,12 +492,13 @@ Manual installation process is the following:
   # log-queries
   # log-dhcp
 
+  ```
+
 - Step 3. Restart dnsmasq service
 
   ```shell
   sudo systemctl restart dnsmasq
   ```
-
 
 ### Useful Commands
 
@@ -513,7 +520,7 @@ Manual installation process is the following:
 
    ```shell
    sudo dhclient <interface>
-	 ```
+   ```
 
 5. Relesase DHCP lease (DHCP server)
 
@@ -543,7 +550,7 @@ Ubuntu 20.04 comes with systemd-resolved service that provides a DNS stub resolv
 
 The DNS servers contacted are determined from the global settings in /etc/systemd/resolved.conf, the per-link static settings in `/etc/systemd/network/*.network` files, the per-link dynamic settings received over DHCP, information provided via resolvectl(1), and any DNS server information made available by other system services.
 
-All nodes of the cluster will receive the configuration of the DNS server in the cluster (dnsmasq running in `gateway` node) from DHCP. But `gateway` node need to be configured to use local dnsmaq service instead of the default DNS servers  received by the DCHP connection to my home network (my home network configuration).
+All nodes of the cluster will receive the configuration of the DNS server in the cluster (dnsmasq running in `gateway` node) from DHCP. But `gateway` node need to be configured to use local dnsmaq service instead of the default DNS servers received by the DCHP connection to my home network (my home network configuration).
 
 To check the name server used by the local resolver run:
 
@@ -554,6 +561,7 @@ systemd-resolve --status
 To specify the dns server to be used modify the file `/etc/systemd/resolved.conf`
 
 Add the following lines
+
 ```
 [Resolve]
 DNS=10.0.0.1
@@ -619,22 +627,22 @@ Check time synchronization with Chronyc
 
    ```shell
     timedatectl
-	 ```
+   ```
 
 2. Checking Chrony is running and view the peers and servers to which it is connected
 
-	 ```shell
+   ```shell
    chronyc activity
-	 ```
+   ```
 
 3. To view a detailed list of time servers, their IP addresses, time skew, and offset
 
-	 ```shell
+   ```shell
    chronyc sources
-	 ```
+   ```
 
 4. Confirm that the chrony is synchronized
 
    ```shell
    chronyc tracking
-	 ```
+   ```

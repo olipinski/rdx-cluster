@@ -9,10 +9,10 @@ metadata:
   namespace: fluent
 spec:
   ports:
-  - name: forward-ext
-    port: 24224
-    protocol: TCP
-    targetPort: 24224
+    - name: forward-ext
+      port: 24224
+      protocol: TCP
+      targetPort: 24224
   selector:
     app.kubernetes.io/instance: fluentd
     app.kubernetes.io/name: fluentd

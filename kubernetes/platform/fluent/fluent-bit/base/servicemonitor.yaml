@@ -15,7 +15,7 @@ spec:
       targetPort: 2020
     - params:
         target:
-        - http://127.0.0.1:2020/api/v1/storage
+          - http://127.0.0.1:2020/api/v1/storage
       path: /probe
       targetPort: 7979
   namespaceSelector:

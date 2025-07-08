@@ -1,5 +1,4 @@
 ---
-
 # Config directory location for k3s
 k3s_config_dir: "/etc/rancher/k3s"
 

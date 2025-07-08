@@ -4,26 +4,26 @@ permalink: /docs/logging/
 description: How to deploy centralized logging solution in our Raspberry Pi Kubernetes cluser. Two alternatives, one based on EFK stack (Elasticsearch- Fluentd/Fluentbit - Kibana) and another based on FLG Stack (Fluentbit/Fluentd - Loki - Grafana)
 
 last_modified_at: "19-11-2022"
-
 ---
-
 
 ## EFK vs PLG Stacks
 
 Two different stacks can be deployed as centralized logging solution for the kubernetes cluster:
 
 - **EFK stack ([Elasticsearch](https://www.elastic.co/elasticsearch/)-[Fluentd](https://www.fluentd.org/)/[Fluentbit](https://fluentbit.io/)-[Kibana](https://www.elastic.co/kibana/))**, where:
-  - *Elasticsearch* is used as logs storage and search engine
-  - *Fluentd/Fluentbit* used for collecting, aggregate and distribute logs
-  - *Kibana* is used as visualization layer.
+
+  - _Elasticsearch_ is used as logs storage and search engine
+  - _Fluentd/Fluentbit_ used for collecting, aggregate and distribute logs
+  - _Kibana_ is used as visualization layer.
 
   This is a mature open-source stack for implementing centralized log management and log analytics capabilities.
   Since Elasticsearch indexes the whole content of the logs the resources required by the solution in terms of storage and memory are high.
 
 - **PLG stack ([Promtail](https://grafana.com/docs/loki/latest/clients/promtail/) - [Loki](https://grafana.com/oss/loki/) - [Grafana](https://grafana.com/oss/grafana/))**, where:
-  - *Promtail* is used as log collector
-  - *Loki* as log storage/aggregator
-  - *Grafana* as visualization layer.
+
+  - _Promtail_ is used as log collector
+  - _Loki_ as log storage/aggregator
+  - _Grafana_ as visualization layer.
 
   Loki is a lightweigh alternative to Elasticsearch providing a horizontally-scalable, highly-available, multi-tenant log aggregation system inspired by Prometheus for Kubernetes environments.
 
@@ -47,7 +47,6 @@ In the cluster you can decide to install EFK (Elatic-Fluent-Kibana) stack or FLG
 
 {{site.data.alerts.end}}
 
-
 The architecture is shown in the following picture
 
 ![K3S-EFK-LOKI-Architecture](/assets/img/efk-loki-logging-architecture.png)
@@ -62,9 +61,7 @@ Fluentd and Fluentbit both support ARM64 docker images for being deployed on Kub
 
 Loki also supports ARM64 docker images.
 
-
 {{site.data.alerts.end}}
-
 
 ## Collecting cluster logs
 
@@ -82,6 +79,7 @@ In addition to container logs, same Fluentd/Fluentbit agents deployed as daemons
 Log format used by Kubernetes is different depending on the container runtime used. `docker` container run-time generates logs in JSON format. `containerd` run-time, used by K3S, uses CRI log format:
 
 CRI log format is the following:
+
 ```
 <time_stamp> <stream_type> <P/F> <log>
 
@@ -98,7 +96,7 @@ Fluentbit/Fluentd includes built-in CRI log parser.
 
 ### Kubernetes logs
 
-In K3S all kuberentes componentes (API server, scheduler, controller, kubelet, kube-proxy, etc.) are running within a single process (k3s). This process when running with `systemd` writes all its logs to  `/var/log/syslog` file. This file need to be parsed in order to collect logs from Kubernetes (K3S) processes.
+In K3S all kuberentes componentes (API server, scheduler, controller, kubelet, kube-proxy, etc.) are running within a single process (k3s). This process when running with `systemd` writes all its logs to `/var/log/syslog` file. This file need to be parsed in order to collect logs from Kubernetes (K3S) processes.
 
 K3S logs can be also viewed with `journactl` command
 
@@ -121,10 +119,12 @@ OS level logs (`/var/logs`) can be collected with the same agent deployed to col
 {{site.data.alerts.important}} **About Ubuntu's syslog-format logs**
 
 Some of Ubuntu system logs stored are `/var/logs` (auth.log, systlog, kern.log) have a `syslog` format but with some differences from the standard:
- - Priority field is missing
- - Timestamp is formatted using system local time.
+
+- Priority field is missing
+- Timestamp is formatted using system local time.
 
 The syslog format is the following:
+
 ```
 <time_stamp> <host> <process>[<PID>] <message>
 Where:
@@ -132,6 +132,7 @@ Where:
   - <host>: hostanme
   - <process> and <PID> identifies the process generating the log
 ```
+
 Fluentbit/fluentd custom parser need to be configured to parse this kind of logs.
 
 {{site.data.alerts.end}}
@@ -195,7 +196,6 @@ The procedure for deploying logging solution stack is described in the following
 2. [Loki installation](/docs/loki/)
 
 3. [Fluentbit/Fluentd forwarder/aggregator architecture installation](/docs/logging-forwarder-aggregator/).
-
 
 ## References
 

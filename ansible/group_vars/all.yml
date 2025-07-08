@@ -29,14 +29,14 @@ dns_domain: "{{ vault.general.domains.dns }}"
 # Deactivate clean service. Only enabled in one node
 restic_clean_service: false
 restic_backups_dirs:
-  - path: '/etc'
-  - path: '/root'
+  - path: "/etc"
+  - path: "/root"
     exclude:
-      - pattern: '.cache'
-  - path: '/home/{{ ansible_user }}'
+      - pattern: ".cache"
+  - path: "/home/{{ ansible_user }}"
     exclude:
-      - pattern: '.cache'
-      - pattern: '.ansible'
+      - pattern: ".cache"
+      - pattern: ".ansible"
 
 ##########################
 ## ssh role variables

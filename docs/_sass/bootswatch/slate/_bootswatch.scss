@@ -1,31 +1,40 @@
 // Slate 5.1.3
 // Bootswatch
 
-
 // Mixins
 
-@mixin btn-shadow($color){
-  @include gradient-y-three-colors(tint-color($color, 12%), $color, 60%, shade-color($color, 8%));
+@mixin btn-shadow($color) {
+  @include gradient-y-three-colors(
+    tint-color($color, 12%),
+    $color,
+    60%,
+    shade-color($color, 8%)
+  );
   filter: none;
 }
 
-@mixin btn-shadow-inverse($color){
-  @include gradient-y-three-colors(shade-color($color, 36%), shade-color($color, 30%), 40%, shade-color($color, 26%));
+@mixin btn-shadow-inverse($color) {
+  @include gradient-y-three-colors(
+    shade-color($color, 36%),
+    shade-color($color, 30%),
+    40%,
+    shade-color($color, 26%)
+  );
   filter: none;
 }
 
 // Navbar
 
 .navbar {
-  border: 1px solid rgba(0, 0, 0, .6);
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 
   .container {
     padding: 0;
   }
 
   .navbar-toggler {
-    border-color: rgba(0, 0, 0, .6);
+    border-color: rgba(0, 0, 0, 0.6);
   }
 
   &-fixed-top {
@@ -38,25 +47,25 @@
 
   .nav-link {
     padding: 1rem;
-    border-left: 1px solid rgba(255, 255, 255, .1);
-    border-right: 1px solid rgba(0, 0, 0, .2);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
 
     &:hover,
     &:focus {
       @include btn-shadow-inverse($gray-800);
-      border-left: 1px solid rgba(0, 0, 0, .2);
+      border-left: 1px solid rgba(0, 0, 0, 0.2);
     }
   }
 
   &-brand {
-    padding: .75rem 1rem subtract(24px, .75rem);
+    padding: 0.75rem 1rem subtract(24px, 0.75rem);
     margin-right: 0;
-    border-right: 1px solid rgba(0, 0, 0, .2);
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
   }
 
   .nav-item.active .nav-link {
-    background-color: rgba(0, 0, 0, .3);
-    border-left: 1px solid rgba(0, 0, 0, .2);
+    background-color: rgba(0, 0, 0, 0.3);
+    border-left: 1px solid rgba(0, 0, 0, 0.2);
   }
 
   &-nav .nav-item + .nav-item {
@@ -64,13 +73,13 @@
   }
 
   &.bg-light {
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, .1);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
 
     .nav-link {
       &:hover,
       &:focus {
         @include btn-shadow-inverse($gray-600);
-        border-left: 1px solid rgba(0, 0, 0, .2);
+        border-left: 1px solid rgba(0, 0, 0, 0.2);
       }
     }
   }
@@ -106,12 +115,12 @@
 // Buttons
 
 .btn {
-  border-color: rgba(0, 0, 0, .6);
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+  border-color: rgba(0, 0, 0, 0.6);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 
   &:not([disabled]):not(.disabled).active,
   &.disabled {
-    border-color: rgba(0, 0, 0, .6);
+    border-color: rgba(0, 0, 0, 0.6);
     box-shadow: none;
   }
 
@@ -120,7 +129,7 @@
   &:not([disabled]):not(.disabled):active,
   &:not([disabled]):not(.disabled):active:hover,
   &:not([disabled]):not(.disabled).active:hover {
-    border-color: rgba(0, 0, 0, .6);
+    border-color: rgba(0, 0, 0, 0.6);
   }
 }
 
@@ -207,7 +216,7 @@
 .btn-group,
 .btn-group-vertical {
   .btn.active {
-    border-color: rgba(0, 0, 0, .6);
+    border-color: rgba(0, 0, 0, 0.6);
   }
 }
 
@@ -219,7 +228,7 @@ h3,
 h4,
 h5,
 h6 {
-  text-shadow: -1px -1px 0 rgba(0, 0, 0, .3);
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
 }
 
 // Forms
@@ -230,7 +239,7 @@ legend {
 
 .input-group-addon {
   @include btn-shadow($secondary);
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
   color: $white;
 }
 
@@ -239,7 +248,7 @@ legend {
 .nav-tabs {
   .nav-link {
     @include btn-shadow-inverse($gray-800);
-    border: 1px solid rgba(0, 0, 0, .6);
+    border: 1px solid rgba(0, 0, 0, 0.6);
 
     &:not([disabled]):not(.disabled):hover,
     &:not([disabled]):not(.disabled):focus,
@@ -249,7 +258,7 @@ legend {
     }
 
     &.disabled {
-      border: 1px solid rgba(0, 0, 0, .6);
+      border: 1px solid rgba(0, 0, 0, 0.6);
     }
   }
 
@@ -262,13 +271,13 @@ legend {
 .nav-pills {
   .nav-link {
     @include btn-shadow($gray-800);
-    border: 1px solid rgba(0, 0, 0, .6);
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+    border: 1px solid rgba(0, 0, 0, 0.6);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
     color: $white;
 
     &:hover {
       @include btn-shadow-inverse($gray-800);
-      border: 1px solid rgba(0, 0, 0, .6);
+      border: 1px solid rgba(0, 0, 0, 0.6);
     }
   }
 
@@ -276,7 +285,7 @@ legend {
   .nav-link:hover {
     background-color: transparent;
     @include btn-shadow-inverse($gray-800);
-    border: 1px solid rgba(0, 0, 0, .6);
+    border: 1px solid rgba(0, 0, 0, 0.6);
   }
 
   .nav-link.disabled,
@@ -288,7 +297,7 @@ legend {
 
 .pagination {
   .page-link {
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
     @include btn-shadow($gray-800);
 
     &:hover {
@@ -307,8 +316,8 @@ legend {
 }
 
 .breadcrumb {
-  border: 1px solid rgba(0, 0, 0, .6);
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
   background-color: transparent;
   @include btn-shadow($gray-800);
 

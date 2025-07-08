@@ -1,5 +1,4 @@
 ---
-
 - name: "Wait for master node to be ready"
   ansible.builtin.command:
     cmd: "kubectl get nodes {{ item }}"

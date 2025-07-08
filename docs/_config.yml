@@ -4,7 +4,6 @@ email: admin@ricsanfre.com
 description: >
   How to build a hybrid x86/ARM Kubernetes cluster at home, using Raspberry Pi and refurbished mini PCs, and automate its deployment and configuration applying IaC (infrastructure as a code) and GitOps methodologies with tools like Ansible and Argo CD.
 lang: en-US
-
 author:
   name: Ricardo Sanchez
   twitter: ricsanfre
@@ -38,7 +37,6 @@ giscus:
   category: Announcements
   category_id: DIC_kwDOFqYoCM4CUyX7
 
-
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: https://picluster.ricsanfre.com # the base hostname & protocol for your site
 git_address: https://github.com/ricsanfre/pi-cluster
@@ -59,8 +57,8 @@ highlighter: rouge
 
 # Plugins (previously gems:)
 plugins:
-#  - jekyll-remote-theme
-#  - jekyll-toc
+  #  - jekyll-remote-theme
+  #  - jekyll-toc
   - jekyll-feed
   - jekyll-redirect-from
   - jekyll-seo-tag
@@ -74,29 +72,28 @@ exclude:
   - README.md
   - vendor
 
-
 defaults:
-- scope:
-    path: ""
-  values:
-    image: /assets/img/pi-logo-reduced.png
-- scope:
-    path: _posts
-    type: posts
-  values:
-    layout: post
-    sectionid: news
-- scope:
-    path: _docs
-    type: docs
-  values:
-    layout: docs
-    sectionid: docs
-    seo:
-      type: "WebPage"
-    toc: true
-    comments: true
-    last_modified_at: "29-01-2022"
+  - scope:
+      path: ""
+    values:
+      image: /assets/img/pi-logo-reduced.png
+  - scope:
+      path: _posts
+      type: posts
+    values:
+      layout: post
+      sectionid: news
+  - scope:
+      path: _docs
+      type: docs
+    values:
+      layout: docs
+      sectionid: docs
+      seo:
+        type: "WebPage"
+      toc: true
+      comments: true
+      last_modified_at: "29-01-2022"
 
 collections:
   docs:

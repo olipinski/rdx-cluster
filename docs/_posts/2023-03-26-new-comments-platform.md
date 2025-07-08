@@ -1,18 +1,16 @@
 ---
 layout: post
-title:  Website comments platform migration to giscus
-date:   2023-03-26
+title: Website comments platform migration to giscus
+date: 2023-03-26
 author: ricsanfre
 description: PiCluster News - New Website comments platform
 ---
 
-
 ![giscus-avatar](/assets/img/giscus-app.png)
 
-Pi-cluster Website comments platform has been migrated to  to [giscus](https://giscus.app/), a comments system powered by [GitHub Discussions](https://docs.github.com/en/discussions).
+Pi-cluster Website comments platform has been migrated to to [giscus](https://giscus.app/), a comments system powered by [GitHub Discussions](https://docs.github.com/en/discussions).
 
 As part of the migration old comments have been lost. Sorry for the inconvenience it might cause to people who already have posted some comments.
-
 
 ## Migration reasons
 
@@ -20,7 +18,7 @@ As part of the migration old comments have been lost. Sorry for the inconvenienc
 
    Previous comments platform based on a self-hosted remark42[remark42](https://remark42.com/) has been abandon mainly to an issue with email notifications. Users registered could assume that will receive email notifications whenever they receive a reply to their messages but this was not happening, because they needed to manually susbscribe for notifications.
 
-   With remark42, users, using Github account or email-account,  only get email notifications about new replies to their comments (and any of the responses down the tree) if they actively subscribe for email notifications when they post a comment. See [remark42 documentation: "Email notifications to users"](https://remark42.com/docs/configuration/email/).
+   With remark42, users, using Github account or email-account, only get email notifications about new replies to their comments (and any of the responses down the tree) if they actively subscribe for email notifications when they post a comment. See [remark42 documentation: "Email notifications to users"](https://remark42.com/docs/configuration/email/).
 
    In GUI the subscribe option, is not clearly explainied and highlighted its real purpose, and it seems to be an option to receive notifications from any message posted not for getting notifications to replies. Users could understand that they will receive notifications by email to their own comments without subscribing.
 

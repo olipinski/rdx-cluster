@@ -1,16 +1,14 @@
 ---
 layout: post
-title:  Kubernetes Pi Cluster relase v1.7
-date:   2023-06-24
+title: Kubernetes Pi Cluster relase v1.7
+date: 2023-06-24
 author: ricsanfre
 description: PiCluster News - announcing release v1.7
 ---
 
-
 Today I am pleased to announce the seventh release of Kubernetes Pi Cluster project (v1.7).
 
 Main features/enhancements of this release are:
-
 
 ## Hybrid x86/ARM nodes support
 
@@ -22,9 +20,7 @@ Use old x86 refurbished mini PCs, with Intel i5 processors, has been the solutio
 
 The overall price of a mini PC, intel i5 + 8 GB RAM + 256 GB SSD disk + power supply, ([aprox 130 €](https://www.amazon.es/HP-EliteDesk-800-G3-reacondicionado/dp/B09TL2N2M8/)) is cheaper than the overal cost of building a cluster node using a Rasbperry PI: cost of Raspberry PI 8GB (100€) + Power Adapter (aprox 10 €) + SSD Disk ([aprox 20 €](https://www.amazon.es/Kingston-SSD-A400-Disco-s%C3%B3lido/dp/B01N5IB20Q)) + USB3.0 to SATA converter ([aprox 20€](https://www.amazon.es/Startech-USB3S2SAT3CB-Adaptador-3-0-2-5-negro/dp/B00HJZJI84))
 
-
 ![!Cluster-3.0](/assets/img/pi-cluster-3.0.png)
-
 
 Ansible automation code has been update to be able to configure both type of nodes.
 
@@ -36,13 +32,11 @@ Process of burning Raspberry Pi's ubuntu cloud image to USB Flash Disk/SSD and c
 
 See ["Automating Image creation (USB Booting)"](/docs/ubuntu/rpi/#automating-image-creation-usb-booting)
 
-
 ### Ubuntu autoinstall over PXE (x86 nodes)
 
 Ubuntu OS installation on x86 nodes has been automated using PXE. PXE server has been added to the cluster, and installation process can be launched from network.
 
 See ["OS Installation - x86 (PXE sever)"](/docs/ubuntu/x86/) and ["PXE Server"](/docs/pxe-server/).
-
 
 ## Ubuntu OS upgrade from 20.04 to 22.04
 
@@ -53,7 +47,6 @@ Ansible OS configuration tasks have been updated to fit the new OS release.
 
 k3s software version upgrade automated using Rancher's system-upgrade-controller. This controller uses a [custom resource definition (CRD)], `plan`, to schedule upgrades based on the configured plans. See [K3S Automated Upgrades documentation](https://docs.k3s.io/upgrades/automated)
 
-
 ArgoCD packaged application has been created to deploy system-upgrade-controller app and to generate upgrade plans. Just modifiying a couple of files in the github repository, K3s can be upgraded automatically.
 
 ## New Kuberentes S3 Storage service based on Minio
@@ -63,11 +56,10 @@ Previous Minio service, cluster external service, is maintained only as backend 
 
 Implementation details:
 
-- [vanilla Minio helm chart](https://github.com/minio/minio/tree/master/helm/minio) has been used instead of new Operator. Not need to support multi-tenant installations and  Vanilla Minio helm chart supports also the automatic creation of buckets, policies and users.
+- [vanilla Minio helm chart](https://github.com/minio/minio/tree/master/helm/minio) has been used instead of new Operator. Not need to support multi-tenant installations and Vanilla Minio helm chart supports also the automatic creation of buckets, policies and users.
 - Deploy Minio as Argo CD application
 - Reconfigure Loki and Tempo to use the new Minio internal service
 - Re-deploy Minio external service as cluster offsite service, running on Oracle Cloud Infrastructure
-
 
 ## ElasticSearch/Fluentd Enhancements
 
@@ -85,11 +77,9 @@ Fluentd has been reconfigured to create different ES indices per application (dy
 
 Fluentd's elastic-search-plugin support the creation of dynamic indices, creation of ILM policies and index templates.
 
-
 ## Implementation Details
 
 Fluend elastic-search-plugin already support ILM and Index templates configuration: [See plugin FAQ](https://github.com/uken/fluent-plugin-elasticsearch/blob/master/README.Troubleshooting.md#example-ilm-settings)
-
 
 ## Release v1.7.0 Notes
 
@@ -97,27 +87,32 @@ Hybrid x86/ARM kubernetes cluster support (x86 and ARM cluster nodes can be used
 
 ### Release Scope:
 
-  - Hybrid x86/ARM kubernetes cluster support.
-    - Combine Raspberry PI 4B nodes and x86 mini PCS (HP Elitedesk 800 G3) in the same cluster.
-    - Ansible code update for supporting configuration of Raspberry PI nodes and x86 nodes.
+- Hybrid x86/ARM kubernetes cluster support.
 
-  - Ubuntu OS installation automation
-    - Automate process of creating boot USB disk for Raspberry PI nodes.
-    - x86 nodes autoinstallation using PXE
+  - Combine Raspberry PI 4B nodes and x86 mini PCS (HP Elitedesk 800 G3) in the same cluster.
+  - Ansible code update for supporting configuration of Raspberry PI nodes and x86 nodes.
 
-  - Node's Operating System upgrade from Ubuntu 20.04 LTS to Ubuntu 22.04 LTS.
-    - Node's installation/configuration documentation update.
-    - Ansible OS configuration tasks updated to fit the new OS release.
+- Ubuntu OS installation automation
 
-  - K3s automated upgrade
-     - Deploy Rancher's system-upgrade-controller app. This controller uses a [custom resource definition (CRD)], `plan`, to schedule upgrades based on the configured plans.
-     - ArgoCD packaged application created to deploy system-upgrade-controller app and to generate upgrade plans.
+  - Automate process of creating boot USB disk for Raspberry PI nodes.
+  - x86 nodes autoinstallation using PXE
 
-  - Logging solution enhancements
-    - ES/Kibana upgrade to release 8.6
-    - ElasticSearch's ILM policies (data retention policies) and Index templates (data model) configuration for Fluentd logs.
-    - Fluentd dynamic indices creation and configuration.
-    - Elasticsearch roles and users definition. File Auth Realm configured through ECK. Different roles and users created (fluentd, prometheus-elasticsearch-exporter)
+- Node's Operating System upgrade from Ubuntu 20.04 LTS to Ubuntu 22.04 LTS.
 
-  - Automation enhancements
-    - New Ansible-runtime environment in a docker container, ansible-runner containing all ansible packages and its dependencies. Isolating ansible run-time environment from local server.
+  - Node's installation/configuration documentation update.
+  - Ansible OS configuration tasks updated to fit the new OS release.
+
+- K3s automated upgrade
+
+  - Deploy Rancher's system-upgrade-controller app. This controller uses a [custom resource definition (CRD)], `plan`, to schedule upgrades based on the configured plans.
+  - ArgoCD packaged application created to deploy system-upgrade-controller app and to generate upgrade plans.
+
+- Logging solution enhancements
+
+  - ES/Kibana upgrade to release 8.6
+  - ElasticSearch's ILM policies (data retention policies) and Index templates (data model) configuration for Fluentd logs.
+  - Fluentd dynamic indices creation and configuration.
+  - Elasticsearch roles and users definition. File Auth Realm configured through ECK. Different roles and users created (fluentd, prometheus-elasticsearch-exporter)
+
+- Automation enhancements
+  - New Ansible-runtime environment in a docker container, ansible-runner containing all ansible packages and its dependencies. Isolating ansible run-time environment from local server.

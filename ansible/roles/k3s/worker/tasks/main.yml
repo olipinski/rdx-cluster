@@ -1,5 +1,4 @@
 ---
-
 - name: Run pre-configuration tasks
   include_tasks: pre_configuration.yml
 
@@ -7,7 +6,7 @@
   ansible.builtin.get_url:
     url: https://get.k3s.io
     dest: /tmp/k3s_install.sh
-    mode: '0766'
+    mode: "0766"
 
 - name: Install K3s
   ansible.builtin.command: "/tmp/k3s_install.sh agent"

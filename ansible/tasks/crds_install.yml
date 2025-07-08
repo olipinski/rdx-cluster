@@ -1,5 +1,4 @@
 ---
-
 - name: CRDs installation
   become: false
   shell: |

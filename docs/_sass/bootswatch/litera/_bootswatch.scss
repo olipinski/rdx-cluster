@@ -12,7 +12,7 @@
 
   &.bg-light {
     background-color: $white !important;
-    border: 1px solid rgba(0, 0, 0, .1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 
     &.navbar-fixed-top {
       border-width: 0 0 1px;
@@ -83,7 +83,9 @@ table,
   @each $color, $value in $theme-colors {
     &-#{$color} {
       @if $enable-gradients {
-        background: $value linear-gradient($value, mix($body-bg, $value, 15%)) repeat-x;
+        background: $value
+          linear-gradient($value, mix($body-bg, $value, 15%))
+          repeat-x;
       } @else {
         background-color: $value;
       }

@@ -52,11 +52,13 @@ This helm chart bootstraps a Keycloak deployment on Kubernetes using as backend 
   ```shell
   helm repo add bitnami https://charts.bitnami.com/bitnami
   ```
+
 - Step 2: Fetch the latest charts from the repository:
 
   ```shell
   helm repo update
   ```
+
 - Step 3: Create namespace
 
   ```shell
@@ -99,6 +101,7 @@ This helm chart bootstraps a Keycloak deployment on Kubernetes using as backend 
   ```
 
   With this configuration:
+
   - Keycloak is deployed to run behind NGINX proxy terminating TLS connections. `proxyHeaders` variable need to be used.
   - PostgreSQL is deployed in standalone mode.
   - Ingress resource is configured
@@ -110,11 +113,13 @@ This helm chart bootstraps a Keycloak deployment on Kubernetes using as backend 
   {{site.data.alerts.end}}
 
 - Step 5: Install Keycloak in `keycloak` namespace
+
   ```shell
   helm install keycloak bitnami/keycloak -f keycloak-values.yml --namespace keycloak
   ```
 
 - Step 6: Check status of Keycloak pods
+
   ```shell
   kubectl get pods -n keycloak
   ```
@@ -141,13 +146,13 @@ Alternatively, it can be provided in an external secret.
   apiVersion: v1
   kind: Secret
   metadata:
-      name: keycloak-secret
-      namespace: keycloak
+    name: keycloak-secret
+    namespace: keycloak
   type: kubernetes.io/basic-auth
   data:
-      admin-password: <`echo -n 'supersecret1' | base64`>
-      postgresql-admin-password: <`echo -n 'supersecret2' | base64`>
-      password: <`echo -n 'supersecret3' | base64`>
+    admin-password: <`echo -n 'supersecret1' | base64`>
+    postgresql-admin-password: <`echo -n 'supersecret2' | base64`>
+    password: <`echo -n 'supersecret3' | base64`>
   ```
 
 - Step 2: Add externalSecret to keycloak-values.yaml
@@ -155,8 +160,8 @@ Alternatively, it can be provided in an external secret.
   ```yaml
   # Admin user
   auth:
-      existingSecret: keycloak-secret
-      adminUser: admin
+    existingSecret: keycloak-secret
+    adminUser: admin
 
   # postgresSQL
   postgresql:
@@ -182,13 +187,12 @@ For example, using CloudNative-PG a, keycload database cluster can be created. S
   apiVersion: v1
   kind: Secret
   metadata:
-      name: keycloak-secret
-      namespace: keycloak
+    name: keycloak-secret
+    namespace: keycloak
   type: kubernetes.io/basic-auth
   data:
-      admin-password: <`echo -n 'supersecret1' | base64`>
+    admin-password: <`echo -n 'supersecret1' | base64`>
   ```
-
 
 - Step 2. Create secret for external database
 
@@ -253,8 +257,8 @@ For example, using CloudNative-PG a, keycload database cluster can be created. S
   ```yaml
   # Admin user
   auth:
-      existingSecret: keycloak-secret
-      adminUser: admin
+    existingSecret: keycloak-secret
+    adminUser: admin
   # External DB: https://github.com/bitnami/charts/tree/main/bitnami/keycloak#use-an-external-database
   postgresql:
     enabled: false
@@ -268,7 +272,6 @@ For example, using CloudNative-PG a, keycload database cluster can be created. S
     existingSecretPasswordKey: "password"
   ```
 
-
 ## Keycloak Configuration
 
 ### Pi Cluster realm configuration
@@ -280,7 +283,6 @@ For example, using CloudNative-PG a, keycload database cluster can be created. S
 - Step 9: Create a new realm 'picluster'
 
   Follow procedure in Keycloak documentation:[Keycloak: Creating a Realm](https://www.keycloak.org/docs/latest/server_admin/#proc-creating-a-realm_server_administration_guide)
-
 
 ### Configure Oauth2-Proxy Client
 
@@ -328,7 +330,7 @@ Follow procedure in [Oauth2-Proxy: Keycloak OIDC Auth Provider Configuration](ht
     ![oauth2-proxy-client-5](/assets/img/oauth2-proxy-client-5.png)
 
   - Access the dedicated mappers pane by clicking 'oauth2-proxy-dedicated', located under Assigned client scope.
-  (It should have a description of "Dedicated scope and mappers for this client")
+    (It should have a description of "Dedicated scope and mappers for this client")
   - Click on 'Configure a new mapper' and select 'Audience'
 
     ![oauth2-proxy-client-6](/assets/img/oauth2-proxy-client-6.png)
@@ -342,7 +344,7 @@ Follow procedure in [Oauth2-Proxy: Keycloak OIDC Auth Provider Configuration](ht
     - Included Client Audience select oauth2-proxy client's id from the dropdown.
     - Add to ID token 'On'
     - Add to access token 'On'
-    OAuth2 proxy can be set up to pass both the access and ID JWT tokens to your upstream services.
+      OAuth2 proxy can be set up to pass both the access and ID JWT tokens to your upstream services.
   - Save the configuration.
 
 ### Automatic import of Realm configuration
@@ -376,6 +378,7 @@ New ConfigMap, containing the JSON files to be imported need to be mounted by ke
   ```shell
   kubectl apply -f keycloak-realm-configmap.yaml
   ```
+
 - Step 2: Add to keycloak-values.yaml the following configuration and install helm char
 
   ```yml
@@ -391,7 +394,6 @@ New ConfigMap, containing the JSON files to be imported need to be mounted by ke
       name: realm-config
   ```
 
-
 ## Proxy Oauth 2.0 Installation
 
 - Step 1: Add Helm repository:
@@ -399,11 +401,13 @@ New ConfigMap, containing the JSON files to be imported need to be mounted by ke
   ```shell
   helm repo add oauth2-proxy https://oauth2-proxy.github.io/manifests
   ```
+
 - Step 2: Fetch the latest charts from the repository:
 
   ```shell
   helm repo update
   ```
+
 - Step 3: Create namespace
 
   ```shell
@@ -513,12 +517,12 @@ As workaround, the issue can be solved providing the credentials in a external s
   apiVersion: v1
   kind: Secret
   metadata:
-      name: oauth2-proxy-secret
-      namespace: oauth2-proxy
+    name: oauth2-proxy-secret
+    namespace: oauth2-proxy
   type: kubernetes.io/basic-auth
   data:
     client-id: <`echo -n 'oauth2-proxy' | base64`>
-    client-secret:  <`echo -n 'supersecret | base64`>
+    client-secret: <`echo -n 'supersecret | base64`>
     cookie-secret: <`openssl rand -base64 32 | head -c 32 | base64`>
     redis-password: <`openssl rand -base64 32 | head -c 32 | base64`>
   ```

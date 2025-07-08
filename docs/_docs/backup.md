@@ -18,7 +18,6 @@ The backup architecture is the following:
   Some OS configuration files should be backed up in order to being able to restore configuration at OS level.
   For doing so, [Restic](https://restic.net) can be used. Restic provides a fast and secure backup program that can be intregrated with different storage backends, including Cloud Service Provider Storage services (AWS S3, Google Cloud Storage, Microsoft Azure Blob Storage, etc). It also supports opensource S3 [Minio](https://min.io).
 
-
 - K3S cluster configuration backup and restore.
 
   This could be achieve backing up and restoring the etcd Kubernetes cluster database as official [documentation](https://rancher.com/docs/k3s/latest/en/backup-restore/) states. The supported backup procedure is only supported in case `etcd` database is deployed (by default K3S use a sqlite databse)
@@ -34,9 +33,10 @@ The backup architecture is the following:
 - PODs Persistent Volumes backup and restore.
 
   Applications running in Kubernetes needs to be backed up in a consistent state. It means that before copying the filesystem is it required to freeze the application and make it flush all the pending changes to disk before making the copy. Once the backup is finished, the application can be unfreeze.
-  1) Application Freeze and flush to disk
-  2) Filesystem level backup
-  3) Application unfreeze.
+
+  1. Application Freeze and flush to disk
+  2. Filesystem level backup
+  3. Application unfreeze.
 
   Longhorn provides its own mechanisms for doing the backups and to take snapshots of the persistent volumes. See Longhorn [documentation](https://longhorn.io/docs/latest/snapshots-and-backups/).
 
@@ -66,7 +66,7 @@ The backup architecture is the following:
 
   {{site.data.alerts.note}}
 
-  Velero also supports, Persistent Volumes backup/restore procedures using [File System Backup (FSB shortly) or Pod Volume Backup](https://velero.io/docs/latest/file-system-backup/).  [restic](https://restic.net/) or [kopia](https://kopia.io/) can be used to transfer the data using the same S3 backend configured within Velero for backing up the cluster configuration. Velero node agent has to be installed to enable this functionality. FSB support is not enabled when deploying Velero, instead CSI snapshots will be used.
+  Velero also supports, Persistent Volumes backup/restore procedures using [File System Backup (FSB shortly) or Pod Volume Backup](https://velero.io/docs/latest/file-system-backup/). [restic](https://restic.net/) or [kopia](https://kopia.io/) can be used to transfer the data using the same S3 backend configured within Velero for backing up the cluster configuration. Velero node agent has to be installed to enable this functionality. FSB support is not enabled when deploying Velero, instead CSI snapshots will be used.
 
   {{site.data.alerts.end}}
 
@@ -91,6 +91,7 @@ Restic installation and backup scheduling tasks have been automated with Ansible
 Ubuntu has as part of its distribution a `restic` package that can be installed with `apt` command. restic version is an old one, so it is better to install the last version binary (0.16.5) from github repository
 
 For doing the installation execute the following commands as root user
+
 ```shell
 cd /tmp
 wget https://github.com/restic/restic/releases/download/v0.16.5/restic_0.16.5_linux_[amd64/arm64].bz2
@@ -98,6 +99,7 @@ bzip2 -d /tmp/restic_0.16.5_linux_[amd64/arm64].bz2
 cp /tmp/restic_0.16.5_linux_[amd64/arm64] /usr/local/bin/restic
 chmod 755 /usr/local/bin/restic
 ```
+
 ### Create restic environment variables files
 
 restic repository info can be passed to `restic` command through environment variables instead of typing in as parameters with every command execution
@@ -122,6 +124,7 @@ restic repository info can be passed to `restic` command through environment var
   ```shell
   export $(grep -v '^#' /etc/restic/restic.conf | xargs -d '\n')
   ```
+
   {{site.data.alerts.important}}
   This command need to be executed with any new SSH shell connection before executing any `restic` command. As an alternative that command can be added to the bash profile of the user.
   {{site.data.alerts.end}}
@@ -147,24 +150,29 @@ For initilizing the repo execute:
 ```shell
 restic init
 ```
+
 For checking whether the repo is initialized or not execute:
 
 ```shell
 restic init cat config
 ```
+
 That command shows the information about the repository (file `config` stored within the S3 bucket)
 
 ### Execute restic backup
 
 For manually launch backup process, execute
+
 ```shell
 restic backup <path_to_backup>
 ```
+
 Backups snapshots can be displayed executing
 
 ```shell
 restic snapshots
 ```
+
 ### Restic repository maintenance tasks
 
 For checking repository inconsistencies and fixing them
@@ -172,16 +180,19 @@ For checking repository inconsistencies and fixing them
 ```shell
 restic check
 ```
+
 For applying data retention policy (i.e.: maintain 30 days old snapshots)
 
 ```shell
 restic forget --keep-within 30d
 ```
+
 For purging repository old data:
 
 ```shell
 restic prune
 ```
+
 ### Restic backup schedule and concurrent backups
 
 - Scheduling backup processes
@@ -196,24 +207,23 @@ restic prune
 
   To avoid this situation, retic repo maintenance tasks are scheduled separatedly from the backup process and executed just from one of the nodes: `gateway`
 
-
 ### Backups policies
 
 The folling directories are backed-up from the cluster nodes
 
-|Path | Exclude patterns|
-|----|----|
-| /etc/ | |
-| /home/oss | .cache |
-| /root | .cache |
-| /home/ansible | .cache .ansible |
+| Path          | Exclude patterns |
+| ------------- | ---------------- |
+| /etc/         |                  |
+| /home/oss     | .cache           |
+| /root         | .cache           |
+| /home/ansible | .cache .ansible  |
+
 {: .table .table-white .border-dark }
 
 Backup policies scheduling
 
 - Daily backup at 03:00 (executed from all nodes)
 - Daily restic repo maintenance at 06:00 (executed from `gateway` node)
-
 
 ## Enable CSI snapshots support in K3S
 
@@ -240,8 +250,8 @@ Check which version to use in [Longhorn documentation - Enable CSI Snapshot Supp
   kind: Kustomization
   namespace: kube-system
   resources:
-  - https://github.com/kubernetes-csi/external-snapshotter/client/config/crd/?ref=v7.0.2
-  - https://github.com/kubernetes-csi/external-snapshotter/deploy/kubernetes/snapshot-controller/?ref=v7.0.2
+    - https://github.com/kubernetes-csi/external-snapshotter/client/config/crd/?ref=v7.0.2
+    - https://github.com/kubernetes-csi/external-snapshotter/deploy/kubernetes/snapshot-controller/?ref=v7.0.2
   ```
 
 - Step Deploy Snapshot-Controller
@@ -353,15 +363,15 @@ Since full cluster backup will be scheduled using Velero, including Longhorn's P
     cron: "0 5 * * *"
     task: "backup"
     groups:
-    - default
+      - default
     retain: 2
     concurrency: 2
     labels:
-      type: 'full'
-      schedule: 'daily'
+      type: "full"
+      schedule: "daily"
   ```
 
-  This will create  recurring backup job for `default`. Longhorn will automatically add a volume to the default group when the volume has no recurring job.
+  This will create recurring backup job for `default`. Longhorn will automatically add a volume to the default group when the volume has no recurring job.
 
 - Apply manifest file
 
@@ -421,7 +431,6 @@ The complete backup workflow is the following:
 
 As storage provider, Minio will be used. See [Velero's installation documentation using Minio as backend](https://velero.io/docs/latest/contributions/minio/).
 
-
 ### Configuring Minio bucket and user for Velero
 
 Velero requires an object storage bucket to store backups in. In Minio a dedicated S3 bucket is created for Velero (name: `k3s-velero`)
@@ -430,37 +439,29 @@ A specific Minio user `velero` is configured with specic access policy to grant 
 
 ```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:DeleteObject",
-                "s3:GetObject",
-                "s3:ListMultipartUploadParts",
-                "s3:PutObject",
-                "s3:AbortMultipartUpload"
-            ],
-            "Resource": [
-                "arn:aws:s3:::k3s-velero/*"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:ListBucket"
-            ],
-            "Resource": [
-                "arn:aws:s3:::k3s-velero"
-            ]
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:DeleteObject",
+        "s3:GetObject",
+        "s3:ListMultipartUploadParts",
+        "s3:PutObject",
+        "s3:AbortMultipartUpload"
+      ],
+      "Resource": ["arn:aws:s3:::k3s-velero/*"]
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::k3s-velero"]
+    }
+  ]
 }
-
 ```
 
 See more details in [Velero plugin for aws](https://github.com/vmware-tanzu/velero-plugin-for-aws).
-
 
 ### Installing Velero CLI
 
@@ -478,11 +479,13 @@ This will be installed in `pimaster`
   ```shell
   velero-<release>-linux-<arch>.tar.gz
   ```
+
 - Step 3: unarchive
 
   ```shell
   tar -xvf <RELEASE-TARBALL-NAME>.tar.gz -C /dir/to/extract/to
   ```
+
 - Step 4: Copy `velero` binary to `/usr/local/bin`
 
 - Step 5: Customize namespace for operational commands
@@ -490,6 +493,7 @@ This will be installed in `pimaster`
   CLI commands expects velero to be running in default namespace (`velero`). If namespace is different it must be specified with any execution of the command (--namespace option)
 
   Velero CLI can be configured to use a different namespace and avoid passing --namespace option with each execution
+
   ```shell
   velero client config set namespace=<velero_namespace>
   ```
@@ -503,11 +507,13 @@ Installation using `Helm` (Release 3):
   ```shell
   helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
   ```
+
 - Step2: Fetch the latest charts from the repository:
 
   ```shell
   helm repo update
   ```
+
 - Step 3: Create namespace
 
   ```shell
@@ -555,6 +561,7 @@ Installation using `Helm` (Release 3):
   ```shell
   helm install velero vmware-tanzu/velero --namespace velero -f values.yml
   ```
+
 - Step 6: Confirm that the deployment succeeded, run:
 
   ```shell
@@ -578,6 +585,7 @@ Installation using `Helm` (Release 3):
   parameters:
     type: bak
   ```
+
   This VolumeSnapshotClass will be used by Velero to create VolumeSnapshot objects when orchestrating PV backups. The VolumeSnapshotClass to be used, from all the configured in the system, is the one with the label "velero.io/csi-volumesnapshot-class".
 
   Setting a DeletionPolicy of Retain on the VolumeSnapshotClass will preserve the volume snapshot in the storage system for the lifetime of the Velero backup and will prevent the deletion of the volume snapshot, in the storage system, in the event of a disaster where the namespace with the VolumeSnapshot object may be lost.
@@ -593,8 +601,8 @@ Installation using `Helm` (Release 3):
 - Velero plugins installation
 
   The chart configuration deploys the following velero plugin as `initContainers`:
-  - `velero-plugin-for-aws` to enable S3 Minio as backup backend.
 
+  - `velero-plugin-for-aws` to enable S3 Minio as backup backend.
 
   ```yml
   # AWS backend and CSI plugins configuration
@@ -611,7 +619,7 @@ Installation using `Helm` (Release 3):
 
   ```yml
   configuration:
-     # Enable CSI snapshot support
+    # Enable CSI snapshot support
     features: EnableCSI
 
   # Disable VolumeSnapshotLocation CRD. It is not needed for CSI integration
@@ -640,13 +648,12 @@ Installation using `Helm` (Release 3):
         [default]
         aws_access_key_id: <minio_velero_user> # Not encoded
         aws_secret_access_key: <minio_velero_pass> # Not encoded
-
   ```
 
   Minio server connection data (`configuration.backupStorageLocation.config`) ,minio credentials (`credentials.secretContents`), and bucket(`configuration.backupStorageLocation.bucket`) to be used.
 
   {{site.data.alerts.note}}
-   In case of using a self-signed certificate for Minio server, custom CA certificate must be passed as `configuration.backupStorageLocation.caCert` parameter (base64 encoded and removing any '\n' character)
+  In case of using a self-signed certificate for Minio server, custom CA certificate must be passed as `configuration.backupStorageLocation.caCert` parameter (base64 encoded and removing any '\n' character)
   {{site.data.alerts.end}}
 
 #### GitOps installation
@@ -663,6 +670,7 @@ type: Opaque
 data:
   cloud: <velero_secret_content | b64encode>
 ```
+
 Where <velero_secret_content> is:
 
 ```
@@ -682,8 +690,7 @@ credentials:
 
 - Step 1: Deploy a testing application (nginx), which uses a Longhorn's Volume for storing its logs (`/var/logs/nginx`)
 
-  1) Create manifest file: `nginx-example.yml`
-
+  1. Create manifest file: `nginx-example.yml`
 
   ```yml
   ---
@@ -722,12 +729,12 @@ credentials:
     template:
       metadata:
         labels:
-            app: nginx
+          app: nginx
         annotations:
-            pre.hook.backup.velero.io/container: fsfreeze
-            pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/var/log/nginx"]'
-            post.hook.backup.velero.io/container: fsfreeze
-            post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/var/log/nginx"]'
+          pre.hook.backup.velero.io/container: fsfreeze
+          pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/var/log/nginx"]'
+          post.hook.backup.velero.io/container: fsfreeze
+          post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/var/log/nginx"]'
       spec:
         volumes:
           - name: nginx-logs
@@ -759,7 +766,7 @@ credentials:
   kind: Service
   metadata:
     labels:
-        app: nginx
+      app: nginx
     name: my-nginx
     namespace: nginx-example
   spec:
@@ -775,31 +782,32 @@ credentials:
   Deployment template is annotated so, volume is included in the backup (`backup.velero.io/backup-volumes`) and before doing the backup the filesystem is freeze (`pre.hook.backup.velero.io` and `post.hook.backup.velero.io`)
   {{site.data.alerts.end}}
 
-  2) Apply manifest file `nginx-example.yml`
+  2. Apply manifest file `nginx-example.yml`
 
   ```shell
   kubectl apply -f nginx-example.yml
   ```
-  3) Connect to nginx pod and create manually a file within `/var/log/nginx`
+
+  3. Connect to nginx pod and create manually a file within `/var/log/nginx`
 
   ```shell
   kubectl exec <nginx-pod> -n nginx-example -it -- /bin/sh
   # touch /var/log/nginx/testing
   ```
 
-  4) Create a backup for any object included in nginx-example namespace:
+  4. Create a backup for any object included in nginx-example namespace:
 
   ```shell
   velero backup create nginx-backup --include-namespaces nginx-example --wait
   ```
 
-  5) Simulate a disaster:
+  5. Simulate a disaster:
 
   ```shell
   kubectl delete namespace nginx-example
   ```
 
-  6) To check that the nginx deployment and service are gone, run:
+  6. To check that the nginx deployment and service are gone, run:
 
   ```shell
   kubectl get deployments --namespace=nginx-example
@@ -807,25 +815,26 @@ credentials:
   kubectl get namespace/nginx-example
   ```
 
-  7) Run the restore
+  7. Run the restore
 
   ```shell
   velero restore create --from-backup nginx-backup
   ```
 
-  8) Check the status of the restore:
+  8. Check the status of the restore:
 
   ```shell
   velero restore get
   ```
 
   After the restore finishes, the output looks like the following:
+
   ```
   NAME                          BACKUP         STATUS      STARTED                         COMPLETED                       ERRORS   WARNINGS   CREATED                         SELECTOR
   nginx-backup-20211220180613   nginx-backup   Completed   2021-12-20 18:06:13 +0100 CET   2021-12-20 18:06:50 +0100 CET   0        0          2021-12-20 18:06:13 +0100 CET   <none>
   ```
 
-  9) Check nginx deployment and services are back
+  9. Check nginx deployment and services are back
 
   ```shell
   kubectl get deployments --namespace=nginx-example
@@ -833,7 +842,7 @@ credentials:
   kubectl get namespace/nginx-example
   ```
 
-  10) Connect to the restored pod and check that `testing` file is in `/var/log/nginx`
+  10. Connect to the restored pod and check that `testing` file is in `/var/log/nginx`
 
 ### Schedule a periodic full backup
 
@@ -842,6 +851,7 @@ Set up daily full backup can be on with velero CLI
 ```shell
 velero schedule create full --schedule "0 4 * * *"
 ```
+
 Or creating a 'Schedule' [kubernetes resource](https://velero.io/docs/latest/api-types/schedule/):
 
 ```yml
@@ -855,17 +865,16 @@ spec:
   template:
     hooks: {}
     includedNamespaces:
-    - '*'
+      - "*"
     includedResources:
-    - '*'
+      - "*"
     includeClusterResources: true
     metadata:
       labels:
-        type: 'full'
-        schedule: 'daily'
+        type: "full"
+        schedule: "daily"
     ttl: 720h0m0s
 ```
-
 
 ## References
 

@@ -1,4 +1,3 @@
-
 ---
 # Fluentd ServiceMonitor
 apiVersion: monitoring.coreos.com/v1

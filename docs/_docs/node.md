@@ -12,7 +12,6 @@ A K3S cluster is composed of:
   - `node5`and `node6` running on Raspberry Pi 4B (8GB)
   - `node-hp-1`,`node-hp-2` and `node-hp-3` running on HP Elitedesk 800 G3 (16GB)
 
-
 ## Raspberry PI nodes
 
 ### Storage Configuration
@@ -21,7 +20,7 @@ A K3S cluster is composed of:
 
 - **Dedicated disks storage architecture**: Kingston A400 480GB SSD Disk and a USB3.0 to SATA adapter will be used connected to `node1`. Kingston A400 240GB SSD Disk and USB3.0 to SATA adapter will be used connected to `node2-node6`.
 
-  SSD disk is partitioned to separate  root filesystem (mountpoit `/`) from data storage destinated for Longhorn data (mountpoint `/storage`)
+  SSD disk is partitioned to separate root filesystem (mountpoit `/`) from data storage destinated for Longhorn data (mountpoint `/storage`)
 
 - **Centralized SAN architecture**: A Samsung USB 3.1 32 GB Fit Plus Flash Disk will be used connected to one of the USB 3.0 ports of the Raspberry Pi.
 
@@ -41,9 +40,10 @@ Follow the procedure indicated in ["Ubuntu OS Installation - Raspberry PI"](/doc
 
 `user-data` file to be used depends on the storage architectural option selected.
 
-| Dedicated Disks | Centralized SAN  |
-|-----------------| ---------------- |
-| [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/nodes/user-data-SSD-partition) | [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/nodes/user-data)|
+| Dedicated Disks                                                                             | Centralized SAN                                                               |
+| ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/nodes/user-data-SSD-partition) | [user-data]({{ site.git_edit_address }}/metal/rpi/cloud-init/nodes/user-data) |
+
 {: .table .border-dark }
 
 {{site.data.alerts.note}}
@@ -54,11 +54,11 @@ In user-data file `hostname` field need to be changed for each node (node1-node6
 
 `network-config` is the same in both architectures:
 
-| Network configuration |
-|---------------------- |
+| Network configuration                                                                   |
+| --------------------------------------------------------------------------------------- |
 | [network-config]({{ site.git_edit_address }}/metal/rpi/cloud-init/nodes/network-config) |
-{: .table .border-dark }
 
+{: .table .border-dark }
 
 {{site.data.alerts.note}}
 
@@ -78,9 +78,7 @@ As a reference of how cloud images partitions grow in boot time check this blog 
 
 cloud-init partition SSD Disk will be partitioned during firt boot. cloud-init will be configured to reserve 30 GB for root filesystem (OS installation) and the rest will be used for creating a Linux partition (ext4) mounted as `/storage`. This will provide local storage capacity in each node of the cluster, used mainly by Kuberentes distributed storage solution and by backup solution.
 
-
 `cloud-init` configuration (`user-data` file) includes commands to be executed once in boot time changing partition table and creating a new partition before the automatic growth of root partitions to fill the entire disk happens.
-
 
 ```yml
 bootcmd:
@@ -90,7 +88,18 @@ bootcmd:
   # Second moves the GPT backup block to the end of the disk where it belongs (-e option)
   # Then creates a new partition starting 10GiB into the disk filling the rest of the disk (-n=0:10G:0 option)
   # And labels it as a Linux partition (-t option)
-  - [cloud-init-per, once, addpartition, sgdisk, /dev/sda, "-g", "-e", "-n=0:30G:0", -t, "0:8300"]
+  - [
+      cloud-init-per,
+      once,
+      addpartition,
+      sgdisk,
+      /dev/sda,
+      "-g",
+      "-e",
+      "-n=0:30G:0",
+      -t,
+      "0:8300",
+    ]
 
 runcmd:
   # reload partition table
@@ -110,17 +119,17 @@ sgdisk /dev/sda -e .g -n=0:30G:0 -t 0:8300
 ```
 
 This command:
-  - First convert MBR partition to GPT (-g option)
-  - Second moves the GPT backup block to the end of the disk  (-e option)
-  - then creates a new partition starting 30GiB into the disk filling the rest of the disk (-n=0:10G:0 option)
-  - And labels it as an Linux partition (-t option)
+
+- First convert MBR partition to GPT (-g option)
+- Second moves the GPT backup block to the end of the disk (-e option)
+- then creates a new partition starting 30GiB into the disk filling the rest of the disk (-n=0:10G:0 option)
+- And labels it as an Linux partition (-t option)
 
 For `node1-node6`, the new partition created in boot time, `/dev/sda3`, uses most of the disk space leaving just 30GB for the root filesystem, `/dev/sda2`.
 
 Then cloud-init executes the commands (cloud-init's runcmd section) to format (`ext4`) and mounted the new partition as `/storage`.
 
 #### cloud-init: network configuration
-
 
 Ubuntu's netplan yaml configuration file used, part of cloud-init boot `/boot/network-config` is the following:
 
@@ -145,9 +154,7 @@ ethernets:
 It assigns static IP address 10.0.0.X to eth0 port using as gateway and DNS server 10.0.0.1 (`gateway`).
 Also `homelab.ricsanfre.com` domain is added to dns search
 
-
 ## x86 mini PC nodes
-
 
 ### Storage Configuration
 
@@ -160,35 +167,36 @@ Partitioning to be performed on the servers is the following:
 
 For nodes having only SATA disk (hp-node-1)
 
-| Partition | Description  | Mount Point | Format | Size |
-|---| --- | --- | --- | --- |
-| /dev/sda1 |  EFI system Partition (ESP) | /boot/efi | fat32 | 1075 MB |
-| /dev/sda2 | Boot partition  | /boot | ext4 | 2GB |
-| /dev/sda3 | LVM Volume Group: ubuntu-vg| | Rest of space available |
+| Partition | Description                 | Mount Point | Format                  | Size    |
+| --------- | --------------------------- | ----------- | ----------------------- | ------- |
+| /dev/sda1 | EFI system Partition (ESP)  | /boot/efi   | fat32                   | 1075 MB |
+| /dev/sda2 | Boot partition              | /boot       | ext4                    | 2GB     |
+| /dev/sda3 | LVM Volume Group: ubuntu-vg |             | Rest of space available |
+
 {: .table .border-dark }
 
 For nodes having NvME disks (hp-node-2 and hp-node-3)
 
-| Partition | Description  | Mount Point | Format | Size |
-|---| --- | --- | --- | --- |
-| /dev/nvme0n1p1 |  EFI system Partition (ESP) | /boot/efi | fat32 | 1075 MB |
-| /dev/nvme0n1p2 | Boot partition  | /boot | ext4 | 2GB |
-| /dev/nvme0n1p3 | LVM Volume Group: ubuntu-vg| | Rest of space available |
-{: .table .border-dark }
+| Partition      | Description                 | Mount Point | Format                  | Size    |
+| -------------- | --------------------------- | ----------- | ----------------------- | ------- |
+| /dev/nvme0n1p1 | EFI system Partition (ESP)  | /boot/efi   | fat32                   | 1075 MB |
+| /dev/nvme0n1p2 | Boot partition              | /boot       | ext4                    | 2GB     |
+| /dev/nvme0n1p3 | LVM Volume Group: ubuntu-vg |             | Rest of space available |
 
+{: .table .border-dark }
 
 LVM logical volumes configuration is the same in both cases:
 
-| LVM Logical Volueme | Description  | Mount Point | Format | Size |
-|---| --- | --- | --- | --- |
-| ubuntu-lv |  Root filesystem | / | ext4 | 30 GB |
-| lv-data | Storage filesystem | /storage | ext4 | Rest of space available in ubuntu-vg|
+| LVM Logical Volueme | Description        | Mount Point | Format | Size                                 |
+| ------------------- | ------------------ | ----------- | ------ | ------------------------------------ |
+| ubuntu-lv           | Root filesystem    | /           | ext4   | 30 GB                                |
+| lv-data             | Storage filesystem | /storage    | ext4   | Rest of space available in ubuntu-vg |
+
 {: .table .border-dark }
 
 This partitioning scheme in installer GUI, will looks like
 
 ![partition](/assets/img/ubuntu-partitioning-schema.png)
-
 
 ### Network Configuration
 
@@ -213,7 +221,6 @@ When any system is installed using the server installer, an autoinstall file for
 
 {{site.data.alerts.end}}
 
-
 Server autoinstallation can be done through network using PXE ([Preboot eXecution Environment](https://en.wikipedia.org/wiki/Preboot_Execution_Environment)). x86-64 systems boot in either UEFI or legacy (“BIOS”) mode (many systems can be configured to boot in either mode). The precise details depend on the system firmware, but both modes supports the PXE specification, which allows the provisioning of a bootloader over the network.
 
 See details in Ubuntu's documentation: ["Ubuntu Advance Installation - Netbooting the server installer in amd64"](https://ubuntu.com/server/docs/install/netboot-amd64)
@@ -222,11 +229,9 @@ A PXE server need to be deployed in the Cluster for automatically autoinstall Ub
 
 Follow the procedure indicated in ["Ubuntu OS Installation - x86 (PXE Server)"](/docs/ubuntu/x86/) to install Ubuntu on HP Elitedesk 800 G3 mini PCs.
 
-
 #### cloud-init autoinstall configuration
 
 For the x86 servers the cloud-init autoinstall configuration to be served from PXE server are similar to the sample provided here:
-
 
 ```yml
 #cloud-config
@@ -255,100 +260,100 @@ autoinstall:
             - homelab.ricsanfre.com
   storage:
     config:
-    - ptable: gpt
-      path: /dev/sda
-      wipe: superblock-recursive
-      preserve: false
-      name: ''
-      grub_device: false
-      type: disk
-      id: disk-sda
-    - device: disk-sda
-      size: 1075M
-      wipe: superblock
-      flag: boot
-      number: 1
-      preserve: false
-      grub_device: true
-      path: /dev/sda1
-      type: partition
-      id: partition-0
-    - fstype: fat32
-      volume: partition-0
-      preserve: false
-      type: format
-      id: format-0
-    - device: disk-sda
-      size: 2G
-      wipe: superblock
-      number: 2
-      preserve: false
-      grub_device: false
-      path: /dev/sda2
-      type: partition
-      id: partition-1
-    - fstype: ext4
-      volume: partition-1
-      preserve: false
-      type: format
-      id: format-1
-    - device: disk-sda
-      size: -1
-      wipe: superblock
-      number: 3
-      preserve: false
-      grub_device: false
-      path: /dev/sda3
-      type: partition
-      id: partition-2
-    - name: ubuntu-vg
-      devices:
-      - partition-2
-      preserve: false
-      type: lvm_volgroup
-      id: lvm_volgroup-0
-    - name: ubuntu-lv
-      volgroup: lvm_volgroup-0
-      size: 100G
-      wipe: superblock
-      preserve: false
-      path: /dev/ubuntu-vg/ubuntu-lv
-      type: lvm_partition
-      id: lvm_partition-0
-    - fstype: ext4
-      volume: lvm_partition-0
-      preserve: false
-      type: format
-      id: format-3
-    - path: /
-      device: format-3
-      type: mount
-      id: mount-3
-    - name: lv-data
-      volgroup: lvm_volgroup-0
-      size: -1
-      wipe: superblock
-      preserve: false
-      path: /dev/ubuntu-vg/lv-data
-      type: lvm_partition
-      id: lvm_partition-1
-    - fstype: ext4
-      volume: lvm_partition-1
-      preserve: false
-      type: format
-      id: format-4
-    - path: /storage
-      device: format-4
-      type: mount
-      id: mount-4
-    - path: /boot
-      device: format-1
-      type: mount
-      id: mount-1
-    - path: /boot/efi
-      device: format-0
-      type: mount
-      id: mount-0
+      - ptable: gpt
+        path: /dev/sda
+        wipe: superblock-recursive
+        preserve: false
+        name: ""
+        grub_device: false
+        type: disk
+        id: disk-sda
+      - device: disk-sda
+        size: 1075M
+        wipe: superblock
+        flag: boot
+        number: 1
+        preserve: false
+        grub_device: true
+        path: /dev/sda1
+        type: partition
+        id: partition-0
+      - fstype: fat32
+        volume: partition-0
+        preserve: false
+        type: format
+        id: format-0
+      - device: disk-sda
+        size: 2G
+        wipe: superblock
+        number: 2
+        preserve: false
+        grub_device: false
+        path: /dev/sda2
+        type: partition
+        id: partition-1
+      - fstype: ext4
+        volume: partition-1
+        preserve: false
+        type: format
+        id: format-1
+      - device: disk-sda
+        size: -1
+        wipe: superblock
+        number: 3
+        preserve: false
+        grub_device: false
+        path: /dev/sda3
+        type: partition
+        id: partition-2
+      - name: ubuntu-vg
+        devices:
+          - partition-2
+        preserve: false
+        type: lvm_volgroup
+        id: lvm_volgroup-0
+      - name: ubuntu-lv
+        volgroup: lvm_volgroup-0
+        size: 100G
+        wipe: superblock
+        preserve: false
+        path: /dev/ubuntu-vg/ubuntu-lv
+        type: lvm_partition
+        id: lvm_partition-0
+      - fstype: ext4
+        volume: lvm_partition-0
+        preserve: false
+        type: format
+        id: format-3
+      - path: /
+        device: format-3
+        type: mount
+        id: mount-3
+      - name: lv-data
+        volgroup: lvm_volgroup-0
+        size: -1
+        wipe: superblock
+        preserve: false
+        path: /dev/ubuntu-vg/lv-data
+        type: lvm_partition
+        id: lvm_partition-1
+      - fstype: ext4
+        volume: lvm_partition-1
+        preserve: false
+        type: format
+        id: format-4
+      - path: /storage
+        device: format-4
+        type: mount
+        id: mount-4
+      - path: /boot
+        device: format-1
+        type: mount
+        id: mount-1
+      - path: /boot/efi
+        device: format-0
+        type: mount
+        id: mount-0
   user-data:
     # Set TimeZone and Locale
     timezone: UTC
@@ -371,7 +376,6 @@ autoinstall:
           - ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAusTXKfFoy6p3G4QAHvqoBK+9Vn2+cx2G5AY89WmjMikmeTG9KUseOCIAx22BCrFTNryMZ0oLx4u3M+Ibm1nX76R3Gs4b+gBsgf0TFENzztST++n9/bHYWeMVXddeV9RFbvPnQZv/TfLfPUejIMjFt26JCfhZdw3Ukpx9FKYhFDxr2jG9hXzCY9Ja2IkVwHuBcO4gvWV5xtI1nS/LvMw44Okmlpqos/ETjkd12PLCxZU6GQDslUgGZGuWsvOKbf51sR+cvBppEAG3ujIDySZkVhXqH1SSaGQbxF0pO6N5d4PWus0xsafy5z1AJdTeXZdBXPVvUSNVOUw8lbL+RTWI2Q== ricardo@dol-guldur
           - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDsVSvxBitgaOiqeX4foCfhIe4yZj+OOaWP+wFuoUOBCZMWQ3cW188nSyXhXKfwYK50oo44O6UVEb2GZiU9bLOoy1fjfiGMOnmp3AUVG+e6Vh5aXOeLCEKKxV3I8LjMXr4ack6vtOqOVFBGFSN0ThaRTZwKpoxQ+pEzh+Q4cMJTXBHXYH0eP7WEuQlPIM/hmhGa4kIw/A92Rm0ZlF2H6L2QzxdLV/2LmnLAkt9C+6tH62hepcMCIQFPvHVUqj93hpmNm9MQI4hM7uK5qyH8wGi3nmPuX311km3hkd5O6XT5KNZq9Nk1HTC2GHqYzwha/cAka5pRUfZmWkJrEuV3sNAl ansible@pimaster
 ```
-
 
 {{site.data.alerts.note}}
 

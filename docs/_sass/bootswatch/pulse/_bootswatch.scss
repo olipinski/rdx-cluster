@@ -72,14 +72,14 @@
 // Forms
 
 .form-control:focus {
-  box-shadow: 0 0 5px rgba(100, 65, 164, .4);
+  box-shadow: 0 0 5px rgba(100, 65, 164, 0.4);
 }
 
 // Navs
 
 .nav-tabs {
   .nav-link,
-  .nav-link.active, {
+  .nav-link.active {
     border-width: 0 0 1px;
   }
 
@@ -119,7 +119,7 @@
 
 .list-group {
   &-item {
-    color: rgba(255, 255, 255, .8);
+    color: rgba(255, 255, 255, 0.8);
 
     &.active,
     &:hover,

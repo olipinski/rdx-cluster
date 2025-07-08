@@ -18,9 +18,9 @@ cr:
       grafana:
         enabled: true
         # Grafana service name is "grafana" and is in the "monitoring" namespace.
-        in_cluster_url: 'http://grafana.monitoring.svc.cluster.local/grafana/'
+        in_cluster_url: "http://grafana.monitoring.svc.cluster.local/grafana/"
         # Public facing URL of Grafana
-        url: 'https://monitoring.${CLUSTER_DOMAIN}/grafana/'
+        url: "https://monitoring.${CLUSTER_DOMAIN}/grafana/"
         auth:
           # Use same OAuth2.0 token used for accesing Kiali
           type: bearer
@@ -53,20 +53,20 @@ cr:
               cert-manager.io/common-name: kiali.${CLUSTER_DOMAIN}
           spec:
             rules:
-            - host: kiali.${CLUSTER_DOMAIN}
-              http:
-                paths:
-                - backend:
-                    service:
-                      name: kiali
-                      port:
-                        number: 20001
-                  path: /
-                  pathType: Prefix
+              - host: kiali.${CLUSTER_DOMAIN}
+                http:
+                  paths:
+                    - backend:
+                        service:
+                          name: kiali
+                          port:
+                            number: 20001
+                      path: /
+                      pathType: Prefix
             tls:
-            - hosts:
-              - kiali.${CLUSTER_DOMAIN}
-              secretName: kiali-tls
+              - hosts:
+                  - kiali.${CLUSTER_DOMAIN}
+                secretName: kiali-tls
       # Enabling debug logs
       logger:
         log_level: debug

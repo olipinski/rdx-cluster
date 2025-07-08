@@ -3,7 +3,6 @@ title: Service Mesh (Linkerd)
 permalink: /docs/service-mesh/
 description: How to deploy service-mesh architecture based on Linkerd. Adding observability, traffic management and security to our Kubernetes cluster.
 last_modified_at: "01-05-2024"
-
 ---
 
 {{site.data.alerts.important}} **Deprecated Technology in PiCluster project**
@@ -17,7 +16,6 @@ See alternative Service Mesh solution documentation: ["Service Mesh (Istio)"](/d
 
 {{site.data.alerts.end}}
 
-
 ## Why a Service Mesh
 
 Introduce Service Mesh architecture to add observability, traffic management, and security capabilities to internal communications within the cluster.
@@ -28,7 +26,6 @@ Linkerd service mesh archictecture is composed of three planes: control Plane, d
 
 ![picluster-linkerd](/assets/img/linkerd-architecture.png)
 
-
 - **Control plane**: providing the services for automatically injecting data plane components into pods(`poxy-injector`), generate certificates used in mTLS communications in the data plane and authorized data plane componentes (`identity`), and traffic flow control services (`destination`)
 
 - **Data Plane**, transparent proxy running as sidecar container within the pods. Proxies automatically intercept Pod's inbound/outbound TCP traffic and add transparantly encryption (mTLS), Later-7 load balancing, routing, retries, telemetry, etc.
@@ -37,7 +34,6 @@ Linkerd service mesh archictecture is composed of three planes: control Plane, d
   - Linkerd control plane and data-plane components expose metrics that can be scraped by Prometheus and their logs can be captured and integrated into Loki (Logging aggregator)
   - User-plane component (linkerd-proxy) can be also configured to emit traces to cluster tracing backend, Grafana Tempo. Linkerd-jaeger extension need to be installed.
   - Linkerd-viz component add a service mesh web dashboard and pre-configured Grafana dashboards.
-
 
 ## Automatic mTLS configuration and Certmanager
 
@@ -65,12 +61,12 @@ That trust-anchor anc ClusterIssuer will be used to generate linkerd certificate
 
 ### Linkerd Installation using Helm
 
-
 {{site.data.alerts.note}}
 
 Starting from release 2.12, linkerd installation procedure has changed.
 
 [Linkerd v2.12 installation procedure using helm](https://linkerd.io/2.12/tasks/install-helm/) requires to deploy two different new charts:
+
 - `linkerd-crd`
 - `linkerd-control-plane`
 
@@ -78,19 +74,20 @@ Chart available from previous versions (till v2.11.4), `linkerd2`, is not used a
 
 {{site.data.alerts.end}}
 
-
 Installation using `Helm` (Release 3):
 
 - Step 1: Add the Linkerd Helm stable repository:
 
-    ```shell
-    helm repo add linkerd https://helm.linkerd.io/stable
-    ```
+  ```shell
+  helm repo add linkerd https://helm.linkerd.io/stable
+  ```
+
 - Step2: Fetch the latest charts from the repository:
 
-    ```shell
-    helm repo update
-    ```
+  ```shell
+  helm repo update
+  ```
+
 - Step 3: Create namespace
 
   By default, the helm chart creates the control plane namespace with the `config.linkerd.io/admission-webhooks: disabled` label. It is required for the control plane to work correctly.
@@ -113,7 +110,6 @@ Installation using `Helm` (Release 3):
   ```
 
   And apply the manifest with the following command:
-
 
   ```shell
   kubectl apply -f linkerd_namespace.yml
@@ -139,20 +135,20 @@ Installation using `Helm` (Release 3):
       group: cert-manager.io
     commonName: identity.linkerd.cluster.local
     dnsNames:
-    - identity.linkerd.cluster.local
+      - identity.linkerd.cluster.local
     isCA: true
     privateKey:
       algorithm: ECDSA
     usages:
-    - cert sign
-    - crl sign
-    - server auth
-    - client auth
+      - cert sign
+      - crl sign
+      - server auth
+      - client auth
   ```
 
   ClusterIssuer `ca-issuer`, created as part of cert-manager configuration, is used to sign this certificate.
 
-  `duration`  instructs cert-manager to consider certificates as valid for 48 hours and `renewBefore` indicates that cert-manager will attempt to issue a new certificate 25 hours before expiration of the current one.
+  `duration` instructs cert-manager to consider certificates as valid for 48 hours and `renewBefore` indicates that cert-manager will attempt to issue a new certificate 25 hours before expiration of the current one.
 
   Certificate is creates as CA (isCA:true) because it will be use by linkerd to issue mTLS certificates.
 
@@ -239,9 +235,9 @@ In the previous installation procedure, step 6 and step 8 can be replaced by the
     name: linkerd-identity-trust-roots
   spec:
     sources:
-    - secret:
-        name: "root-secret"
-        key: "ca.crt"
+      - secret:
+          name: "root-secret"
+          key: "ca.crt"
     target:
       configMap:
         key: "ca-bundle.crt"
@@ -268,7 +264,6 @@ In the previous installation procedure, step 6 and step 8 can be replaced by the
   linkerd/linkerd-control-plane \
   -n linkerd
   ```
-
 
 ### Linkerd Viz extension installation
 
@@ -317,7 +312,6 @@ Installation procedure:
 
   And apply the manifest with the following command:
 
-
   ```shell
   kubectl apply -f linkerd_viz_namespace.yml
   ```
@@ -346,8 +340,8 @@ Installation procedure:
   ```shell
   helm install linkerd-viz -n linkerd-viz -f values.yml
   ```
-  By default, helm chart creates `linkerd-viz` namespace where all components are deployed.
 
+  By default, helm chart creates `linkerd-viz` namespace where all components are deployed.
 
 - Step 4: Exposing Linkerd Viz dashboard
 
@@ -398,7 +392,6 @@ Installation procedure:
                   name: web
                   port:
                     number: 8084
-
   ```
 
 - Step 5: Configure Prometheus to scrape metrics from linkerd
@@ -424,20 +417,20 @@ Installation procedure:
       matchLabels: {}
     podMetricsEndpoints:
       - relabelings:
-        - sourceLabels:
-          - __meta_kubernetes_pod_container_port_name
-          action: keep
-          regex: admin-http
-        - sourceLabels:
-          - __meta_kubernetes_pod_container_name
-          action: replace
-          targetLabel: component
-        # Replace job value
-        - sourceLabels:
-          - __address__
-          action: replace
-          targetLabel: job
-          replacement: linkerd-controller
+          - sourceLabels:
+              - __meta_kubernetes_pod_container_port_name
+            action: keep
+            regex: admin-http
+          - sourceLabels:
+              - __meta_kubernetes_pod_container_name
+            action: replace
+            targetLabel: component
+          # Replace job value
+          - sourceLabels:
+              - __address__
+            action: replace
+            targetLabel: job
+            replacement: linkerd-controller
   ---
   apiVersion: monitoring.coreos.com/v1
   kind: PodMonitor
@@ -454,21 +447,21 @@ Installation procedure:
       matchLabels: {}
     podMetricsEndpoints:
       - relabelings:
-        - sourceLabels:
-          - __meta_kubernetes_pod_label_linkerd_io_control_plane_component
-          - __meta_kubernetes_pod_container_port_name
-          action: keep
-          regex: linkerd-service-mirror;admin-http$
-        - sourceLabels:
-          - __meta_kubernetes_pod_container_name
-          action: replace
-          targetLabel: component
-        # Replace job value
-        - source_labels:
-          - __address__
-          action: replace
-          targetLabel: job
-          replacement: linkerd-service-mirror
+          - sourceLabels:
+              - __meta_kubernetes_pod_label_linkerd_io_control_plane_component
+              - __meta_kubernetes_pod_container_port_name
+            action: keep
+            regex: linkerd-service-mirror;admin-http$
+          - sourceLabels:
+              - __meta_kubernetes_pod_container_name
+            action: replace
+            targetLabel: component
+          # Replace job value
+          - source_labels:
+              - __address__
+            action: replace
+            targetLabel: job
+            replacement: linkerd-service-mirror
   ---
   apiVersion: monitoring.coreos.com/v1
   kind: PodMonitor
@@ -484,11 +477,11 @@ Installation procedure:
     selector:
       matchLabels: {}
     podMetricsEndpoints:
-        relabelings:
+      relabelings:
         - sourceLabels:
-          - __meta_kubernetes_pod_container_name
-          - __meta_kubernetes_pod_container_port_name
-          - __meta_kubernetes_pod_label_linkerd_io_control_plane_ns
+            - __meta_kubernetes_pod_container_name
+            - __meta_kubernetes_pod_container_port_name
+            - __meta_kubernetes_pod_label_linkerd_io_control_plane_ns
           action: keep
           regex: ^linkerd-proxy;linkerd-admin;linkerd$
         - sourceLabels: [__meta_kubernetes_namespace]
@@ -513,14 +506,14 @@ Installation procedure:
           replacement: __tmp_pod_label_$1
         - action: labelmap
           regex: __tmp_pod_label_linkerd_io_(.+)
-          replacement:  __tmp_pod_label_$1
+          replacement: __tmp_pod_label_$1
         - action: labeldrop
           regex: __tmp_pod_label_linkerd_io_(.+)
         - action: labelmap
           regex: __tmp_pod_label_(.+)
         # Replace job value
         - sourceLabels:
-          - __address__
+            - __address__
           action: replace
           targetLabel: job
           replacement: linkerd-proxy
@@ -550,7 +543,6 @@ Installation procedure:
 
   Follow ["Provision dashboards automatically"](/docs/prometheus/#provisioning-dashboards-automatically) procedure to load Grafana dashboards automatically.
 
-
 ### Linkerd jaeger extension installation
 
 [Linkerd-jaeger extension](https://linkerd.io/2.12/tasks/distributed-tracing/) is needed to configure linkerd to emit span traces from linkerd-proxies.
@@ -567,7 +559,6 @@ Tempo service need to be meshed with linkerd before installing Linkerd jaeger ex
 
 {{site.data.alerts.end}}
 
-
 - Step 1. Prepare linked-jaeger-values.yml
 
   ```yml
@@ -579,6 +570,7 @@ Tempo service need to be meshed with linkerd before installing Linkerd jaeger ex
     collectorSvcAddr: tempo-distributor.tracing:55678
     collectorSvcAccount: tempo
   ```
+
   This configuration disables Jaeger and OTel Collector installation and configures jaeger-injector to send traces span to tempo-distributor component using OpenCensus receiver (port 55678)
 
   `webhook.collectorSvcAddr` is OpenCensus endpoint distributor receiver
@@ -589,7 +581,6 @@ Tempo service need to be meshed with linkerd before installing Linkerd jaeger ex
   ```shell
   helm install linkerd-jaeger -n linkerd-jaeger --create-namespace linkerd/linkerd-jaeger -f linkerd-jaeger-values.yml
   ```
-
 
 ## Meshing a service with linkerd
 
@@ -617,11 +608,13 @@ There are two common ways to define a resource as meshed with Linkerd:
 - **Implicit**: add `linkerd.io/inject: enabled` annotation for a namespace. Any new pod created within the namespace is automatically injected with linkerd-proxy.
 
   Using kubectl:
+
   ```shell
   kubectl annotate ns <namespace_name> linkerd.io/inject=enabled
   ```
 
   Through manifest file during namespace creation or patching the resource.
+
   ```yml
   kind: Namespace
   apiVersion: v1
@@ -633,14 +626,13 @@ There are two common ways to define a resource as meshed with Linkerd:
 
 ### Problems with Kuberentes Jobs and implicit annotation
 
-
 With `linkerd.io/inject: enabled` annotation at namespace level, [Kubernetes Jobs](https://kubernetes.io/docs/concepts/workloads/controllers/job/) do not terminate after completion since the Pods created are injected with linkerd-proxy and it continues to run after the job container completes its work.
 
 That behaviour might cause errors during helm chart installation that deploy Jobs or during executions of scheduled CronJobs.
 
 As stated in this [ITNEXT blog post](https://itnext.io/three-ways-to-use-linkerd-with-kubernetes-jobs-c12ccc6d4c7c) there are different ways to handle this issue, both of them requires to modify Job template definition:
 
-1) Do not mesh the Jobs resources
+1. Do not mesh the Jobs resources
 
 Adding `linkerd.io/inject: disabled` annotation to job template definition.
 
@@ -653,16 +645,16 @@ jobTemplate:
           linkerd.io/inject: disabled
 ```
 
-2) Shuting down linkerd-proxy as part of the Job execution.
+2. Shuting down linkerd-proxy as part of the Job execution.
 
 This can be done using [`linkerd-await`](https://github.com/linkerd/linkerd-await) as wrapper of the main job command.
 `linkerd-await` waits till linkerd-proxy is ready then executes the main job command and, when it finishes, it calls the linkerd-proxy `/shutdown` endpoint.
-  ```shell
-  linked-await --shutdown option <job_commad>
-  ```
+
+```shell
+linked-await --shutdown option <job_commad>
+```
 
 See details of implementation of this second workarround previously mentioned [ITNEXT blog post](https://itnext.io/three-ways-to-use-linkerd-with-kubernetes-jobs-c12ccc6d4c7c)
-
 
 ## Meshing cluster services
 
@@ -681,7 +673,6 @@ So we will try to limit the meshing to Longhorn control-plane components (`longh
 One `longhorn-engine` process and a set of `longhorn-replica` processes is created per Volume created by Longhorn. These processes run inside `instance-manager-e` and `instance-manager-r` pods (one per node) whose controls their lifecycle.
 
 {{site.data.alerts.end}}
-
 
 Trying to apply the explicit annotation at namespace level or only explicit annotation for longhorn-manager daemon set (only available at Helm Chart configuration) causes Longhorn deployment to fail. See [picluster-issue #47](https://github.com/ricsanfre/pi-cluster/issues/47).
 
@@ -703,10 +694,10 @@ There is a [longhorn open issue](https://github.com/longhorn/longhorn/issues/131
 
 ```yml
 env:
-- name: POD_IP
-  valueFrom:
-    fieldRef:
-      fieldPath: status.podIP
+  - name: POD_IP
+    valueFrom:
+      fieldRef:
+        fieldPath: status.podIP
 ```
 
 This environment variable can be changed using on an already deployed daemon set using the command `kubectl set env` or can be patched during installation of Helm Chart using its post-rendering feature with `kustomize`:
@@ -714,32 +705,29 @@ This environment variable can be changed using on an already deployed daemon set
 - `kubectl set env` procedure described in [this comment of issue #47]:(https://github.com/ricsanfre/pi-cluster/issues/47#issuecomment-1077866955)
 - `helm+kustomize` procedure described in [this comment of issue #47]: (https://github.com/ricsanfre/pi-cluster/issues/47#issuecomment-1081754487)
 
-
 Applying patching procedure on installation time (`helm+kustomize` procedure) still produces the error that Longhorn is not completely deployed (CSI driver is not deployed). See the analysis and the root cause identified in [issue #47](https://github.com/ricsanfre/pi-cluster/issues/47) and the correponding [bug submitted to longhorn project](https://github.com/longhorn/longhorn/issues/3809).
-
 
 So the only way to meshing `longhorn-manager` component is to wait till Longhorn is completely deployed and inject linkerd-proxy using explicit annotation afterwards:
 
 - Deploy Lonhgorn using Helm.
 
-
 - Wait till it is completely deployed.
-
 
 - Meshing `longhorn-manager` daemonset
 
-  1) Change environment variable (POD_IP) to make the container listen to localhost connetions
+  1. Change environment variable (POD_IP) to make the container listen to localhost connetions
 
-    ```shell
-    kubectl set env daemonset/longhorn-manager -n longhorn-system POD_IP=0.0.0.0
-    ```
+  ```shell
+  kubectl set env daemonset/longhorn-manager -n longhorn-system POD_IP=0.0.0.0
+  ```
 
-  2) Annotate daemonset to deploy linkerd sidecar
+  2. Annotate daemonset to deploy linkerd sidecar
 
-    ```shell
-    kubectl patch daemonset longhorn-manager "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"linkerd.io/inject\":\"enabled\"}}}}}" -n longhorn-system
+  ```shell
+  kubectl patch daemonset longhorn-manager "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"linkerd.io/inject\":\"enabled\"}}}}}" -n longhorn-system
 
-    ```
+  ```
+
 - Meshing `longhorn-ui` deployment
 
   Annotate daemonset to deploy linkerd sidecar
@@ -749,11 +737,9 @@ So the only way to meshing `longhorn-manager` component is to wait till Longhorn
 
   ```
 
-
 ### Prometheus Stack
 
 For applying linkerd service mesh to Prometheus-stack services, implicit annotation at namespace level can be used before deploying kube-prometheys-stack chart.
-
 
 When deploying `kube-prometheus-stack` helm using an annotated namespace (`linkerd.io/inject: enabled`), causes the Prometheus Operartor to hung.
 
@@ -792,7 +778,6 @@ failed to inject daemonset/kube-prometheus-stack-prometheus-node-exporter: hostN
 
 {{site.data.alerts.end}}
 
-
 ### EFK
 
 For applying linkerd service mesh to EFK services, it is enough to use the implicit annotation at namespace level before deploying ECK Operator and create Kibana and Elasticsearch service and before deploying fluentbit chart.
@@ -811,18 +796,15 @@ The following configuration need to be added to Elastic and Kibana resources
 podTemplate:
   spec:
     automountServiceAccountToken: true
-
 ```
 
 For details about how to integrate with linkerd Elastic stack components using ECK operator, see [ECK-linkerd document](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-service-mesh-linkerd.html).
-
 
 {{site.data.alerts.important}}
 
 Elasticsearch automatic TLS configuration that was itinitially configured has been disabled, so Linkerd can gather more metrics about the connections. See [issue #45](https://github.com/ricsanfre/pi-cluster/issues/45)
 
 {{site.data.alerts.end}}
-
 
 ### Velero
 
@@ -835,13 +817,12 @@ podAnnotations:
   linkerd.io/inject: enabled
 ```
 
-
 ## Configure Ingress Controller
 
 Linkerd does not come with a Ingress Controller. Existing ingress controller can be integrated with Linkerd doing the following:
 
-  - Configuring Ingress Controller to support Linkerd.
-  - Meshing Ingress Controller pods so that they have the Linkerd proxy installed.
+- Configuring Ingress Controller to support Linkerd.
+- Meshing Ingress Controller pods so that they have the Linkerd proxy installed.
 
 Linkerd can be used with any ingress controller. In order for Linkerd to properly apply features such as route-based metrics and traffic splitting, Linkerd needs the IP/port of the Kubernetes Service as the traffic destination. However, by default, many ingresses, like Traefik or NGINX, do their own load balance and endpoint selection when forwarding HTTP traffic pass the IP/port of the destination Pod, rather than the Service as a whole.
 
@@ -849,14 +830,13 @@ In order to enable linkerd implementation of load balancing at HTTP request leve
 
 More details in linkerd documentation ["Ingress Traffic"](https://linkerd.io/2.13/tasks/using-ingress/).
 
-
 ### Meshing Traefik
 
 In order to integrate Traefik with Linkerd the following must be done:
 
 1. Traefik must be meshed with `ingress mode` enabled, i.e. with the `linkerd.io/inject: ingress` annotation rather than the default enabled.
 
-   Executing the following command Traefik deployment is injected with  linkerd-proxy in ingress mode:
+   Executing the following command Traefik deployment is injected with linkerd-proxy in ingress mode:
 
    ```shell
    kubectl get deployment traefik -o yaml -n kube-system | linkerd inject --ingress - | kubectl apply -f -
@@ -888,13 +868,12 @@ In order to integrate Traefik with Linkerd the following must be done:
 
    ```yml
    deployment:
-      podAnnotations:
-        linkerd.io/inject: ingress
-        config.linkerd.io/skip-outbound-ports: "443"
+     podAnnotations:
+       linkerd.io/inject: ingress
+       config.linkerd.io/skip-outbound-ports: "443"
    ```
 
    Traefik is a K3S embedded components that is auto-deployed using Helm. In order to configure Helm chart configuration parameters the official [document](https://rancher.com/docs/k3s/latest/en/helm/#customizing-packaged-components-with-helmchartconfig) must be followed. See how to do it in [Traefik configuration documentation](/docs/traefik/)
-
 
 2. Replace Traefik routing and load-balancing mechanism by linkerd-proxy routing and load balancing mechanism.
 
@@ -906,67 +885,62 @@ In order to integrate Traefik with Linkerd the following must be done:
 
    The destination service for a request is computed by selecting the value of the first HTTP header to exist of, `l5d-dst-override`, `:authority`, and `Host`. The port component, if included and including the colon, is stripped. That value is mapped to the fully qualified DNS name.
 
-
    Per ingress resource do the following:
 
    - Step 1: Create Middleware routing for providing l5d-dst-override HTTP header
 
-      ```yml
-      apiVersion: traefik.containo.us/v1alpha1
-      kind: Middleware
-      metadata:
-        name: l5d-header-middleware
-        namespace: my-namespace
-      spec:
-        headers:
-          customRequestHeaders:
-            l5d-dst-override: "my-service.my-namespace.svc.cluster.local:80"
+     ```yml
+     apiVersion: traefik.containo.us/v1alpha1
+     kind: Middleware
+     metadata:
+       name: l5d-header-middleware
+       namespace: my-namespace
+     spec:
+       headers:
+         customRequestHeaders:
+           l5d-dst-override: "my-service.my-namespace.svc.cluster.local:80"
+     ```
 
-      ```
-    - Step 2: Add traefik Middleware in Ingress configuration
+   - Step 2: Add traefik Middleware in Ingress configuration
 
-      Through annotation in Ingress resource.
+     Through annotation in Ingress resource.
 
-      ```yml
-      apiVersion: networking.k8s.io/v1
-      kind: Ingress
-      metadata:
-        name: my-ingress
-        namespace: my-namespace
-        annotations:
-          traefik.ingress.kubernetes.io/router.middlewares:
-            my-namespace-l5d-header-middleware@kubernetescrd
+     ```yml
+     apiVersion: networking.k8s.io/v1
+     kind: Ingress
+     metadata:
+       name: my-ingress
+       namespace: my-namespace
+       annotations:
+         traefik.ingress.kubernetes.io/router.middlewares: my-namespace-l5d-header-middleware@kubernetescrd
+     ```
 
-      ```
+     Or within `middlewares` key in IngressRoute definition
 
-      Or within `middlewares` key in IngressRoute definition
-
-      ```yml
-      apiVersion: traefik.containo.us/v1alpha1
-      kind: IngressRoute
-      metadata:
-        name: my-ingress-route
-        namespace: my-namespace
-      spec:
-        routes:
-        - kind: Rule
-          match: Host(`mydomain`)
-          services:
-          - name: my-service
-            port: 8080
-            namespace: my-namespace
-          middlewares:
-            - name: l5d-header-middleware
-              namespace: my-namespace
-
-      ```
+     ```yml
+     apiVersion: traefik.containo.us/v1alpha1
+     kind: IngressRoute
+     metadata:
+       name: my-ingress-route
+       namespace: my-namespace
+     spec:
+       routes:
+         - kind: Rule
+           match: Host(`mydomain`)
+           services:
+             - name: my-service
+               port: 8080
+               namespace: my-namespace
+           middlewares:
+             - name: l5d-header-middleware
+               namespace: my-namespace
+     ```
 
 {{site.data.alerts.note}}
 
 Since Traefik terminates TLS, this TLS traffic (e.g. HTTPS calls from outside the cluster) will pass through Linkerd as an opaque TCP stream and Linkerd will only be able to provide byte-level metrics for this side of the connection. The resulting HTTP or gRPC traffic to internal services, of course, will have the full set of metrics and mTLS support.
 
 {{site.data.alerts.end}}
-
 
 ### Meshing Ingress NGINX
 
@@ -988,7 +962,7 @@ controller:
 
 2. Replace NGINX routing and load-balancing mechanism by linkerd-proxy routing and load balancing mechanism.
 
-  Ingress resources need to be annotated with `nginx.ingress.kubernetes.io/service-upstream: "true"`. By default the Ingress-Nginx Controller uses a list of all endpoints (Pod IP/port) in the NGINX upstream configuration. The nginx.ingress.kubernetes.io/service-upstream annotation disables that behavior and instead uses a single upstream in NGINX, the service's Cluster IP and port.
+Ingress resources need to be annotated with `nginx.ingress.kubernetes.io/service-upstream: "true"`. By default the Ingress-Nginx Controller uses a list of all endpoints (Pod IP/port) in the NGINX upstream configuration. The nginx.ingress.kubernetes.io/service-upstream annotation disables that behavior and instead uses a single upstream in NGINX, the service's Cluster IP and port.
 
 ```yml
 apiVersion: networking.k8s.io/v1
@@ -998,12 +972,9 @@ metadata:
   namespace: my-namespace
   annotations:
     nginx.ingress.kubernetes.io/service-upstream: "true"
-
 ```
 
-
 ## References
-
 
 - [Linkerd vs Istio Benchmarks](https://linkerd.io/2021/11/29/linkerd-vs-istio-benchmarks-2021/)
 - [Why Linkerd does not use Envoy proxy](https://linkerd.io/2020/12/03/why-linkerd-doesnt-use-envoy/)

@@ -1,15 +1,19 @@
 // Cerulean 5.1.3
 // Bootswatch
 
-
 // Variables
 
-$text-shadow: 0 1px 0 rgba(0, 0, 0, .05) !default;
+$text-shadow: 0 1px 0 rgba(0, 0, 0, 0.05) !default;
 
 // Mixins
 
-@mixin btn-shadow($color){
-  @include gradient-y-three-colors(tint-color($color, 16%), $color, 60%, shade-color($color, 6%));
+@mixin btn-shadow($color) {
+  @include gradient-y-three-colors(
+    tint-color($color, 16%),
+    $color,
+    60%,
+    shade-color($color, 6%)
+  );
 }
 
 // Navbar

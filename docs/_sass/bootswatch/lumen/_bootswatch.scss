@@ -1,7 +1,6 @@
 // Lumen 5.1.3
 // Bootswatch
 
-
 // Variables
 
 $web-font-path: "https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" !default;
@@ -11,7 +10,7 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,w
 
 // Mixins
 
-@mixin shadow($width: 4px){
+@mixin shadow($width: 4px) {
   border-style: solid;
   border-width: 0 1px $width 1px;
 }
@@ -94,7 +93,7 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,w
 // Forms
 
 .form-control {
-  box-shadow: inset 0 2px 0 rgba(0, 0, 0, .075);
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.075);
 }
 
 // Navs
@@ -117,13 +116,16 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,w
     &.disabled:focus {
       margin-top: 6px;
       border-color: $nav-tabs-border-color;
-      transition: padding-bottom .2s ease-in-out, margin-top .2s ease-in-out, border-bottom .2s ease-in-out;
+      transition:
+        padding-bottom 0.2s ease-in-out,
+        margin-top 0.2s ease-in-out,
+        border-bottom 0.2s ease-in-out;
     }
 
     &:not(.disabled):hover,
     &:not(.disabled):focus,
     &.active {
-      padding-bottom: add(.5rem, 6px);
+      padding-bottom: add(0.5rem, 6px);
       border-bottom-color: transparent;
       margin-top: 0;
     }
@@ -201,7 +203,7 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,w
 
 .btn-close {
   text-decoration: none;
-  opacity: .4;
+  opacity: 0.4;
 
   &:hover,
   &:focus {

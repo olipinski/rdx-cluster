@@ -13,7 +13,7 @@
 
     - name: Cleaning
       ansible.builtin.import_tasks: tasks/cleaning.yml
-      tags: ['clean']
+      tags: ["clean"]
 
 - name: Clean workers
   hosts: k3s_worker
@@ -29,4 +29,4 @@
 
     - name: Cleaning
       ansible.builtin.import_tasks: tasks/cleaning.yml
-      tags: ['clean']
+      tags: ["clean"]

@@ -1,5 +1,4 @@
 ---
-
 - name: "Wait for K3S worker nodes to be ready. Nodes Ready status when Cilium has been installed"
   ansible.builtin.command:
     cmd: "kubectl get nodes {{ item }}"

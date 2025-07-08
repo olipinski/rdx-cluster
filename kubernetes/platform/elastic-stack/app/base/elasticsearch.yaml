@@ -27,9 +27,9 @@ spec:
         spec:
           # Limiting Resources consumption
           containers:
-          - name: elasticsearch
-            resources:
-              requests:
-                memory: "1Gi"
-              limits:
-                memory: "1Gi"
+            - name: elasticsearch
+              resources:
+                requests:
+                  memory: "1Gi"
+                limits:
+                  memory: "1Gi"

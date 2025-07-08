@@ -22,19 +22,22 @@ Installation using `Helm` (Release 3):
 
 - Step 1: Add Ingress Nginx's Helm repository:
 
-    ```shell
-    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-    ```
+  ```shell
+  helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+  ```
+
 - Step2: Fetch the latest charts from the repository:
 
-    ```shell
-    helm repo update
-    ```
+  ```shell
+  helm repo update
+  ```
+
 - Step 3: Create namespace
 
-    ```shell
-    kubectl create namespace nginx
-    ```
+  ```shell
+  kubectl create namespace nginx
+  ```
+
 - Step 4: Create helm values file `nginx-values.yml`
 
   ```yml
@@ -46,7 +49,7 @@ Installation using `Helm` (Release 3):
       enabled: true
   # Enabling OTEL traces
   opentelemetry:
-   enabled: true
+    enabled: true
 
   # Allow snpippet anotations
   # From v1.9 default value has chaged to false.
@@ -74,16 +77,16 @@ Installation using `Helm` (Release 3):
     - name: stream-accesslog
       image: busybox
       args:
-      - /bin/sh
-      - -c
-      - tail -n+1 -F /data/access.log
+        - /bin/sh
+        - -c
+        - tail -n+1 -F /data/access.log
       imagePullPolicy: Always
       resources: {}
       terminationMessagePath: /dev/termination-log
       terminationMessagePolicy: File
       volumeMounts:
-      - mountPath: /data
-        name: data
+        - mountPath: /data
+          name: data
 
   # Set specific LoadBalancer IP address for Ingress service
   service:
@@ -93,18 +96,17 @@ Installation using `Helm` (Release 3):
 
 - Step 5: Install Ingress Nginx
 
-    ```shell
-    helm install ingress-nginx ingress-nginx/ingress-nginx -f nginx-values.yml --namespace nginx
-    ```
+  ```shell
+  helm install ingress-nginx ingress-nginx/ingress-nginx -f nginx-values.yml --namespace nginx
+  ```
 
 - Step 6: Confirm that the deployment succeeded, run:
 
-    ```shell
-    kubectl -n nginx get pod
-    ```
+  ```shell
+  kubectl -n nginx get pod
+  ```
 
 ### Helm chart configuration details
-
 
 #### Enabling Prometheus metrics
 
@@ -117,8 +119,8 @@ controller:
   metrics:
     enabled: true
 ```
-This configuration makes NGINX pod to open its metric port at TCP port 10254
 
+This configuration makes NGINX pod to open its metric port at TCP port 10254
 
 #### Assign a static IP address from LoadBalancer pool to Ingress service
 
@@ -164,7 +166,6 @@ Following Ingress NGINX helm chart values need to be provided:
 
 ```yml
 controller:
-
   config:
     # Print access log to file instead of stdout
     # Separating acces logs from the rest
@@ -182,16 +183,16 @@ controller:
     - name: stream-accesslog
       image: busybox
       args:
-      - /bin/sh
-      - -c
-      - tail -n+1 -F /data/access.log
+        - /bin/sh
+        - -c
+        - tail -n+1 -F /data/access.log
       imagePullPolicy: Always
       resources: {}
       terminationMessagePath: /dev/termination-log
       terminationMessagePolicy: File
       volumeMounts:
-      - mountPath: /data
-        name: data
+        - mountPath: /data
+          name: data
 
   # Set specific LoadBalancer IP address for Ingress service
   service:
@@ -211,7 +212,6 @@ controller:
   # From v1.9 default value has chaged to false.
   # allow-snippet-annotations: Enables Ingress to parse and add -snippet annotations/directives created by the user.
   allowSnippetAnnotations: true
-
 ```
 
 #### Enabling Observability
@@ -229,12 +229,11 @@ controller:
 
 To enable OTel traces the following need to be added:
 
-
 ```yaml
 controller:
   # Enabling OTEL traces
   opentelemetry:
-   enabled: true
+    enabled: true
   config:
     # Open Telemetry
     enable-opentelemetry: "true"
@@ -255,11 +254,9 @@ Standard kuberentes resource, `Ingress` can be used to configure the access to c
 
 Following instructions details how to configure access to cluster service using standard `Ingress` resources where Nginx configuration is specified using annotations.
 
-
 ### Enabling HTTPS and TLS
 
 All externally exposed frontends deployed on the Kubernetes cluster should be accessed using secure and encrypted communications, using HTTPS protocol and TLS certificates. If possible those TLS certificates should be valid public certificates.
-
 
 #### Enabling TLS in Ingress resources
 
@@ -277,9 +274,9 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-  - hosts:
-    - whoami
-    secretName: whoami-tls # SSL certificate store in Kubernetes secret
+    - hosts:
+        - whoami
+      secretName: whoami-tls # SSL certificate store in Kubernetes secret
   rules:
     - host: whoami
       http:
@@ -288,14 +285,14 @@ spec:
             pathType: Exact
             backend:
               service:
-                name:  whoami
+                name: whoami
                 port:
                   number: 80
           - path: /foo
             pathType: Exact
             backend:
               service:
-                name:  whoami
+                name: whoami
                 port:
                   number: 80
 ```
@@ -315,13 +312,11 @@ type: kubernetes.io/tls
 
 This manual step can be avoided using Cert-manager and annotating the Ingress resource: `cert-manager.io/cluster-issuer: <issuer_name>`. See further details in [TLS certification management documentation](/docs/certmanager/).
 
-
 #### Redirecting HTTP traffic to HTTPS
 
 By default the controller redirects HTTP clients to the HTTPS port 443 using a 308 Permanent Redirect response if TLS is enabled for that Ingress. So no need to implement further configuraition if TLS is enabled in Ingress Resource
 
 This default configuration can be disabled globally using `ssl-redirect: "false"` in the NGINX config map, or per-Ingress with the `nginx.ingress.kubernetes.io/ssl-redirect: "false"` annotation in the particular resource.
-
 
 ### Providing HTTP basic authentication
 
@@ -366,6 +361,7 @@ As an alternative, docker image can be used and the command to generate the `use
 ```shell
 docker run --rm -it --entrypoint /usr/local/apache2/bin/htpasswd httpd:alpine -nb user password | base64
 ```
+
 For example user:pass pair (oss/s1cret0) will generate a Secret file:
 
 ```yml
@@ -379,15 +375,13 @@ data:
     b3NzOiRhcHIxJDNlZTVURy83JFpmY1NRQlV6SFpIMFZTak9NZGJ5UDANCg0K
 ```
 
-
 #### Configuring Ingress resource
 
 Following annotations need to be added to Ingress resource:
 
 - `nginx.ingress.kubernetes.io/auth-type: basic` : to set basic authentication
 - `nginx.ingress.kubernetes.io/auth-secret: basic-auth` : to specify the secret name
-. `nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - foo'`: to specify context message
-
+  . `nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - foo'`: to specify context message
 
 ```yml
 ---
@@ -402,13 +396,13 @@ metadata:
     # name of the secret that contains the user/password definitions
     nginx.ingress.kubernetes.io/auth-secret: basic-auth
     # message to display with an appropriate context why the authentication is required
-    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - foo'
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - foo"
 spec:
   ingressClassName: nginx
   tls:
-  - hosts:
-    - whoami
-    secretName: whoami-tls
+    - hosts:
+        - whoami
+      secretName: whoami-tls
   rules:
     - host: whoami
       http:
@@ -417,15 +411,14 @@ spec:
             pathType: Exact
             backend:
               service:
-                name:  whoami
+                name: whoami
                 port:
                   number: 80
           - path: /foo
             pathType: Exact
             backend:
               service:
-                name:  whoami
+                name: whoami
                 port:
                   number: 80
-
 ```

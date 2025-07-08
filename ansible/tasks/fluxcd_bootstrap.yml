@@ -1,5 +1,4 @@
 ---
-
 - name: Deploy Flux CD Operator
   kubernetes.core.helm:
     name: flux-operator

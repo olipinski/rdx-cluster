@@ -27,7 +27,7 @@ releases:
       - ../kubernetes/platform/cilium/app/components/istio-config/values.yaml
       - ../kubernetes/platform/cilium/app/overlays/dev/values.yaml
     needs:
-     - kube-system/prometheus-operator-crds
+      - kube-system/prometheus-operator-crds
   - name: coredns
     namespace: kube-system
     chart: coredns/coredns
@@ -36,5 +36,5 @@ releases:
       - ../kubernetes/platform/coredns/app/base/values.yaml
       - ../kubernetes/platform/coredns/app/overlays/dev/values.yaml
     needs:
-     - kube-system/prometheus-operator-crds
-     - kube-system/cilium
+      - kube-system/prometheus-operator-crds
+      - kube-system/cilium

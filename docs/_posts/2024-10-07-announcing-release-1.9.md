@@ -1,16 +1,14 @@
 ---
 layout: post
-title:  Kubernetes Pi Cluster relase v1.9
-date:   2024-10-07
+title: Kubernetes Pi Cluster relase v1.9
+date: 2024-10-07
 author: ricsanfre
 description: PiCluster News - announcing release v1.9
 ---
 
-
 Today I am pleased to announce the nineth release of Kubernetes Pi Cluster project (v1.9).
 
 Main features/enhancements of this release are:
-
 
 ## GitOps tool replacement: from ArgoCD to FluxCD
 
@@ -32,13 +30,11 @@ Main reasons for this migration:
 
 - Avoid definition of extra-configuration in the manifest files to fix neverending out-of-sync ArgoCD issues. Due to how Argo CD drift assesment logic certain not mandatory fields or server assigned fields are marked as out-of-synch and they have to be configured to be ignored during the sync process.
 
-
 Cluster bootstrap process using Ansible playbook has been updated to use FluxCD instead of ArgoCD
 
 Git repo structure to store cluster configuration has been restructured and all applications have been repackaged, so FluxCD resources can be used, and advance Kustomize options (like variants and components) can be used so same set of manifest files can be used for different clusters environemnts.
 
 See further details in ["GitOps (FluxCD)"](/docs/fluxcd/)
-
 
 ## Kuberentes CNI replacement: from Flannel to Cilium
 
@@ -62,7 +58,6 @@ Main reasons for this migration:
   - Support for [Kubernetes Network Policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/). Flannel does not support it.
   - Cilium extends Kubernetes Network Policies adding support for application-aware network policies
 - Cilium's observabilities capabilities provides network visibility. Hubble UI
-
 
 See further details in ["Cilium (Kubernetes CNI)"](/docs/cilium/)
 
@@ -104,7 +99,7 @@ Upgrade Keycloak deployment to use an PosgreSQL database in HA, using CloudNativ
 
 [CloudNative-PG](https://cloudnative-pg.io/) provides a Kubernetes operator that covers the full lifecycle of a highly available PostgreSQL database cluster with a primary/standby architecture, using native streaming replication.
 
-Deploy  so PosgreSQL databases can be deployed in a declarative way
+Deploy so PosgreSQL databases can be deployed in a declarative way
 
 It also supports the automation of database backup using an external S3 service.
 
@@ -117,18 +112,19 @@ Cluster Upgrade to use Cilium CNI, as cluster networking solution, Istio, as Ser
 ### Release Scope:
 
 - Migrate GitOps solution from ArgoCD to FluxCD
+
   - Upgrade cluster bootstrap process to use FluxCD instead of ArgoCD
   - Re-package all kubernetes application to use FluxCD specific resources
   - Use advance Kustomize options (variants and componets) to have a reusable set of configurations
 
-
 - Kubernetes CNI migration from Flannel to Cilium
+
   - Install K3s disabling installation of embedded Flannel CNI.
   - Replace cluster's load balancer, based on Metal LB by Cilium L4 load balancer capabilty.
   - Configure Cilium to replace `kube-proxy` component. That means to replace kube-proxy’s iptables based routing by [eBFP](https://ebpf.io/) technology.
 
-
 - Migrate Service Mesh solution from Linkerd to Istio
+
   - Deploy Istio sidecar-less ambient mode
   - Integrate Istio with Cilium CNI
   - Deploy Istio's observability solution, [Kiali](https://kiali.io/)

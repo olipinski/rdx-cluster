@@ -21,7 +21,6 @@ ingress:
 
   ## Ingress annotations
   annotations:
-
     # Enable external authentication using Oauth2-proxy
     nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.${CLUSTER_DOMAIN}/oauth2/start?rd=https://$host$request_uri
     nginx.ingress.kubernetes.io/auth-url: http://oauth2-proxy.oauth2-proxy.svc.cluster.local/oauth2/auth

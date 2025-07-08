@@ -163,7 +163,12 @@ tolerations:
 initContainers:
   - name: init-fluentbit-directory
     image: busybox
-    command: ['/bin/sh', '-c', 'if [ ! -d /var/log/fluentbit ]; then mkdir -p /var/log/fluentbit; fi ; if [ ! -d /var/log/fluentbit/tail-db ]; then mkdir -p /var/log/fluentbit/tail-db; fi ; if [ ! -d /var/log/fluentbit/storage ]; then mkdir -p /var/log/fluentbit/storage; fi']
+    command:
+      [
+        "/bin/sh",
+        "-c",
+        "if [ ! -d /var/log/fluentbit ]; then mkdir -p /var/log/fluentbit; fi ; if [ ! -d /var/log/fluentbit/tail-db ]; then mkdir -p /var/log/fluentbit/tail-db; fi ; if [ ! -d /var/log/fluentbit/storage ]; then mkdir -p /var/log/fluentbit/storage; fi",
+      ]
     volumeMounts:
       - name: varlog
         mountPath: /var/log
@@ -171,8 +176,8 @@ initContainers:
 extraContainers:
   - name: json-exporter
     image: quay.io/prometheuscommunity/json-exporter
-    command: ['/bin/json_exporter']
-    args: ['--config.file=/json-exporter-config.yml']
+    command: ["/bin/json_exporter"]
+    args: ["--config.file=/json-exporter-config.yml"]
     ports:
       - containerPort: 7979
         name: http

@@ -15,9 +15,9 @@ spec:
     spec:
       # Limiting Resources consumption
       containers:
-      - name: kibana
-        resources:
-          requests:
-            memory: "1Gi"
-          limits:
-            memory: "1Gi"
+        - name: kibana
+          resources:
+            requests:
+              memory: "1Gi"
+            limits:
+              memory: "1Gi"

@@ -3,7 +3,6 @@ title: Hardware
 permalink: /docs/hardware/
 description: Hardware components used to build our Pi Kuberentes cluster. Raspberry Pi different storage options benchmarking.
 last_modified_at: "10-06-2023"
-
 ---
 
 ## Hardware used
@@ -25,7 +24,6 @@ This is the hardware I'm using to create the cluster:
 - [1 x ANKER USB Charging Hub](https://www.amazon.es/Anker-Cargador-USB-6-Puertos/dp/B00PTLSH9G/) . 6 port USB power supply (60 w and max 12 A)
 - [6 x USB-C charging cable with ON/OFF switch](https://www.aliexpress.com/item/33049198504.html).
 
-
 ### x86 nodes
 
 - [2 x HP EliteDesk 800 G3 i5 6500T 2,5 GHz, 8 GB de RAM, SSD de 256 GB](https://www.amazon.es/HP-EliteDesk-800-G3-reacondicionado/dp/B09TL2N2M8) for additional cluster nodes.
@@ -35,9 +33,7 @@ This is the hardware I'm using to create the cluster:
 ### Networking
 
 - [1 x Negear GS108-300PES](https://www.amazon.es/Netgear-GS108E-300PES-conmutador-gestionable-met%C3%A1lica/dp/B00MYYTP3S). 8 ports GE ethernet manageable switch (QoS and VLAN support)
-- [8 x Ethernet Cable](https://www.aliexpress.com/item/32821735352.html). Flat Cat 6,  15 cm length
-
-
+- [8 x Ethernet Cable](https://www.aliexpress.com/item/32821735352.html). Flat Cat 6, 15 cm length
 
 ## Raspberry PI Storage benchmarking
 
@@ -62,7 +58,6 @@ Tests execution has been automated with Ansible. See `pi-storage-benchmark` [rep
 #### Sequential I/O performance
 
 Test sequential I/O with `dd` and `hdparam` tools. `hdparm` can be installed through `sudo apt install -y hdparm`
-
 
 - Read speed (Use `hdparm` command)
 
@@ -110,13 +105,13 @@ Tools used `fio` and `iozone`.
 
   ```shell
   sudo fio --minimal --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=80M --readwrite=randwrite
-   ```
+  ```
 
   Random Read
 
   ```shell
   sudo fio --minimal --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=80M --readwrite=randread
-   ```
+  ```
 
 - Check random I/O with `iozone`
 
@@ -142,7 +137,6 @@ Average-metrics obtained during the tests removing the worst and the best result
 
   ![sequential_i_o](/assets/img/benchmarking_sequential_i_o.png)
 
-
 - Random I/O (FIO)
 
   ![random_i_o](/assets/img/benchmarking_random_i_o.png)
@@ -150,7 +144,6 @@ Average-metrics obtained during the tests removing the worst and the best result
 - Random I/O (IOZONE)
 
   ![random_i_o_iozone](/assets/img/benchmarking_random_i_o_iozone.png)
-
 
 - Global Score
 

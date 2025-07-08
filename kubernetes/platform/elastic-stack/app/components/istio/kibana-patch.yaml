@@ -1,4 +1,4 @@
-  # Disable TLS endpoints
+# Disable TLS endpoints
 - op: add
   path: /spec/http
   value:
@@ -8,5 +8,4 @@
   # Enabling service account token
 - op: add
   path: /spec/podTemplate/spec/automountServiceAccountToken
-  value:
-    true
+  value: true

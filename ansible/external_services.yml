@@ -254,7 +254,6 @@
       become: true
 
   tasks:
-
     # Vault Login using ansible environement variables for creating token file
     # token file will be usd in next commands
     - name: Vault login

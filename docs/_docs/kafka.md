@@ -3,7 +3,6 @@ title: Kafka
 permalink: /docs/kafka/
 description: How to deploy Kafka to our Kubernetes cluster. Using Strimzi Kafka Operator to streamline the deployment
 last_modified_at: "16-09-2023"
-
 ---
 
 ## Kafka Cluster installation
@@ -19,21 +18,25 @@ Installation using `Helm` (Release 3):
   ```shell
   helm repo add strimzi https://strimzi.io/charts/
   ```
+
 - Step2: Fetch the latest charts from the repository:
 
   ```shell
   helm repo update
   ```
+
 - Step 3: Create namespace
 
   ```shell
   kubectl create namespace kafka
   ```
+
 - Step 3: Install Strimzi kafka operator
 
   ```shell
   helm install strimzi-kafka-operator strimzi/strimzi-kafka-operator --namespace kafka
   ```
+
 - Step 4: Confirm that the deployment succeeded, run:
 
   ```shell
@@ -44,54 +47,53 @@ Installation using `Helm` (Release 3):
 
 Using Strimzi operator build Kafka cluster CRD.
 
-
 - Step 1: Create a manifest file deploying a 3 broker tls-encrypted cluster. It contains basic configuration of Kafka cluster with 3 Zookeeper replicas and 3 Kafka broker replicas. Persistence will be configure to use Longhorn as storageClass and 5GB of storage in the volume claims.
 
   ```yml
-	apiVersion: kafka.strimzi.io/v1beta2
-	kind: Kafka
-	metadata:
-	  name: my-cluster
-	  namespace: kafka
-	spec:
-	  kafka:
-	    version: 3.5.1
-	    replicas: 3
-	    listeners:
-	      - name: plain
-	        port: 9092
-	        type: internal
-	        tls: false
-	      - name: tls
-	        port: 9093
-	        type: internal
-	        tls: true
-	    config:
-	      offsets.topic.replication.factor: 3
-	      transaction.state.log.replication.factor: 3
-	      transaction.state.log.min.isr: 2
-	      default.replication.factor: 3
-	      min.insync.replicas: 2
-	      inter.broker.protocol.version: "3.5"
-	    storage:
-	      type: jbod
-	      volumes:
-	      - id: 0
-	        type: persistent-claim
-          class: longhorn
-	        size: 5Gi
-	        deleteClaim: false
+  apiVersion: kafka.strimzi.io/v1beta2
+  kind: Kafka
+  metadata:
+    name: my-cluster
+    namespace: kafka
+  spec:
+    kafka:
+      version: 3.5.1
+      replicas: 3
+      listeners:
+        - name: plain
+          port: 9092
+          type: internal
+          tls: false
+        - name: tls
+          port: 9093
+          type: internal
+          tls: true
+      config:
+        offsets.topic.replication.factor: 3
+        transaction.state.log.replication.factor: 3
+        transaction.state.log.min.isr: 2
+        default.replication.factor: 3
+        min.insync.replicas: 2
+        inter.broker.protocol.version: "3.5"
+      storage:
+        type: jbod
+        volumes:
+          - id: 0
+            type: persistent-claim
+            class: longhorn
+            size: 5Gi
+            deleteClaim: false
 
-	  zookeeper:
-	    replicas: 3
-	    storage:
-	      type: persistent-claim
-	      size: 5Gi
-	      deleteClaim: false5Gi
-	      class: longhorn
-	  entityOperator:
-	    topicOperator: {}
-	    userOperator: {}
+    zookeeper:
+      replicas: 3
+      storage:
+        type: persistent-claim
+        size: 5Gi
+        deleteClaim: false5Gi
+        class: longhorn
+    entityOperator:
+      topicOperator: {}
+      userOperator: {}
   ```
 
 - Step 2: Apply manifest
@@ -99,6 +101,7 @@ Using Strimzi operator build Kafka cluster CRD.
   ```shell
   kubectl apply -f manifest.yml
   ```
+
 - Step 3: Check Kafka status
 
   ```shell
@@ -113,7 +116,6 @@ By default, intra-broker communication is encrypted with TLS while communication
 The Apache ZooKeeper clusters backing the Kafka instances are not exposed outside of the Kubernetes cluster, providing additionnal security.
 
 {{site.data.alerts.end}}
-
 
 ### Create Topic
 
@@ -139,6 +141,7 @@ The Apache ZooKeeper clusters backing the Kafka instances are not exposed outsid
   ```shell
   kubectl apply -f topic.yml
   ```
+
 - Step 3: Check Kafka topic status
 
   ```shell
@@ -152,11 +155,13 @@ The Apache ZooKeeper clusters backing the Kafka instances are not exposed outsid
 Once the cluster is running, you can run a simple producer to send messages to a Kafka topic (the topic will be automatically created).
 
 - Step 1: launch producer
+
   ```shell
   kubectl -n kafka run kafka-producer -ti --image=quay.io/strimzi/kafka:0.29.0-kafka-3.2.0 --rm=true --restart=Never -- bin/kafka-console-producer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic my-topic
   ```
 
 - Step 3: in a different terminal launch consumer
+
   ```shell
   kubectl -n kafka run kafka-consumer -ti --image=quay.io/strimzi/kafka:0.29.0-kafka-3.2.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic my-topic --from-beginning
   ```
@@ -164,9 +169,6 @@ Once the cluster is running, you can run a simple producer to send messages to a
 - Step 5: In producer terminal wait for the prompt and start typing messages. (Input Control-C to finish)
 
   Messages will be outputed in consumer terminal.
-
-
-
 
 ## Schema Registry
 
@@ -185,7 +187,7 @@ Some key benefits of using Kafka Schema Registry include:
 - Schema Evolution: As data formats and requirements evolve over time, it is common for producers and consumers to undergo changes to their data schemas. Kafka Schema Registry provides support for schema evolution, allowing producers to register new versions of schemas while maintaining compatibility with existing consumers. Consumers can retrieve the appropriate schema version for deserialization, ensuring that data is processed correctly even when schema changes occur.
 
 - Data Validation: Kafka Schema Registry enables data validation by allowing producers to register schemas with predefined data types, field names, and other constraints. Consumers can then retrieve and use these schemas to validate incoming data, ensuring that data conforms to the expected structure and format. This helps prevent data processing errors and improves data quality.
-Schema Management: Kafka Schema Registry provides a centralized repository for managing schemas, making it easier to track, version, and manage changes. Producers and consumers can register, retrieve and manage schemas through a simple API, allowing for centralized schema governance and management.
+  Schema Management: Kafka Schema Registry provides a centralized repository for managing schemas, making it easier to track, version, and manage changes. Producers and consumers can register, retrieve and manage schemas through a simple API, allowing for centralized schema governance and management.
 
 - Interoperability: Kafka Schema Registry promotes interoperability between different producers and consumers by providing a standardized way to define and manage data schemas. Producers and consumers written in different programming languages or using different serialization frameworks can use a common schema registry to ensure data consistency and compatibility across the ecosystem.
 
@@ -198,7 +200,6 @@ Official confluent docker images for Schema Registry can be installed using [hel
 ### Install Bitnami packaged Schema registry
 
 [Confluent Schema Registry packaged by Bitnami](https://github.com/bitnami/charts/tree/main/bitnami/schema-registry) is keept up to date and it supports [multi-architecture docker images](https://hub.docker.com/r/bitnami/schema-registry/tags).
-
 
 - Step 1: Prepare schema-registry-values.yaml:
 
@@ -214,11 +215,13 @@ Official confluent docker images for Schema Registry can be installed using [hel
     brokers:
       - PLAINTEXT://my-cluster-kafka-bootstrap:9092
   ```
+
 - Step 2: Install bitnami schema registry:
 
   ```shell
   helm install schema-registry oci://registry-1.docker.io/bitnamicharts/schema-registry -f schema-registry-values.yml --namespace kafka
   ```
+
 - Step 3: Check schema registry started
 
   ```shell
@@ -241,15 +244,15 @@ Once the cluster is running, you can run a producer and a consumer using Avro me
 
 Kafka consumer and producers docker images used for testing ca be found in [kafka-python-client repository](https://github.com/ricsanfre/kafka-python-client). This docker image contain source code of one of the examples in [confluent-kafka-python repository]https://github.com/confluentinc/confluent-kafka-python/.
 
-
 {{site.data.alerts.end}}
 
 - Step 1: launch producer
+
   ```shell
   kubectl -n kafka run kafka-producer -ti --image=ricsanfre/kafka-python-client:latest --rm=true --restart=Never -- python avro_producer.py -b my-cluster-kafka-bootstrap:9092 -s http://kafka-schema-registry:8081 -t my-avro-topic
   ```
-  Enter required fields for building the message
 
+  Enter required fields for building the message
 
 - Step 3: in a different terminal launch consumer
   ```shell
@@ -271,11 +274,13 @@ Even when helm chart source code is available in the repository, this helm chart
   ```shell
   helm repo add ricsanfre https://ricsanfre.github.io/helm-charts/
   ```
+
 - Step 2: Fetch the latest charts from the repository:
 
   ```shell
   helm repo update
   ```
+
 - Step 3: Prepare kafdrop-values.yml
 
   ```yml
@@ -318,26 +323,26 @@ Even when helm chart source code is available in the repository, this helm chart
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
-        - matchExpressions:
-          - key: kubernetes.io/arch
-            operator: In
-            values:
-            - amd64
+          - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
   ```
 
   Kafdrop is configured to use Schema Registry, so messages can be decoded when Schema Registry is used. See helm chart value `cmdArgs`:
-  -  `--schemaregistry.connect=http://kafka-schema-registry:8081`
 
+  - `--schemaregistry.connect=http://kafka-schema-registry:8081`
 
 - Step 4: Install Kafdrop helm chart
 
   ```shell
   helm upgrade -i kafdrop ricsanfre/kafdrop -f kafdrop-values.yml --namespace kafka
   ```
+
 - Step 4: Confirm that the deployment succeeded, opening UI:
 
   https://kafdrop.picluster.ricsanfre.com/
-
 
 ## References
 

@@ -16,9 +16,7 @@
       "redirectUris": [
         "https://oauth2-proxy.${CLUSTER_DOMAIN}/oauth2/callback"
       ],
-      "webOrigins": [
-        "https://oauth2-proxy.${CLUSTER_DOMAIN}"
-      ],
+      "webOrigins": ["https://oauth2-proxy.${CLUSTER_DOMAIN}"],
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": false,
       "protocol": "openid-connect",
@@ -69,9 +67,7 @@
       "redirectUris": [
         "https://monitoring.${CLUSTER_DOMAIN}/grafana/login/generic_oauth"
       ],
-      "webOrigins": [
-        "https://monitoring.${CLUSTER_DOMAIN}/grafana"
-      ],
+      "webOrigins": ["https://monitoring.${CLUSTER_DOMAIN}/grafana"],
       "standardFlowEnabled": true,
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": true,
@@ -127,12 +123,8 @@
       "alwaysDisplayInConsole": true,
       "clientAuthenticatorType": "client-secret",
       "secret": "$${KIALI_OAUTH_CLIENT_SECRET}",
-      "redirectUris": [
-        "https://kiali.${CLUSTER_DOMAIN}/kiali/*"
-      ],
-      "webOrigins": [
-        "https://kiali.${CLUSTER_DOMAIN}"
-      ],
+      "redirectUris": ["https://kiali.${CLUSTER_DOMAIN}/kiali/*"],
+      "webOrigins": ["https://kiali.${CLUSTER_DOMAIN}"],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
@@ -199,10 +191,7 @@
           "value": "$${PI_ADMIN_PASSWORD}"
         }
       ],
-      "realmRoles": [
-        "admin",
-        "default-roles-picluster"
-      ]
+      "realmRoles": ["admin", "default-roles-picluster"]
     }
   ]
 }

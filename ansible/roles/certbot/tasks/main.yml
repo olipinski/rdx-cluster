@@ -1,5 +1,4 @@
 ---
-
 - name: Ensure python virtualenv is installed.
   ansible.builtin.package:
     name:

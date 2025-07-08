@@ -1,15 +1,13 @@
 ---
 layout: post
-title:  Kubernetes Pi Cluster relase v1.10
-date:   2025-01-16
+title: Kubernetes Pi Cluster relase v1.10
+date: 2025-01-16
 author: ricsanfre
 description: PiCluster News - announcing release v1.10
 ---
 
-
 Today I am pleased to announce the tenth release of Kubernetes Pi Cluster project (v1.9).
 Main features/enhancements of this release are:
-
 
 ## Homelab Gateway migration to OpenWRT
 
@@ -24,7 +22,6 @@ Networking Services running previously in `gateway` node using Ubuntu OS have be
 ![gateway-migration](/assets/img/gateway-dns-dhcp-config.png)
 
 See details in ["Cluster Gateway (OpenWrt)"](/docs/openwrt/)
-
 
 ## Re-architect Homelab and Kubernetes DNS service
 
@@ -45,7 +42,6 @@ Reconfigure complete DNS architecture of my homelab implementing a split-horizon
 - **Forwarder/Resolver DNS server**, based on `dnsmasq`, running in my homelab router (`gateway`), able to resolve recursive queries by forwarding the requests to the corresponding authoritative servers.
 
   Configured as DNS server in all homelab nodes. It forwards request for `homelab.ricsanfre.com` domain to Authoritative Internal DNS server runing in `node1` and the rest of request to default DNS servers 1.1.1.1 (cloudflare) and 8.8.8.8 (google)
-
 
 This architecture is complemented with the following Kubernetes components:
 
@@ -80,7 +76,6 @@ The development setup with K3D will be using same K3s configuration as the produ
 
 See details in ["Kubernetes development environment"](/docs/dev/)
 
-
 ### MongoDB Cloud-native deployment
 
 Add support to deploy MongoDB databases in a declarative way using a [MongoDB Community Kubernetes Operator](https://github.com/mongodb/mongodb-kubernetes-operator).
@@ -89,7 +84,6 @@ Declarative deployment of MongoDB clusters (replicasets) secured using TLS certi
 
 See details in ["Databases - MongoDB operator"](/docs/databases/#mongodb-operator)
 
-
 ## Release v1.10.0 Notes
 
 Homelab/Kuberenes DNS rearchitecture, migration to OpenWRT based router/firewall, and new 3D-based dev environment and suppor MongoDB declarative deployment.
@@ -97,14 +91,15 @@ Homelab/Kuberenes DNS rearchitecture, migration to OpenWRT based router/firewall
 ### Release Scope:
 
 - Migrate Homelab Gateway Ubuntu OS based to OpenWRT
+
   - Migrate firewall rules to OpenWrt router
     - OpenWrt firewall is also using `nftables` to implemt its firewall functionallity.
   - Migrate DNS/DHCP services to OpenWrt
     - OpenWrt DNS/DCHP is also based on dnsmasq.
   - Migrate PXE boot services (TFTF server and Kick-start web servers) to other node in the cluster (node1). GL-A1300 does not have enough disk space to store boot and iso files.
 
-
 - New DNS Architecure
+
   - Cluster domain changed to `homelab.picluster.ricsanfre.com`
   - New Homelab DNS authoritative server based on Bind9
   - Gateway DNS resolver/forwarder service reconfiguration
@@ -112,6 +107,7 @@ Homelab/Kuberenes DNS rearchitecture, migration to OpenWRT based router/firewall
   - Cert-manager reconfiguration to support LetsEncrypt certificates in split DNS horizon architecture
 
 - New Dev Environment
+
   - Add documentation to install k3d development platform
   - Add Flux configuration for dev cluster environment
 

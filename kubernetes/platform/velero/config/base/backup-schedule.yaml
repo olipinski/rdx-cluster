@@ -8,12 +8,12 @@ spec:
   template:
     hooks: {}
     includedNamespaces:
-    - '*'
+      - "*"
     includedResources:
-    - '*'
+      - "*"
     includeClusterResources: true
     metadata:
       labels:
-        type: 'full'
-        schedule: 'daily'
+        type: "full"
+        schedule: "daily"
     ttl: 720h0m0s
