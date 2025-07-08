@@ -6,7 +6,7 @@
     tls:
       selfSignedCertificate:
         disabled: true
-  # Enabling service account token
+# Enabling service account token
 - op: add
   path: /spec/nodeSets/0/podTemplate/spec/automountServiceAccountToken
   value: true

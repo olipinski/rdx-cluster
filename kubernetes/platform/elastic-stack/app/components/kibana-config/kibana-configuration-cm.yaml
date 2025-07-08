@@ -8,8 +8,12 @@ data:
     #!/bin/sh
     # Wait for Kibana to be available & healthy
     echo "Testing connection to Kibana"
-    until $(curl -k -X GET http://$KIBANA_URL:$KIBANA_PORT/_cluster/health); do sleep 5; done
-    until [ "$(curl -k -X GET http://$KIBANA_URL:$KIBANA_PORT/_cluster/health | wc -l)" == "0" ]
+    until $(curl -k -X GET http://$KIBANA_URL:$KIBANA_PORT/_cluster/health)
+    do sleep 5
+    done
+    until [ "$(curl -k \
+    -X GET http://$KIBANA_URL:$KIBANA_PORT/_cluster/health \
+    | wc -l)" == "0" ]
     do sleep 5
     done
 

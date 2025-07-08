@@ -10,14 +10,14 @@ components:
   - ../../components/componentX
 
 configMapGenerator:
-  - name: {{ .app_name }}-helm-values
+  - name: "{{ .app_name }}-helm-values"
     behavior: merge
     files:
       - overlay-values.yaml=values.yaml
 
 patches:
-- target:
-    group: helm.toolkit.fluxcd.io
-    kind: HelmRelease
-    name: "{{ .app_name }}"
-  path: helm-patch.yaml
+  - target:
+      group: helm.toolkit.fluxcd.io
+      kind: HelmRelease
+      name: "{{ .app_name }}"
+    path: helm-patch.yaml
