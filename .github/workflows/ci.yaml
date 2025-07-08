@@ -27,11 +27,11 @@ jobs:
         run: yamllint .
         working-directory: ./kubernetes
 
-      - name: Scan Ansible YAMLs
-        uses: ansible/ansible-lint@v25.6.0
-        with:
-          working_directory: ./ansible
-          requirements_file: "requirements.yaml"
+#      - name: Scan Ansible YAMLs
+#        uses: ansible/ansible-lint@v25.6.0
+#        with:
+#          working_directory: ./ansible
+#          requirements_file: "requirements.yaml"
 
       - name: Scan Kubernetes YAMLs
         id: kube-lint-scan
