@@ -6,7 +6,7 @@ last_modified_at: "06-10-2024"
 ---
 
 {{site.data.alerts.note}}
-Basic kubernetes networking concepts and useful references can be found in [Reference Docs: Kubernetes networking basics](/docs/k8s-networking/) 
+Basic kubernetes networking concepts and useful references can be found in [Reference Docs: Kubernetes networking basics](/docs/k8s-networking/)
 {{site.data.alerts.end}}
 
 ## K3S networking default components
@@ -116,4 +116,3 @@ To disable the embedded LB, configure all servers in the cluster with the `--dis
 Further details about how to install Metal LB can be found in ["Load Balancer (Metal LB) documentation"](/docs/metallb/).
 
 How to configure Cilium CNI Load balancer capabitily can be found in ["Cilium documentation"](/docs/cilium/).
-

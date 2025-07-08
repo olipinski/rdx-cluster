@@ -10,8 +10,8 @@ The development setup is the following:
 
 - A dedicated docker network is configured for the cluster
 - k3d cluster installed disabling flannel CNI, kube-proxy and load balancer.
-- Cilium is installed as CNI which also takes care of the routing which was handled by kube-proxy. 
-- Cilium L2-LB awareness is enabled, and a set of IP’s are configured for Loadbalancers services and advertised via L2 announcements. 
+- Cilium is installed as CNI which also takes care of the routing which was handled by kube-proxy.
+- Cilium L2-LB awareness is enabled, and a set of IP’s are configured for Loadbalancers services and advertised via L2 announcements.
 - Docker cluster nodes and Load balancer Kubernetes services are reachable from local host through docker network
 
 ![picluster-dev-k3d](/assets/img/pi-cluster-dev-k3d-architecture.png)
@@ -48,7 +48,7 @@ Follow official [installation guide](https://docs.docker.com/engine/install/ubun
   gnupg \
   lsb-release
   ```
-  
+
 - Step 3. Add docker´s official GPG key
 
   ```shell
@@ -56,8 +56,8 @@ Follow official [installation guide](https://docs.docker.com/engine/install/ubun
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.asc
   sudo chmod a+r /etc/apt/keyrings/docker.asc
   ```
-  
-- Step 4: Add x86_64 repository 
+
+- Step 4: Add x86_64 repository
 
   ```shell
   echo \
@@ -78,13 +78,13 @@ Follow official [installation guide](https://docs.docker.com/engine/install/ubun
     ```shell
     sudo groupadd docker
     ```
-    
+
   - Add user to docker group
 
     ```shell
     sudo usermod -aG docker $USER
     ```
-    
+
 - Step 7: Configure Docker to start on boot
 
   ```shell
@@ -95,11 +95,11 @@ Follow official [installation guide](https://docs.docker.com/engine/install/ubun
 - Step 8: Configure docker daemon.
 
   - Edit file `/etc/docker/daemon.json`
-  
+
     Set storage driver to overlay2 and to use systemd for the management of the container’s cgroups.
     Optionally default directory for storing images/containers can be changed to a different disk partition (example /data).
     Documentation about the possible options can be found [here](https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file)
-    
+
     ```json
     {
         "exec-opts": ["native.cgroupdriver=systemd"],
@@ -108,9 +108,9 @@ Follow official [installation guide](https://docs.docker.com/engine/install/ubun
         "max-size": "100m"
         },
         "storage-driver": "overlay2",
-        "data-root": "/data/docker"  
+        "data-root": "/data/docker"
     }
-    ``` 
+    ```
   - Restart docker
 
     ```shell
@@ -181,7 +181,7 @@ Follow official [kubectl installation guide](https://kubernetes.io/docs/tasks/to
   $ ./get_helm.sh
   ```
 - Step 2: Give it executable permissions
-  
+
   ```shell
   chmod 700 get_helm.sh
   ```
@@ -215,11 +215,11 @@ k3s cluster can be created using K3D. The cluster will be configured with same o
 Since cilium uses IPtables to write routes to kernel, we need to enable additional kernel modules
 
 ```shell
-sudo modprobe -v iptable_filter  
-sudo modprobe -v ip_tables  
-sudo modprobe -v iptable_mangle  
-sudo modprobe -v iptable_raw  
-sudo modprobe -v iptable_nat  
+sudo modprobe -v iptable_filter
+sudo modprobe -v ip_tables
+sudo modprobe -v iptable_mangle
+sudo modprobe -v iptable_raw
+sudo modprobe -v iptable_nat
 sudo modprobe -v xt_socket
 ```
 Add this configuration in kernel modules configuration file to persist the modules after restart
@@ -339,7 +339,7 @@ docker network create \
             - server:*
     kubeconfig:
       updateDefaultKubeconfig: true
-      switchCurrentContext: true  
+      switchCurrentContext: true
   ```
 
   - This config 3 nodes cluster is created (1 control plane node and 2 workers) connected to docker network created before (`picluster`)
@@ -379,7 +379,7 @@ docker network create \
 
   {{site.data.alerts.end}}
 
-- Step 3: Check cluster is running 
+- Step 3: Check cluster is running
 
   ```shell
   kubectl get nodes
@@ -400,7 +400,7 @@ Installation using `Helm` (Release 3):
     ```shell
     helm repo update
     ```
-  
+
 - Step 4: Create helm values file `cilium-values.yml`
 
   ```yaml
@@ -438,17 +438,17 @@ Installation using `Helm` (Release 3):
   externalIPs:
     enabled: true
 
-  # Increase the k8s api client rate limit to avoid being limited due to increased API usage 
+  # Increase the k8s api client rate limit to avoid being limited due to increased API usage
   k8sClientRateLimit:
     qps: 50
     burst: 200
-  
+
   # Istio configuration
   # https://docs.cilium.io/en/latest/network/servicemesh/istio/
   # Disable socket lb for non-root ns. This is used to enable Istio routing rules
   socketLB:
     hostNamespaceOnly: true
-  # Istio uses a CNI plugin to implement functionality for both sidecar and ambient modes. 
+  # Istio uses a CNI plugin to implement functionality for both sidecar and ambient modes.
   # To ensure that Cilium does not interfere with other CNI plugins on the node,
   cni:
     exclusive: false
@@ -459,7 +459,7 @@ Installation using `Helm` (Release 3):
   ```shell
   helm install cilium cilium/cilium --namespace kube-system -f cilium-values.yaml
   ```
- 
+
 - Step 1: Configure Cilium LB-IPAM
 
   Create the following manifest file: `cilium-config.yaml`
@@ -485,7 +485,7 @@ Installation using `Helm` (Release 3):
       externalIPs: true
       loadBalancerIPs: true
     ```
-   
+
    Apply the manifest file
 
    ```shell
@@ -497,7 +497,7 @@ Installation using `Helm` (Release 3):
 
   ```shell
   kubectl -n kube-system get pod
-  ``` 
+  ```
 
 {{site.data.alerts.note}}
 

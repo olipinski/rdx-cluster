@@ -15,7 +15,7 @@ This is the hardware I'm using to create the cluster:
 - [4 x Raspberry Pi 4 - Model B (4 GB)](https://www.tiendatec.es/raspberry-pi/gama-raspberry-pi/1100-raspberry-pi-4-modelo-b-4gb-765756931182.html) and [1 x Raspberry Pi 4 - Model B (8 GB)](https://www.tiendatec.es/raspberry-pi/gama-raspberry-pi/1231-raspberry-pi-4-modelo-b-8gb-765756931199.html) for the kubernetes cluster (1 master node and 5 worker nodes).
 - [1 x Raspberry Pi 4 - Model B (2 GB)](https://www.tiendatec.es/raspberry-pi/gama-raspberry-pi/1099-raspberry-pi-4-modelo-b-2gb-765756931175.html) for creating a router for the lab environment connected via wifi to my home network and securing the access to my lab network.
 - [4 x SanDisk Ultra 32 GB microSDHC Memory Cards](https://www.amazon.es/SanDisk-SDSQUA4-064G-GN6MA-microSDXC-Adaptador-Rendimiento-dp-B08GY9NYRM/dp/B08GY9NYRM) (Class 10) for installing Raspberry Pi OS for enabling booting from USB (update Raspberry PI firmware and modify USB partition)
-- [4 x Samsung USB 3.1 32 GB Fit Plus Flash Disk](https://www.amazon.es/Samsung-FIT-Plus-Memoria-MUF-32AB/dp/B07HPWKS3C) 
+- [4 x Samsung USB 3.1 32 GB Fit Plus Flash Disk](https://www.amazon.es/Samsung-FIT-Plus-Memoria-MUF-32AB/dp/B07HPWKS3C)
 - [1 x Kingston A400 SSD Disk 480GB](https://www.amazon.es/Kingston-SSD-A400-Disco-s%C3%B3lido/dp/B01N0TQPQB)
 - [4 x Kingston A400 SSD Disk 240GB](https://www.amazon.es/Kingston-SSD-A400-Disco-s%C3%B3lido/dp/B01N5IB20Q)
 - [5 x Startech USB 3.0 to SATA III Adapter](https://www.amazon.es/Startech-USB3S2SAT3CB-Adaptador-3-0-2-5-negro/dp/B00HJZJI84) for connecting SSD disk to USB 3.0 ports.
@@ -30,7 +30,7 @@ This is the hardware I'm using to create the cluster:
 
 - [2 x HP EliteDesk 800 G3 i5 6500T 2,5 GHz, 8 GB de RAM, SSD de 256 GB](https://www.amazon.es/HP-EliteDesk-800-G3-reacondicionado/dp/B09TL2N2M8) for additional cluster nodes.
   One of the nodes `node-hp-2` has a SSD M.2 NVMe 256 GB. The other, `node-hp-1` has a SATA SSD Kingston 240 GB
-- [2 x Crucial RAM 8GB DDR4 2400MHz CL17 Memoria](https://www.amazon.es/dp/B01BIWKP58) as RAM expansion for mini PCs. Total memmory 16 GB 
+- [2 x Crucial RAM 8GB DDR4 2400MHz CL17 Memoria](https://www.amazon.es/dp/B01BIWKP58) as RAM expansion for mini PCs. Total memmory 16 GB
 
 ### Networking
 
@@ -53,7 +53,7 @@ Different Raspberry PI storage configurations have been tested:
 
 ### Testing procedure
 
-Sequential and random I/O tests have been executed with the different storage configurations. 
+Sequential and random I/O tests have been executed with the different storage configurations.
 
 For the testing a tweaked version of the script provided by James A. Chambers (https://jamesachambers.com/) has been used
 
@@ -65,10 +65,10 @@ Test sequential I/O with `dd` and `hdparam` tools. `hdparm` can be installed thr
 
 
 - Read speed (Use `hdparm` command)
-    
+
   ```shell
   sudo hdparm -t /dev/sda1
-    
+
   Timing buffered disk reads:  72 MB in  3.05 seconds =  23.59 MB/sec
 
   sudo hdparm -T /dev/sda1

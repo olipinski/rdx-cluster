@@ -8,7 +8,7 @@ resources:
 components:
   - ../../components/external-db
   - ../../components/ingress
-  - ../../components/realm-config  
+  - ../../components/realm-config
 
 configMapGenerator:
   - name: keycloak-helm-values

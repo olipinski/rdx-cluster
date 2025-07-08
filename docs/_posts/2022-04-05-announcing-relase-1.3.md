@@ -6,7 +6,7 @@ author: ricsanfre
 description: PiCluster News - announcing release v1.3
 ---
 
-Today I am very happy to announce the third release of Kubernetes Pi Cluster project (v1.3). 
+Today I am very happy to announce the third release of Kubernetes Pi Cluster project (v1.3).
 
 Main feature included in this release: adding service mesh architecture based on Linkerd
 
@@ -59,7 +59,7 @@ Redesign of the hardware architecture adding local storage (SSD disks) to all cl
   - Traefik and Longhorn metrics integrated into Prometheus
 
 ### Release v1.0.0 - 2021-11-18
-  
+
 Initial complete release. First cluster hardware architecture using USB Flash-drives for booting the Raspberry Pis and building a iSCSI SAN server for providing local storage to cluster nodes.
 
 ![picluster-release1](/assets/img/pi-cluster.png)

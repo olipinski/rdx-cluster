@@ -17,4 +17,3 @@ spec:
   selector:
     matchLabels:
       app: prometheus-elasticsearch-exporter
-

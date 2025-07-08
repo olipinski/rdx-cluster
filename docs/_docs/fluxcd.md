@@ -18,7 +18,7 @@ With Flux manifest files storing can be synchronize from different *Sources* (Gi
 - Sources are defined declarative using specific Flux CRDs: `GitRepository`
 
 Kubernetes applications, to be deployed in Flux, can be defined using plain manifest kubernetes files (not packaged) or kubernetes applications packaged using: Kustomize and/or Helm
-- [Helm Controller](https://fluxcd.io/flux/components/helm/) in charge of reconcile Helm applications 
+- [Helm Controller](https://fluxcd.io/flux/components/helm/) in charge of reconcile Helm applications
 - [Kustomize Controller](https://fluxcd.io/flux/components/kustomize/) in charge of reconcile applications defined in plain manifest files or packaged with Kustomize.
 - Helm and Kustomize applications are declared using specific Flux CRDs: `Kustomization` and `HelmRealease`
 
@@ -191,7 +191,7 @@ Garbage collection is also performed when a Kustomization object is deleted, tri
 
 To enable garbage collection for a Kustomization, `spec.prune` has to be set to `true`.
 Pruning for certain resources can be disabled by either labelling or annotating them with:
- 
+
 ```yaml
 kustomize.toolkit.fluxcd.io/prune: disabled
 ```
@@ -235,7 +235,7 @@ spec:
         name: jetstack
         namespace: flux-system
   releaseName: cert-manager
-  targetNamespace: cert-manager    
+  targetNamespace: cert-manager
   install:
     remediation:
       retries: 3
@@ -256,7 +256,7 @@ Where:
 - `spec.valuesFrom`: ConfigMap where `values.yaml` file is defined.
 - `spec.releaseName`: Helm release name
 - `spect.targetNamespace`: specify the namespace to which the Helm release is deployed. It defaults to the namespace of the HelmRelease.
-- `spec.interval`: 
+- `spec.interval`:
 - `spec.timeout`:
 - `spec.install` and `spec.upgrade`: define the installation and upgrade policies (retries and rollback strategies)
 
@@ -266,7 +266,7 @@ Where:
 
 To have the control of any kuberentes configuration deployed in the cluster, K3s add-ons need to be disabled
 
-By default K3s install a HelmChart controller and configure basic Kubernetes networking packages and 
+By default K3s install a HelmChart controller and configure basic Kubernetes networking packages and
 
 - [Flannel](https://github.com/flannel-io/flannel) as Networking plugin, CNI (Container Networking Interface), for enabling pod communications
 - [CoreDNS](https://coredns.io/) providing cluster dns services
@@ -283,7 +283,7 @@ K3S master nodes need to be installed with the following additional options:
 
 See complete intallation procedure and other configuration settings in ["K3S Installation"](/docs/k3s-installation/)
 
-## Cluster Bootstrap 
+## Cluster Bootstrap
 
 ### Using FluxCD CLI
 
@@ -319,7 +319,7 @@ flux bootstrap github \
 ```
 
 ##### GitHub access requirements
-During bootstrapping process, `flux bootstrap` command need to access the Github repo and perform commits containing flux installation and bootstrapping manifest files. 
+During bootstrapping process, `flux bootstrap` command need to access the Github repo and perform commits containing flux installation and bootstrapping manifest files.
 For accessing the GitHub REST API, the bootstrap command requires a GitHub Personal Access Token (PAT) with administration permissions.
 
 {{site.data.alerts.note}}
@@ -406,9 +406,9 @@ The files are written to the Git repo in two different commits
 3. Git PAT is stored in a Kubernetes Secret
 
 	GitHub PAT is stored in the cluster as a Kubernetes Secret named `flux-system` inside the `flux-system` namespace. It is not stored in the Git repository.
-	
+
 	The following secret is automatic created by flux bootstrap command
-	
+
 	```yaml
 	apiVersion: v1
 	data:
@@ -433,14 +433,14 @@ To avoid automatic commits to GitHub repo, the following manual installation and
     mkdir -p clusters/prod/config
     mkdir -p clusters/prod/infra
     ```
-  
+
 2. Use `flux install` to generate flux installation manifest files (`gotk-components.yaml`) file
 
     ```shell
     flux install \
         --export > ./clusters/prod/flux-system/gotk-components.yaml
     ```
-  
+
 3. Install flux controllers
 
     ```shell
@@ -456,9 +456,9 @@ To avoid automatic commits to GitHub repo, the following manual installation and
         --password=password \
         --export fluxcd-auth.yaml
    ```
-   
+
     It generates a secret file like this:
-    
+
     ```yaml
     apiVersion: v1
     kind: Secret
@@ -469,17 +469,17 @@ To avoid automatic commits to GitHub repo, the following manual installation and
       password: password
       username: username
     ```
-  
+
     Apply manifest file generated
-    
+
      ```shell
      kubectl apply -f fluxcd-auth.yaml
      ```
 
-      
+
 5. Deploy GitRepository and bootstrap Kustomization application resources
     - Create file `./clusters/prod/config/cluster.yaml`
-    
+
       ```yaml
       ---
       apiVersion: source.toolkit.fluxcd.io/v1
@@ -516,11 +516,11 @@ To avoid automatic commits to GitHub repo, the following manual installation and
   ```
 ### Bootstrap read-only Repo
 
-`flux bootstrap` command requires Git repository credentials. 
+`flux bootstrap` command requires Git repository credentials.
 
 Credentials are needed for two purposes:
 - To commit flux bootstrap manifest files to the Repo
-- If Repo is private, to access the repo. Read-only credentials are needed in this case. 
+- If Repo is private, to access the repo. Read-only credentials are needed in this case.
 
 To bootstrap a read-only repo avoiding the need of providing any credential follow the following process:
 
@@ -542,7 +542,7 @@ Bootstrap cluster using manual process instead using `flux bootstrap` command. F
     ```
 
 
-{{site.data.alerts.important}} 
+{{site.data.alerts.important}}
 With Read-only repos some FluxCD functionality won't work  like [Automate image updates to Git](https://fluxcd.io/flux/guides/image-update/)
 
 {{site.data.alerts.end}}
@@ -719,7 +719,7 @@ Cluster specific configuration in `kubernetes/clusters/<environment>`
 - Cluster repositories (helm, OCI, etc.): `kubernetes/clusters/<environment>/repositories
 
   HelmRepository resources like (`kubernetes/clusters/<environment>/repositories/helm/jetstack-helmrepo.yaml)
-  
+
   ```yaml
   ---
   apiVersion: source.toolkit.fluxcd.io/v1
@@ -891,7 +891,7 @@ This design pattern means:
 
 See details of this pattern in [Flux Helmrealase user guide](https://fluxcd.io/flux/guides/helmreleases/#refer-to-values-in-configmaps-generated-with-kustomize)
 
-Additionally `HelmRelease` supports to import HelmChart values from more than one yaml source file, merging the content of the files in order (latter files overwriting definition of the previous). 
+Additionally `HelmRelease` supports to import HelmChart values from more than one yaml source file, merging the content of the files in order (latter files overwriting definition of the previous).
 This enables the evolution of the previous design pattern to be able to compose the `values.yaml` file using Kustomized overlays and components. The following pattern is an evolution of the one described in "Managing Kubernetes the GitOps way by Jeff French"[^2] to consider also kustomized components
 
 Different configMaps can be generated for `base`,  `components` and `overlays` so they are imported in order by `HelmRelase`, making possible to overwrite base `values.yaml` with additional configuration provided by Kustomize Components or Kustomized Overlays.
@@ -930,7 +930,7 @@ As an example nginx flux application can be defined as follows
 
 Base defines the namespace manifest file and the HelmRelease resource. Kustomize configMap generator is used to create a configMap containing Helm Chart values.yaml
 
-Where `base/helm.yaml` contains HelmRelease resource expecting values.yaml in a Config Map 
+Where `base/helm.yaml` contains HelmRelease resource expecting values.yaml in a Config Map
 
 ```yaml
 ---
@@ -1128,7 +1128,7 @@ Flux Kustomize provides [Post Build Variable Substitution](https://fluxcd.io/flu
 
 In any manifest defined as part of the Kustomization application, a set of variables can be defined. Flux replace these values from static values or from ConfigMaps and Secrets after `kustomize build` command is executed.
 
-`spec.postBuild.substitute` or `spec.postBuild.subtituteFrom` need to be specified in the corresponding Kustomization resource. 
+`spec.postBuild.substitute` or `spec.postBuild.subtituteFrom` need to be specified in the corresponding Kustomization resource.
 
 Variables have to be specified, as `${var_name:=default_value}` in manifest yaml files used by kustomized packaged application.
 
@@ -1165,7 +1165,7 @@ spec:
 
 {{site.data.alerts.important}}
 Fux executes substitution logic after the execution of `kustomize build` command.
- 
+
 If a variable is included in the content of a ConfigMap that is auto-generated by Kustomize, as it might happens when using design pattern to generate helm `values.yaml` file, the content of the variable will not be used to generate the hash suffix for the configMap. So, if variable content is changed, no new configMap, with new name, will be generated since the hash won't be different.
 
 See further details in this [flux discussion](https://github.com/fluxcd/flux2/discussions/3611)
@@ -1213,5 +1213,5 @@ kustomize.toolkit.fluxcd.io/substitute: disabled
 [^2]: This design pattern explained in the following webinar.
 
     [**Managing Kubernetes the GitOps way with Flux by Jeff French**](https://www.youtube.com/embed/1DuxTlvmaNM)
-	
+
     [Reference Repo](https://github.com/moonswitch-workshops/terraform-eks-flux)

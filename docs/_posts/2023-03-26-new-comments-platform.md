@@ -36,7 +36,6 @@ As part of the migration old comments have been lost. Sorry for the inconvenienc
    To comment, now visitors must authorize the `giscus` app to post on their behalf using the GitHub OAuth flow.
 
 3. Giscus platform integrated with Github discussions.
- 
+
    Alternatively, visitors can comment on the GitHub Discussion directly.
    Comments can be moderated directly on GitHub by the website administrator.
-

@@ -4,5 +4,3 @@ resources:
 - mongodb-secret.yaml
 - mongodb-certificate.yaml
 - mongodb-cluster.yaml
-
-

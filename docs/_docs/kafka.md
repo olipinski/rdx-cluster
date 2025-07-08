@@ -45,8 +45,8 @@ Installation using `Helm` (Release 3):
 Using Strimzi operator build Kafka cluster CRD.
 
 
-- Step 1: Create a manifest file deploying a 3 broker tls-encrypted cluster. It contains basic configuration of Kafka cluster with 3 Zookeeper replicas and 3 Kafka broker replicas. Persistence will be configure to use Longhorn as storageClass and 5GB of storage in the volume claims. 
-  
+- Step 1: Create a manifest file deploying a 3 broker tls-encrypted cluster. It contains basic configuration of Kafka cluster with 3 Zookeeper replicas and 3 Kafka broker replicas. Persistence will be configure to use Longhorn as storageClass and 5GB of storage in the volume claims.
+
   ```yml
 	apiVersion: kafka.strimzi.io/v1beta2
 	kind: Kafka
@@ -91,16 +91,16 @@ Using Strimzi operator build Kafka cluster CRD.
 	      class: longhorn
 	  entityOperator:
 	    topicOperator: {}
-	    userOperator: {}  
+	    userOperator: {}
   ```
 
 - Step 2: Apply manifest
-  
+
   ```shell
   kubectl apply -f manifest.yml
   ```
 - Step 3: Check Kafka status
-  
+
   ```shell
   kubectl get kafka -n kafka
   NAME         DESIRED KAFKA REPLICAS   DESIRED ZK REPLICAS   READY   WARNINGS
@@ -132,10 +132,10 @@ The Apache ZooKeeper clusters backing the Kafka instances are not exposed outsid
     config:
       retention.ms: 7200000
       segment.bytes: 1073741824
-  ``` 
+  ```
 
 - Step 2: Apply manifest
-  
+
   ```shell
   kubectl apply -f topic.yml
   ```
@@ -146,7 +146,7 @@ The Apache ZooKeeper clusters backing the Kafka instances are not exposed outsid
   NAME       CLUSTER      PARTITIONS   REPLICATION FACTOR   READY
   my-topic   my-cluster   1            1                    True
   ```
-  
+
 ### Testing Kafka cluster
 
 Once the cluster is running, you can run a simple producer to send messages to a Kafka topic (the topic will be automatically created).
@@ -337,7 +337,7 @@ Even when helm chart source code is available in the repository, this helm chart
 - Step 4: Confirm that the deployment succeeded, opening UI:
 
   https://kafdrop.picluster.ricsanfre.com/
-  
+
 
 ## References
 

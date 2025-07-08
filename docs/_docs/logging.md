@@ -1,7 +1,7 @@
 ---
 title: Logging (EFK and Loki)
 permalink: /docs/logging/
-description: How to deploy centralized logging solution in our Raspberry Pi Kubernetes cluser. Two alternatives, one based on EFK stack (Elasticsearch- Fluentd/Fluentbit - Kibana) and another based on FLG Stack (Fluentbit/Fluentd - Loki - Grafana) 
+description: How to deploy centralized logging solution in our Raspberry Pi Kubernetes cluser. Two alternatives, one based on EFK stack (Elasticsearch- Fluentd/Fluentbit - Kibana) and another based on FLG Stack (Fluentbit/Fluentd - Loki - Grafana)
 
 last_modified_at: "19-11-2022"
 
@@ -27,7 +27,7 @@ Two different stacks can be deployed as centralized logging solution for the kub
 
   Loki is a lightweigh alternative to Elasticsearch providing a horizontally-scalable, highly-available, multi-tenant log aggregation system inspired by Prometheus for Kubernetes environments.
 
-  Loki consumption of resources is lower than ES because it does not index the contents of the logs, it rather indexes a set of labels for each log stream. 
+  Loki consumption of resources is lower than ES because it does not index the contents of the logs, it rather indexes a set of labels for each log stream.
 
 In the cluster both stacks can be deployed to deliver complimentary logs-based monitoring (observability) and advance log analytics capabilities.
 
@@ -116,7 +116,7 @@ sudo journalctl -u k3s-agent
 
 ### Host logs
 
-OS level logs (`/var/logs`) can be collected with the same agent deployed to collect containers logs (daemonset)  
+OS level logs (`/var/logs`) can be collected with the same agent deployed to collect containers logs (daemonset)
 
 {{site.data.alerts.important}} **About Ubuntu's syslog-format logs**
 
@@ -176,7 +176,7 @@ Similar to the forwarder-only deployment, lightweight logging agent instance is 
 
 - Dedicated resources required for an aggregation instance.
 
-With this architecture, in the aggregation layer, logs can be filtered and routed to different logs backends: Elastisearch and Loki. In the future different backend can be added to do further online processing. For example Kafka can be deployed as backend to build a Data Streaming Analytics architecture (Kafka, Apache Spark, Flink, etc) and route only the logs from a specfic application. 
+With this architecture, in the aggregation layer, logs can be filtered and routed to different logs backends: Elastisearch and Loki. In the future different backend can be added to do further online processing. For example Kafka can be deployed as backend to build a Data Streaming Analytics architecture (Kafka, Apache Spark, Flink, etc) and route only the logs from a specfic application.
 
 {{site.data.alerts.note}}
 
@@ -203,7 +203,7 @@ The procedure for deploying logging solution stack is described in the following
 
 - [Kubernetes Logging: Comparing Fluentd vs. Logstash](https://platform9.com/blog/kubernetes-logging-comparing-fluentd-vs-logstash/)
 
-- [How To Set Up an Elasticsearch, Fluentd and Kibana (EFK) Logging Stack on Kubernetes](https://www.digitalocean.com/community/tutorials/how-to-set-up-an-elasticsearch-fluentd-and-kibana-efk-logging-stack-on-kubernetes) 
+- [How To Set Up an Elasticsearch, Fluentd and Kibana (EFK) Logging Stack on Kubernetes](https://www.digitalocean.com/community/tutorials/how-to-set-up-an-elasticsearch-fluentd-and-kibana-efk-logging-stack-on-kubernetes)
 
 - [Kubernetes Logging and Monitoring: The Elasticsearch, Fluentd, and Kibana (EFK) Stack](https://platform9.com/blog/kubernetes-logging-and-monitoring-the-elasticsearch-fluentd-and-kibana-efk-stack-part-1-fluentd-architecture-and-configuration/)
 

@@ -7,7 +7,7 @@ description: PiCluster News - announcing release v1.7
 ---
 
 
-Today I am pleased to announce the seventh release of Kubernetes Pi Cluster project (v1.7). 
+Today I am pleased to announce the seventh release of Kubernetes Pi Cluster project (v1.7).
 
 Main features/enhancements of this release are:
 
@@ -28,7 +28,7 @@ The overall price of a mini PC, intel i5 + 8 GB RAM + 256 GB SSD disk + power su
 
 Ansible automation code has been update to be able to configure both type of nodes.
 
-## Ubuntu OS installation automation 
+## Ubuntu OS installation automation
 
 ### Ubuntu Raspberry PI automation
 

@@ -20,7 +20,7 @@ data:
           }
         },
         "mappings" : {
-          "dynamic_templates" : [ 
+          "dynamic_templates" : [
             {
               "message_field" : {
                 "path_match" : "message",
@@ -30,7 +30,7 @@ data:
                   "norms" : false
                 }
               }
-            }, 
+            },
             {
               "string_fields" : {
                 "match" : "*",
@@ -48,5 +48,4 @@ data:
           }
         }
       }
-    } 
-
+    }

@@ -13,4 +13,3 @@ auth:
 service:
   ports:
     client: {}
-

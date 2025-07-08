@@ -1,7 +1,7 @@
 ---
 title: DNS Homelab Architecture
 permalink: /docs/dns/
-description: DNS setup for homelab and Kubernetes cluster. 
+description: DNS setup for homelab and Kubernetes cluster.
 last_modified_at: "23-11-2024"
 ---
 
@@ -11,15 +11,15 @@ Split-horizon DNS architecture is used in my homelab so services can be accessed
 
 Homelab DNS Architecture is composed of the following components:
 
-- **Authoritative internal DNS server**, based on [Bind9](https://www.isc.org/bind/), deployed in one of the homelab nodes (`node1`). 
+- **Authoritative internal DNS server**, based on [Bind9](https://www.isc.org/bind/), deployed in one of the homelab nodes (`node1`).
 
   Authoritative DNS server for homelab subdomain `homelab.ricsanfre.com`, resolving DNS names to homelab's private IP address.
 
 - **Authoritative external DNS server**, IONOS/CloudFlare, resolving DNS names from same homelab subdomain `homelab.ricsanfre.com` to public IP addresses.
 
   Potentially this external DNS can be used to access internal services from Internet through my home network firewall, implementing a VPN/Port Forwarding solution.
-  
-  Initially all homelab services are not accesible from Internet, but that External DNS is needed for when generating valid TLS certificates with Let's Encrypt. DNS01 challenge used by Let's Encrypt to check ownership of the DNS domain before issuing the TLS certificate will be implemented using this external DNS service. 
+
+  Initially all homelab services are not accesible from Internet, but that External DNS is needed for when generating valid TLS certificates with Let's Encrypt. DNS01 challenge used by Let's Encrypt to check ownership of the DNS domain before issuing the TLS certificate will be implemented using this external DNS service.
 
 - **Forwarder/Resolver DNS server**, based on `dnsmasq`, running in my homelab router (`gateway`), able to resolve recursive queries by forwarding the requests to the corresponding authoritative servers.
 
@@ -30,11 +30,11 @@ Homelab DNS Architecture is composed of the following components:
 
 This architecture is complemented with the following Kubernetes components:
 
-- **Kubernetes DNS service**, [CoreDNS](https://coredns.io/). DNS server that can perform service discovery and name resolution within the cluster. 
+- **Kubernetes DNS service**, [CoreDNS](https://coredns.io/). DNS server that can perform service discovery and name resolution within the cluster.
 
-  Pods and kubernetes services are automatically discovered, using Kubernetes API, and assigned a DNS name within cluster-dns domain (default `cluster.local`) so they can be accessed by PODs running in the cluster. 
-  
-  CoreDNS also takes the role of Resolver/Forwarder DNS to resolve POD's dns queries for any domain, using default DNS server configured at node level.  
+  Pods and kubernetes services are automatically discovered, using Kubernetes API, and assigned a DNS name within cluster-dns domain (default `cluster.local`) so they can be accessed by PODs running in the cluster.
+
+  CoreDNS also takes the role of Resolver/Forwarder DNS to resolve POD's dns queries for any domain, using default DNS server configured at node level.
 
 - [ExternalDNS](https://github.com/kubernetes-sigs/external-dns), to synchronize exposed Kubernetes Services and Ingresses with cluster authoritative DNS, Bind9. So DNS records associated to exposed services can be automatically created and services can be accessed from out-side using their DNS names.
 
@@ -50,14 +50,14 @@ Authoritative DNS server for homelab zone (`homlab.ricsanfre.com`) is deployed i
 ### Bind9 Installation
 
 Use apt package manager to install Bind9 in a Ubuntu server.
-    
+
 ```shell
 sudo apt-get install bind9 bind9-doc dnsutils
 ```
 
 Ubuntu packages install bind9 with a default configuration in `/etc/bind/named.conf`
 
-  
+
 #### About folders permissions in Ubuntu with AppArmor
 
 Ubuntu bind9 packages install [[AppArmor]] profile `/etc/apparmor.d/usr.sbin.named`.
@@ -80,7 +80,7 @@ See [https://ubuntu.com/server/docs/domain-name-service-dns](https://ubuntu.com
   #
   # run resolvconf?
   RESOLVCONF=no
-  
+
   # startup options for the server
   OPTIONS="-u bind"
 
@@ -108,7 +108,7 @@ options {
 
   // allow query from any network
   allow-query { any; };
-  
+
   // Disable recursive queries
   recursion no;
 
@@ -128,7 +128,7 @@ DNS server is authoritative server only. Recursive or Forwarder roles are disabl
 
 #### Adding local zones
 
-*DNS zones* designate a specific scope for managing and defining DNS records. 
+*DNS zones* designate a specific scope for managing and defining DNS records.
 In this file it must be specified the DNS zones managed by DNS server
 Zones files are define in dedicated files `/etc/bind.db.x`
 
@@ -151,7 +151,7 @@ Edit config file: `/etc/bind/named.conf.local`
 zone "homelab.ricsanfre.com" {
     type primary;
     file "/var/lib/bind/db.homelab.ricsanfre.com";
-    
+
 };
 
 // reverse zone name
@@ -219,8 +219,8 @@ $TTL    604800
 11.0 IN      PTR     node1.homelab.ricsanfre.com.  ; 10.0.0.11
 12.0 IN      PTR     node2.homelab.ricsanfre.com.  ; 10.0.0.12
 ...
-```  
-  
+```
+
 
 #### About Zone File syntax
 
@@ -237,14 +237,14 @@ where:
 
 Special symbols:
 
-- **`@`**: 
+- **`@`**:
   Used as RR `name`: it  represents the current origin. At the start of the zone file, it is the <**zone_name**>, followed by a trailing dot (.).
 - **`$ORIGIN` Directive:**
   `$ORIGIN <domain>.`: **$ORIGIN** sets the domain name that is appended to any unqualified records.
   When a zone is first read, there is an implicit `$ORIGIN <zone_name>.`
 - **`$TTL`Directive:**
   `$TTL <default-ttl>`: This sets the default Time-To-Live (TTL) for subsequent records
-  
+
 See further information about the Zone file structure in https://bind9.readthedocs.io/en/v9.18.30/chapter3.html#soa-rr
 
 
@@ -266,7 +266,7 @@ dnsmasq installed in `gateway` is providing DHCP/DNS services and it should have
   # local=
   # Do not use /etc/host
   # expand-hosts=
- 
+
   # Specify domain for DHCP server
   domain=homelab.ricsanfre.com
 
@@ -295,7 +295,7 @@ DNS Resolver/Forwarding service, can be deployed in my linux laptop so DNS queri
 - Install bind9
 
   Use apt package manager to install Bind9 in a Ubuntu server.
-    
+
   ```shell
   sudo apt-get install bind9 bind9-doc dnsutils
   ```
@@ -327,12 +327,12 @@ DNS Resolver/Forwarding service, can be deployed in my linux laptop so DNS queri
 
   ```
 
-  With this configuration, DNS service is not exposed, and only queries coming from localhost are accepted. 
+  With this configuration, DNS service is not exposed, and only queries coming from localhost are accepted.
 
 - Edit `/etc/bind/named.conf.local`
- 
+
   Add conditional forwarding for homelab domain `homelab.ricsanfre.com`.
-  DNS queries for homelab domain are forwarded to `gateway` using its IP address in my home network 
+  DNS queries for homelab domain are forwarded to `gateway` using its IP address in my home network
 
   ```
   zone "homelab.ricsanfre.com" {
@@ -354,4 +354,3 @@ DNS Resolver/Forwarding service, can be deployed in my linux laptop so DNS queri
   Go to Interface settings and set static DNS nameserver.
 
   ![network-manager-static](/assets/img/ubuntu-network-manager-ipv4-settings.png)
-

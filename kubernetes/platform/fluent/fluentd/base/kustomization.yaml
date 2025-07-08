@@ -14,7 +14,7 @@ configMapGenerator:
       # Disable hashing.
       # Automatic replacement does not work with configMaps references in values.yaml
       disableNameSuffixHash: true
-    literals: 
+    literals:
       - lokiURL="http://loki-gateway.loki"
       - elasticsearchHost=efk-es-http.elastic
 

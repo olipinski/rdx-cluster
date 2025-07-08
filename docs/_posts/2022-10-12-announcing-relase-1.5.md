@@ -6,7 +6,7 @@ author: ricsanfre
 description: PiCluster News - announcing release v1.5
 ---
 
-Today I am pleased to announce the fifth release of Kubernetes Pi Cluster project (v1.5). 
+Today I am pleased to announce the fifth release of Kubernetes Pi Cluster project (v1.5).
 
 Main features/enhancements of this release are:
 
@@ -38,7 +38,7 @@ K3S currently does not come with a preintegrated Snapshot Controller, needed to 
 
 Memory footprint reduction is achieved by removing  all metrics duplicates from K3S monitoring. See details in [issue #67](https://github.com/ricsanfre/pi-cluster/issues/67)
 
-Before the optimization, K3S duplicates came from monitoring kube-proxy, kubelet and apiserver components. kube-controller-manager and kube-scheduler monitoring was already removed in the past. See [issue #22](https://github.com/ricsanfre/pi-cluster/issues/22) 
+Before the optimization, K3S duplicates came from monitoring kube-proxy, kubelet and apiserver components. kube-controller-manager and kube-scheduler monitoring was already removed in the past. See [issue #22](https://github.com/ricsanfre/pi-cluster/issues/22)
 
 **Before removing K3S duplicates**:
 
@@ -124,7 +124,7 @@ Solution implemented:
   ```shell
   ansible-vault encrypt vault.yml
   ```
-   
+
   Provide ansible vault password to encrypt the file.
 
   The file can be decrypted using the following command
@@ -136,7 +136,7 @@ Solution implemented:
 - Reference the vault variables in playbooks, group_vars, etc.
 
   For example in: k3s_cluster group variables.
-  
+
   ```yml
   # k3s shared token
   k3s_token: "{{ vault.k3s.k3s_token }}"
@@ -226,6 +226,3 @@ Upgrade backup service adding Kubernetes CSI Snapshot feature, Prometheus memory
   - Ansible Playbooks improvements
      - Encrypt passwords and keys used in playbooks with Ansible Vault
      - Automatic provsion of Prometheus Rules from yaml files.
-   
-
-

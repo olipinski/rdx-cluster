@@ -15,9 +15,9 @@ DNS kubernetes services will relay on DNS split horizon architecture deployed fo
 
 ## CoreDNS
 
-Pods and kubernetes services are automatically discovered, using Kubernetes API, and assigned a DNS name within cluster-dns domain (default `cluster.local`) so they can be accessed by PODs running in the cluster. 
-  
-CoreDNS also takes the role of Resolver/Forwarder DNS to resolve POD's dns queries for any domain, using default DNS server configured at node level.  
+Pods and kubernetes services are automatically discovered, using Kubernetes API, and assigned a DNS name within cluster-dns domain (default `cluster.local`) so they can be accessed by PODs running in the cluster.
+
+CoreDNS also takes the role of Resolver/Forwarder DNS to resolve POD's dns queries for any domain, using default DNS server configured at node level.
 
 ![core-dns-architecture](/assets/img/core-dns-architecture.png)
 
@@ -123,19 +123,19 @@ Details on how to configure rfc2136 provider, used for integrating Bind9, can be
   ```
 
 - Step 2. Include shared key in `named` configuration
-  
-  Update `named.conf.options` file with the following 
-  
+
+  Update `named.conf.options` file with the following
+
   ```
   // The following keys are used for dynamic DNS updates
-  include "/etc/bind/keys/external-dns.key";  
+  include "/etc/bind/keys/external-dns.key";
   ```
 
 
 - Step 3. Configure zone to accept dynamic updates
 
   Dynamic updates from external-dns is allowed including  `update-policy` and `allow-transfer` clauses in the `zone` statement.
-  
+
   Update `named.conf.local`
 
   ```
@@ -150,7 +150,7 @@ Details on how to configure rfc2136 provider, used for integrating Bind9, can be
     };
   };
   ```
-  
+
 - Step 4. Reload or restart bind9
 
   ```shell
@@ -175,8 +175,8 @@ Details on how to configure rfc2136 provider, used for integrating Bind9, can be
 
   ```shell
   kubectl create namespace external-dns
-  ``` 
- 
+  ```
+
 - Step 4. Store TSIG secret into a Kubernetes secret
 
   Create manifest `external-dns-bind-secret.yaml`
@@ -214,7 +214,7 @@ Details on how to configure rfc2136 provider, used for integrating Bind9, can be
       - name: EXTERNAL_DNS_RFC2136_TSIG_KEYNAME
         value: externaldns-key
       - name: EXTERNAL_DNS_RFC2136_TSIG_SECRET_ALG
-        value: hmac-sha512 
+        value: hmac-sha512
       - name: EXTERNAL_DNS_RFC2136_TSIG_SECRET
         valueFrom:
           secretKeyRef:
@@ -225,12 +225,12 @@ Details on how to configure rfc2136 provider, used for integrating Bind9, can be
     registry: txt
     txtOwnerId: k8s
     txtPrefix: external-dns-
-    sources: 
+    sources:
       - crd
       - service
       - ingress
 
-    domainFilters: 
+    domainFilters:
       - homelab.ricsanfre.com
     serviceMonitor:
       enabled: true

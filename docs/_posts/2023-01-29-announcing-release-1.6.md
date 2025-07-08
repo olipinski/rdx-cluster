@@ -6,7 +6,7 @@ author: ricsanfre
 description: PiCluster News - announcing release v1.6
 ---
 
-Today I am pleased to announce the sixth release of Kubernetes Pi Cluster project (v1.6). 
+Today I am pleased to announce the sixth release of Kubernetes Pi Cluster project (v1.6).
 
 Main features/enhancements of this release are:
 
@@ -27,7 +27,7 @@ Check further details about [ArgoCD installation and configuration](/docs/argocd
 
 ## New Secrets Management solution (Hashicorp Vault)
 
-Related to the previous feature, a Secret Management tool has been integrated in the cluster to maanage the creation of secrets needed by the Cluster Applications.  
+Related to the previous feature, a Secret Management tool has been integrated in the cluster to maanage the creation of secrets needed by the Cluster Applications.
 
 [HashiCorp Vault](https://www.vaultproject.io/) is used now as Secret Management solution for Raspberry PI cluster. All cluster secrets (users, passwords, api tokens, etc) are securely encrypted and stored in Vault.
 
@@ -106,7 +106,7 @@ Apply GitOps methodology using ArgoCD to deploy and manage Kubernetes Applicatio
     - New packaged Kubernetes applications (helm charts and manifest files) to be deployed using ArgoCD
     - Automate cluster bootstraping with ArgoCD using Ansible
     - Ansible playbooks/roles/vars refactoring
-  
+
   - Integrate Secrets Management solution
     - Hashicorp Vault deployment
     - Kuberentes authorization mechanism integration
@@ -117,7 +117,7 @@ Apply GitOps methodology using ArgoCD to deploy and manage Kubernetes Applicatio
     - Grafana as cluster operations single pane of glass
     - Fluentbit/Fluentd configuration to distribute logs to ES and Loki
     - Linkerd distributed tracing integration
-    - Traefik tracing integration and automatic correlation with access logs 
+    - Traefik tracing integration and automatic correlation with access logs
 
   - Automation enhancements
     - Integration of Ansible vault and GPG to automate the encrypt/decrypt process

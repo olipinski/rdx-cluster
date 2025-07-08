@@ -4,4 +4,3 @@ kind: Kustomization
 resources:
 - ns.yaml
 - vault-auth-serviceaccount.yaml
- 

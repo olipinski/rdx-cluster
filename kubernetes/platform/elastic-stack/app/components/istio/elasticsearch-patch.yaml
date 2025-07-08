@@ -2,7 +2,7 @@
 - op: add
   path: /spec/http
   value:
-    tls: 
+    tls:
       selfSignedCertificate:
         disabled: true
   # Enabling service account token

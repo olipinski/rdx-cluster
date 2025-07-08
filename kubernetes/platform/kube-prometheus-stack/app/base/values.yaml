@@ -364,4 +364,3 @@ coreDns:
   # Enable service monitor
   serviceMonitor:
     enabled: true
-

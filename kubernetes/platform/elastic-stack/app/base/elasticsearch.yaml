@@ -32,4 +32,4 @@ spec:
               requests:
                 memory: "1Gi"
               limits:
-                memory: "1Gi"              
+                memory: "1Gi"

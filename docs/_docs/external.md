@@ -5,7 +5,7 @@ description: How to configure a Raspberry Pi to host external services needed in
 last_modified_at: "08-12-2024"
 ---
 
-One of the Raspeberry Pi (4GB), `node1`, is used to run external services like authoritative DNS, PXE Server, Vault or external Kuberentes API Load Balancer (HA Proxy). 
+One of the Raspeberry Pi (4GB), `node1`, is used to run external services like authoritative DNS, PXE Server, Vault or external Kuberentes API Load Balancer (HA Proxy).
 
 In case of deployment using centralized SAN storage architectural option, `node1` is providing SAN services also.
 

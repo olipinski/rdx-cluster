@@ -20,7 +20,7 @@ spec:
           command: ["/bin/sh","/kibana/wait-for-kibana.sh"]
           volumeMounts:
           - name: kibana-config-data
-            mountPath: /kibana/ 
+            mountPath: /kibana/
       containers:
         - name: kibana-config-job
           image: alpine/curl:latest
@@ -37,7 +37,7 @@ spec:
           command: ["/bin/sh","/kibana/create-data-view.sh"]
           volumeMounts:
           - name: kibana-config-data
-            mountPath: /kibana/ 
+            mountPath: /kibana/
       volumes:
       - name: kibana-config-data
         configMap:

@@ -7,7 +7,7 @@ description: PiCluster News - announcing release v1.8
 ---
 
 
-Today I am pleased to announce the eighth release of Kubernetes Pi Cluster project (v1.8). 
+Today I am pleased to announce the eighth release of Kubernetes Pi Cluster project (v1.8).
 
 Main features/enhancements of this release are:
 
@@ -39,7 +39,7 @@ Migrate Ingress Controller, from Traefik to NGINX.
 Main reasons for this migration:
 
 - Use a more mature ingress controller with a broader installation base, so you could find easily how to configure it in almost any use case. As an example, I found some difficulties integrating Traefik with other components like Oauth2-proxy.
-- More portable configuration in case of future migration to another Ingress Controller. Use of standard Kuberentes resources, avoiding the use of Traefik's custom resoures (Middleware, IngressRoute, etc.), that are required whenever you need to implement a more complex configuration. 
+- More portable configuration in case of future migration to another Ingress Controller. Use of standard Kuberentes resources, avoiding the use of Traefik's custom resoures (Middleware, IngressRoute, etc.), that are required whenever you need to implement a more complex configuration.
 
 
 All packaged applications are updated to use NGINX ingress controller instead of Traefik.
@@ -105,4 +105,3 @@ K3S HA deployment and SSO support.
     - Use of Strimzi Operator to streamline the deployment of Kafka cluster
     - Integrate Kafka Schema Registry, based on Confluent Schema Registry
     - Use of Kafka GUI, Kafdrop
-

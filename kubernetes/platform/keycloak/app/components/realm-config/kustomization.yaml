@@ -17,7 +17,7 @@ configMapGenerator:
       # Automatic replacement does not work with configMaps references in values.yaml
       disableNameSuffixHash: true
     files:
-    - picluster-realm.json  
+    - picluster-realm.json
 
 patches:
 - target:

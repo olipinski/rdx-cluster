@@ -13,7 +13,3 @@ proxyHeaders: xforwarded
 auth:
   existingSecret: keycloak-secret
   adminUser: admin
-
-
-
-
