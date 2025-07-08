@@ -7,7 +7,7 @@
   become: true
   changed_when: false
   when: bind9_ddns_key is not defined
-  delegate_to: service0
+  delegate_to: gateway0
 
 - name: Get DDNS key
   ansible.builtin.set_fact:

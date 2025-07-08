@@ -295,6 +295,9 @@ bind9_zones:
       - label: gateway
         type: A
         rdata: 10.20.0.1
+      - label: gateway1
+        type: A
+        rdata: 10.30.10.2
       - label: ns
         type: A
         rdata: 10.20.0.1

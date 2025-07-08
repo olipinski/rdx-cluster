@@ -17,7 +17,7 @@ ansible-runner-setup:
 	make -C ansible-runner
 
 .PHONY: init
-init: os-upgrade nodes-setup external-services configure-os-backup k3s-install k3s-bootstrap
+init: gateway-init os-upgrade gateway-setup nodes-setup external-services configure-os-backup k3s-install k3s-bootstrap
 
 .PHONY: ansible-credentials
 ansible-credentials:
