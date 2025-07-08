@@ -146,9 +146,9 @@ netplan_configuration:
 # firewall role variables
 #########################
 # Clear defaults
-nft_input_default_rules: { }
-nft_forward_default_rules: { }
-nft_output_default_rules: { }
+nft_input_default_rules: {}
+nft_forward_default_rules: {}
+nft_output_default_rules: {}
 # TCP 9100 Prometheus (fluent-bit)
 # TCP 24 SSH (re-routed for GitLab)
 # TCP/UDP 53 DNS
