@@ -19,7 +19,7 @@ spec:
             groupName: acme.${CLUSTER_DOMAIN}
             solverName: ovh
             config:
-              endpoint: "{{ ovh-api-endpoint }}"
+              endpoint: ${OVH_API_ENDPOINT}
               applicationKeyRef:
                 key: OVH_AK
                 name: ovh-secret

@@ -38,6 +38,7 @@ spec:
     name: flux-system
   dependsOn:
     - name: cert-manager-app
+    - name: external-secrets-config
   path: ./kubernetes/platform/cert-manager/webhook-ovh/overlays/prod
   prune: true
   healthChecks:
