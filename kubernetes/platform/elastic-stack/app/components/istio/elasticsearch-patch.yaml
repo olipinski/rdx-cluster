@@ -1,3 +1,4 @@
+---
 # Disable TLS endpoints
 - op: add
   path: /spec/http

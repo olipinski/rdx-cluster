@@ -1,3 +1,4 @@
+---
 # mongodb-community-operator helm values (base)
 
 # Enabling creating of MongoDB resources in any namespace

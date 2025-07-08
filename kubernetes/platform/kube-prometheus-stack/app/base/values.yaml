@@ -1,3 +1,4 @@
+---
 # kube-prometheus-stack helm values (base)
 
 # Produce cleaner resources names

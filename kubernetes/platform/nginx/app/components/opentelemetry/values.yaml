@@ -1,3 +1,4 @@
+---
 controller:
   # Enabling Promethues metrics and Service Monitoring
   metrics:

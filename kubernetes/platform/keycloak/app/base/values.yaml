@@ -1,3 +1,4 @@
+---
 # keycloak helm values (base)
 global:
   storageClass: longhorn

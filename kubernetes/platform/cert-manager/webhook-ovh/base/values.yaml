@@ -1,3 +1,4 @@
+---
 # webhook-ovh helm values (base)
 configVersion: 0.0.1
 groupName: acme.${CLUSTER_DOMAIN}

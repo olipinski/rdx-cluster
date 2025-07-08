@@ -1,3 +1,4 @@
+---
 # keycloak helm values (realm-config)
 
 # Adding additional secrets for realm configuration as environment variables

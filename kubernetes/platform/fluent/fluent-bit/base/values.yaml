@@ -1,3 +1,4 @@
+---
 # fluent-bit helm values (base)
 #fluentbit-container environment variables:
 env:

@@ -1,3 +1,4 @@
+---
 # minio helm values (base)
 # Get root user/password from secret
 existingSecret: minio-root-secret

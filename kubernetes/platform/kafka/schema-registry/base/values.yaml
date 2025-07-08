@@ -1,3 +1,4 @@
+---
 # schema-registry helm values (base)
 
 # Disable Kafka sub-chart installation

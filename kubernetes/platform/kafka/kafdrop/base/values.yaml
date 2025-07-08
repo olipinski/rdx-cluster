@@ -1,3 +1,4 @@
+---
 # kafdrop helm values (base)
 # Kafka broker connection
 kafka:

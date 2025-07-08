@@ -1,3 +1,4 @@
+---
 # cilium helm values (base)
 
 # Increase the k8s api client rate limit to avoid being limited due to increased API usage
