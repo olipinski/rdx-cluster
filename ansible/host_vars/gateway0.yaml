@@ -146,9 +146,9 @@ netplan_configuration:
 # firewall role variables
 #########################
 # Clear defaults
-nft_input_default_rules: {}
-nft_forward_default_rules: {}
-nft_output_default_rules: {}
+nft_input_default_rules: { }
+nft_forward_default_rules: { }
+nft_output_default_rules: { }
 # TCP 9100 Prometheus (fluent-bit)
 # TCP 24 SSH (re-routed for GitLab)
 # TCP/UDP 53 DNS
@@ -229,9 +229,9 @@ nft_forward_host_rules:
   005_global:
     - jump global
   200_lan_to_lan:
-    - iifname {$lan_interface, $wg_interface} ip saddr $lan_network oifname {$lan_interface, $wg_interface} ct state new accept
+    - iifname { $lan_interface, $wg_interface } ip saddr $lan_network oifname {$lan_interface, $wg_interface} ct state new accept
   300_lan_to_wan:
-    - iifname {$lan_interface, $wg_interface} ip saddr $lan_network oifname $wan_interface ct state new accept
+    - iifname { $lan_interface, $wg_interface } ip saddr $lan_network oifname $wan_interface ct state new accept
   400_wan_to_lan_tcp:
     - iifname $wan_interface ip daddr $lan_network oifname {$lan_interface, $wg_interface} tcp dport @forward_tcp_accept ct state new accept
   410_wan_to_lan_udp:
@@ -240,15 +240,15 @@ nft_forward_host_rules:
 # NAT pre-routing, including DNAT
 nft_nat_host_prerouting_rules:
   005_dnat_http:
-    - iifname $wan_interface tcp dport {80, 443} dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport { 80, 443 } dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
   010_dnat_ssh:
     - iifname $wan_interface tcp dport 22 dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
   015_dnat_email:
-    - iifname $wan_interface tcp dport {143, 993, 25, 465} dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport { 143, 993, 25, 465 } dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
   025_dnat_coturn:
-    - iifname $wan_interface tcp dport {3478, 5349} dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport { 3478, 5349 } dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
   030_dnat_mqtt:
-    - iifname $wan_interface tcp dport {1883, 8883} dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport { 1883, 8883 } dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
   500_dnat_minio:
     - iifname $wan_interface tcp dport 9091 dnat "{{ hostvars[groups['s3'][0]].ansible_host }}"
 
