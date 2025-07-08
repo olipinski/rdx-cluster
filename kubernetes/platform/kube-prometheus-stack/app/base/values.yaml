@@ -295,8 +295,8 @@ kubeControllerManager:
   # K3d tip: Get the K3d control plane node IPs e.g. as follows:
   # kubectl get nodes -l node-role.kubernetes.io/control-plane=true -o jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}' | tr ' ' ',' | sed 's/^/[&/;s/$/]/'
   endpoints: &cp
-    - red000.maas.${CLUSTER_DOMAIN}
-    - rock000.maas.${CLUSTER_DOMAIN}
+    - 10.20.0.4 # red000.maas.${CLUSTER_DOMAIN}
+    - 10.20.0.6 # rock000.maas.${CLUSTER_DOMAIN}
   service:
     # Enable creation of service
     enable: true
