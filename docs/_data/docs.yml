@@ -38,18 +38,22 @@
   docs:
   - longhorn
   - minio
-- title: Monitoring
+- title: Observability
   docs:
   - metrics-server
   - observability
   - logging
   - loki
   - elasticsearch
-  - logging-forwarder-aggregator
+  - fluentbit
+  - fluentd
   - prometheus
   - tracing
+  - grafana
 - title: Backup
   docs:
+  - s3-backup
+  - restic
   - backup
 - title: GitOps
   docs:
