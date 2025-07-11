@@ -1,0 +1,18 @@
+{
+    "enabled": true,
+    "realm": "rdxcluster",
+    "groups": [
+        {
+        "name": "admin",
+        "path": "/admin",
+        "subGroups": [],
+        "attributes": {},
+        "realmRoles": [],
+        "clientRoles": {
+            "grafana": [
+            "admin"
+            ]
+        }
+        }
+    ]
+}

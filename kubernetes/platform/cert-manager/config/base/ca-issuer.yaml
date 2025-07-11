@@ -6,7 +6,7 @@ metadata:
   namespace: cert-manager
 spec:
   isCA: true
-  commonName: picluster-ca
+  commonName: rdxcluster-ca
   secretName: root-secret
   privateKey:
     algorithm: ECDSA

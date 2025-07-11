@@ -44,11 +44,7 @@ spec:
     - name: elastic-stack-app
     - name: loki-app
     - name: fluent-common-app
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: fluentd
-      namespace: fluent
+  wait: true
 
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -67,8 +63,4 @@ spec:
   dependsOn:
     - name: fluentd-app
     - name: external-secrets-config
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: fluent-bit
-      namespace: fluent
+  wait: true

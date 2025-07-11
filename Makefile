@@ -79,6 +79,10 @@ k3s-reset:
 external-services-reset:
 	${RUNNER} ansible-playbook reset_external_services.yml
 
+.PHONY: deploy-monitoring-agent
+deploy-monitoring-agent:
+	${RUNNER} ansible-playbook deploy_monitoring_agent.yml
+
 .PHONY: shutdown
 shutdown:
 	${RUNNER} ansible-playbook shutdown.yml
