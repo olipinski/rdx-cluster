@@ -39,11 +39,11 @@ all:
       children:
         k3s_master:
           hosts:
-            rock000:
-            red000:
+            silver000:
         k3s_worker:
           hosts:
-            silver000:
+            rock000:
+            red000:
             rock001:
     vault:
       hosts:
