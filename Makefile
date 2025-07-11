@@ -80,7 +80,7 @@ external-services-reset:
 	${RUNNER} ansible-playbook reset_external_services.yml
 
 .PHONY: shutdown
-shutdown-k3s:
+shutdown:
 	${RUNNER} ansible-playbook shutdown.yml
 
 .PHONY: kubernetes-vault-config
