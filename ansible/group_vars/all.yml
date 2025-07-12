@@ -52,3 +52,10 @@ sshd_config:
   X11Forwarding: no
   Protocol: 2
   DebianBanner: no
+
+##########################
+## smartd role variables
+##########################
+smartmontools_notification_format: telegram 
+smartmontools_telegram_chat_id: "{{ vault.notifications.telegram.chat-id }}"
+smartmontools_telegram_token: "{{ vault.notifications.telegram.bot-token }}"

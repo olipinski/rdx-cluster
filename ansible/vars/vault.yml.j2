@@ -1,10 +1,16 @@
 ---
 # Encrypted variables - Ansible Vault
 vault:
+  # General variables
   general:
     domains:
       dns: {{ sec_dns_domain }}
       org: {{ sec_org }}
+  # Notifications variables
+  notifications:
+    telegram:
+      chat-id: {{ telegram_chat_id }}
+      bot-token: {{ telegram_api_key }}
   # WiFi secret
   wifi:
     auth:
