@@ -57,5 +57,5 @@ sshd_config:
 ## smartd role variables
 ##########################
 smartmontools_notification_format: telegram 
-smartmontools_telegram_chat_id: "{{ vault.notifications.telegram.chat-id }}"
-smartmontools_telegram_token: "{{ vault.notifications.telegram.bot-token }}"
+smartmontools_telegram_chat_id: "{{ vault.notifications.telegram.chat_id }}"
+smartmontools_telegram_token: "{{ vault.notifications.telegram.bot_token }}"
