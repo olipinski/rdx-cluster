@@ -2,7 +2,7 @@
 title: Minio S3 Object Storage Service
 permalink: /docs/minio/
 description: How to deploy a Minio S3 object storage service in our Raspberry Pi Kubernetes Cluster.
-last_modified_at: "28-06-2025"
+last_modified_at: "13-07-2025"
 ---
 
 Minio will be deployed as a Kuberentes service providing Object Store S3-compatile backend for other Kubernetes Services (Loki, Tempo, Mimir, etc. )
@@ -251,7 +251,7 @@ For details see [Minio's documentation: "Collect MinIO Metrics Using Prometheus"
 
 By default, MinIO requires authentication to scrape the metrics endpoints, but Vanilla Minio Helm Chart, set `MINIO_PROMETHEUS_AUTH_TYPE` environment variable to `public`, and authentication is not needed.
 
-`ServiceMonitoring`, Prometheus Operator's CRD,  resource can be automatically created so Kube-Prometheus-Stack is able to automatically start collecting metrics from cert-manager
+`ServiceMonitoring`, Prometheus Operator's CRD,  resource can be automatically created so Kube-Prometheus-Stack is able to automatically start collecting metrics from Minio.
 
 ```yaml
 # Service Monitor
