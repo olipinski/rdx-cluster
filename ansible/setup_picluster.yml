@@ -21,6 +21,11 @@
       ansible.builtin.include_role:
         name: basic_setup
       tags: [os]
+    # Monitor the hard drives
+    - name: Monitor the hard drives
+      ansible.builtin.include_role:
+        name: olipinski.smartd
+      tags: [os]
     # Make sure wpa_supplicant is installed
     - name: Ensure wpa_supplicant is installed
       ansible.builtin.apt:
@@ -78,7 +83,9 @@
     # OS basic setup tasks
     - role: basic_setup
       tags: [os]
-
+    # Monitor the hard drives
+    - role: olipinski.smartd
+      tags: [os]
     # SSH configuration and hardening
     - role: willshersystems.sshd
       tags: [security]
@@ -96,11 +103,12 @@
     # OS basic setup tasks
     - role: basic_setup
       tags: [os]
-
+    # Monitor the hard drives
+    - role: olipinski.smartd
+      tags: [os]
     # SSH configuration and hardening
     - role: willshersystems.sshd
       tags: [security]
-
     # NTP Client configuration
     - role: ricsanfre.ntp
       tags: [ntp]

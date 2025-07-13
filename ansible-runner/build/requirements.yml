@@ -12,7 +12,7 @@ roles:
   - name: ricsanfre.bind9
     src: https://github.com/olipinski/ansible-role-bind9
     version: main
-  - name: ricsanfre.storage
+  - name: olipinski.smartd
     version: v1.0.0
   - name: ricsanfre.iscsi_target
     version: v1.0.0
