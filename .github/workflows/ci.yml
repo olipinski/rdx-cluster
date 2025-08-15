@@ -33,7 +33,7 @@ jobs:
         working-directory: ./kubernetes
 
       - name: Scan Ansible YAMLs
-        uses: ansible/ansible-lint@v25.7.0
+        uses: ansible/ansible-lint@v25.8.1
         with:
           working-directory: ./ansible
 
