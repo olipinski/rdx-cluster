@@ -42,4 +42,4 @@ collections:
   - name: community.crypto
     version: 3.0.5
   - name: kpfleming.systemd_networkd
-    version: 25.7.1
+    version: 25.9.0
