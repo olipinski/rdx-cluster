@@ -1,7 +1,7 @@
 ---
 roles:
   - name: willshersystems.sshd
-    version: v0.27.1
+    version: v0.30.0
   - name: ricsanfre.ntp
     version: v1.0.0
   - name: ricsanfre.firewall
