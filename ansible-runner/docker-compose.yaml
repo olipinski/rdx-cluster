@@ -4,7 +4,10 @@ services:
     image: ansible-runner
     build:
       context: .
-    command: tail -f /dev/null
+    # Clean up the old gpg-agents
+    command: >
+      /bin/sh -c "./runner/.gnupg/S.gpg-agent* &&
+             tail -f /dev/null"
     container_name: ansible-runner
     restart: unless-stopped
     volumes:

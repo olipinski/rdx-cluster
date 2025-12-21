@@ -59,9 +59,7 @@ netplan_configuration:
       wlExternal:
         access-points:
           ChangemeSSID:  # Change this to your SSID!
-            auth:
-              key-management: sae  # Use WPA3
-              password: "{{ vault.wifi.auth.psk }}"
+            password: "{{ vault.wifi.auth.psk }}"
         # match:
           # macaddress: ae:fd:ce:27:21:90
         # set-name: wlExternal
@@ -95,7 +93,8 @@ netplan_configuration:
           - keys:
               public: 'GZ/vB0iBjq5MgYadSYeU+pBw14p4iTOqMlPyZqTVhy8='
             allowed-ips:
-              - '10.30.10.2/32' # GW 1
+              - '10.30.2.1/32' # GW 1
+              - '0.0.0.0/0' # GW 1 Routing
             keepalive: 120
           - keys:
               public: 'JoM3rQKTHinMrcblya4v0EQT09FODzb16adECPuOXhU='
@@ -118,9 +117,30 @@ netplan_configuration:
               - '10.30.1.12/32'  # MM 0
             keepalive: 120
           - keys:
+              public: '8aK3s0GuRn0q+16yVbZDJW5utv6vJi0uV/oIUG9FRkY='
+            allowed-ips:
+              - '10.30.1.13/32'  # BR 0 PH
+            keepalive: 120
+          - keys:
+              public: 'uxyFErXpeb7wuj4AE4BzMF9Zm49I7yq2XlkrI45K9jw='
+            allowed-ips:
+              - '10.30.1.14/32'  # BR 1 PD
+            keepalive: 120
+          - keys:
+              public: 'AgjpTZhztBayjmt72Gq2gTjRjMoQloLw7JrEQ/n+7i8='
+            allowed-ips:
+              - '10.30.1.15/32'  # BR 2 KK
+            keepalive: 120
+          - keys:
               public: 'kmsZCBqLS3ONX3IuF9w/tIcoVh17/1Me3rzumvy4oVs='
             allowed-ips:
               - '10.30.2.11/32'  # DD 0
+            keepalive: 120
+          - keys:
+              public: 'qY+TNzLHeUxO5K5tjtLn0rAoEzuid32BAkcQQju6+Vc='
+            allowed-ips:
+              - '10.30.3.10/32'  # HAS 0
+              - '0.0.0.0/0' # GW2 Routing
             keepalive: 120
         nameservers:
           addresses:
@@ -310,6 +330,12 @@ bind9_zones:
       - label: s3
         type: A
         rdata: 10.20.0.8
+      - label: ham
+        type: A
+        rdata: 10.20.0.8
+      - label: has
+        type: A
+        rdata: 10.30.3.10
       - label: ns.maas
         type: A
         rdata: 10.20.0.8

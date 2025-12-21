@@ -4,5 +4,5 @@ namespace: cert-manager
 
 resources:
   - ../../base
-  - ovh-externalsecret.yaml
-  - ovh-issuer.yaml
+  - cloudflare-externalsecret.yaml
+  - cloudflare-issuer.yaml

@@ -19,8 +19,8 @@ env:
   - name: EXTERNAL_DNS_RFC2136_TSIG_SECRET
     valueFrom:
       secretKeyRef:
-        name: external-dns-bind9-secret
-        key: ddns-key
+        name: external-dns-secret
+        key: bind9-ddns-key
 
 policy: sync
 registry: txt

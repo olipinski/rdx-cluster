@@ -39,6 +39,10 @@ gateway-init:
 gateway-setup:
 	${RUNNER} ansible-playbook setup_picluster.yml --tags "gateway"
 
+.PHONY: gateways-setup
+gateways-setup:
+	${RUNNER} ansible-playbook setup_picluster.yml --tags "gateways"
+
 .PHONY: external-setup
 external-setup:
 	${RUNNER} ansible-playbook setup_picluster.yml --tags "external"
