@@ -15,6 +15,10 @@ vault:
   wifi:
     auth:
       psk: {{ wifi_password }}
+  # Dynamic DNS
+  ddns:
+    cloudflare:
+      token: {{ cloudflare_token_ddns }}
   # WireGuard secret
   wireguard:
     auth:
@@ -98,10 +102,8 @@ vault:
       client-secret: {{ grafana_client_secret }}
   # Certmanager
   certmanager:
-    ovh:
-      ak: {{ ovh_ak }}
-      as: {{ ovh_as }}
-      ck: {{ ovh_ck }}
+    cloudflare:
+      token: {{ cloudflare_token_certmanager }}
   # PostgreSQL
   postgresql:
     admin:

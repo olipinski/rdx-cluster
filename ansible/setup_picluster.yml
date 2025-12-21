@@ -32,14 +32,14 @@
         name: wpasupplicant
         update_cache: true
         state: present
-    # wlan interface configuration
-    - name: Configure wlan link name using systemd-networkd
+    # WLAN interface configuration
+    - name: Configure WLAN link name using systemd-networkd
       ansible.builtin.include_role:
         name: kpfleming.systemd_networkd.link
       tags: [networking]
       register: networkd_result
-    # Reboot for wlan to take effect
-    - name: Reboot to apply wlan naming
+    # Reboot for WLAN to take effect
+    - name: Reboot to apply WLAN naming
       ansible.builtin.reboot:
         msg: "Rebooting to install systemd-networkd links."
       tags: [networking]
@@ -69,6 +69,31 @@
       ansible.builtin.include_role:
         name: ricsanfre.ntp
       tags: [ntp]
+    # Setup main DDNS
+    - name: Setup DDNS on main gateway
+      ansible.builtin.include_role:
+        name: ddclient
+      tags: [dns]
+    
+- name: Configure secondary gateways
+  hosts: gateways:!gateway0
+  gather_facts: true
+  tags: [gateways]
+  become: true
+  pre_tasks:
+    - name: Include vault variables
+      include_vars: "vars/vault.yml"
+      tags: ["always"]
+  roles:
+    # OS basic setup tasks
+    - role: basic_setup
+      tags: [os]
+    # Monitor the hard drives
+    - role: olipinski.smartd
+      tags: [os]
+    # SSH configuration and hardening
+    - role: willshersystems.sshd
+      tags: [security]
 
 - name: Configure External Node
   hosts: service0
