@@ -3,6 +3,9 @@ kind: Kustomization
 namespace: monitoring
 
 resources:
+- external-bind-scrapeconfig.yaml
 - external-nodes-scrapeconfig.yaml
+- external-haproxy-scrapeconfig.yaml
+#- external-vault-monitoring.yaml
 - minio-bearer-externalsecret.yaml
 - minio-ext-scrapeconfig.yaml

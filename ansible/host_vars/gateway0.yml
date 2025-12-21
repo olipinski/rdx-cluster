@@ -77,7 +77,7 @@ netplan_configuration:
         regulatory-domain: PL
         routes:
           - to: default
-            via: 192.168.10.1
+            via: 192.168.0.1
             on-link: true
         nameservers:
           addresses:
@@ -182,7 +182,8 @@ in_udp_port: '{ 161, 53, 123, 51820 }'
 # TCP 25/465 SMTP/S
 # TCP 143/993 IMAP/S
 # TCP 1883/8883 MQTT/S
-forward_tcp_port: '{ 25, 465, 143, 993, 80, 443, 22, 3478, 5349, 1883, 8883, 9091 }'
+# TCP 8123 HAM
+forward_tcp_port: '{ 25, 465, 143, 993, 80, 443, 22, 3478, 5349, 1883, 8123, 8883, 9091 }'
 forward_udp_port: '{ 123, 3478, 5349 }'
 # Enabling forwarding and NAT
 firewall_forward_enabled: true
@@ -202,6 +203,9 @@ nft_define_host:
   lan_network:
     name: lan_network
     value: '10.0.0.0/8'
+  lb_host:
+    name: lb_host
+    value: '10.20.0.8'
   forward_tcp_accepted:
     name: forward_tcp_accept
     value: '{{ forward_tcp_port }}'
@@ -261,17 +265,19 @@ nft_forward_host_rules:
 # NAT pre-routing, including DNAT
 nft_nat_host_prerouting_rules:
   005_dnat_http:
-    - iifname $wan_interface tcp dport {80, 443} dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport {80, 443} dnat $lb_host
   010_dnat_ssh:
-    - iifname $wan_interface tcp dport 22 dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport 22 dnat $lb_host
   015_dnat_email:
-    - iifname $wan_interface tcp dport {143, 993, 25, 465} dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport {143, 993, 25, 465} dnat $lb_host
   025_dnat_coturn:
-    - iifname $wan_interface tcp dport {3478, 5349} dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport {3478, 5349} dnat $lb_host
   030_dnat_mqtt:
-    - iifname $wan_interface tcp dport {1883, 8883} dnat "{{ hostvars[groups['haproxy'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport {1883, 8883} dnat $lb_host
+  040_dnat_ham:
+    - iifname $wan_interface tcp dport 8123 dnat $lb_host
   500_dnat_minio:
-    - iifname $wan_interface tcp dport 9091 dnat "{{ hostvars[groups['s3'][0]].ansible_host }}"
+    - iifname $wan_interface tcp dport 9091 dnat $lb_host
 
 # NAT post-routing
 nft_nat_host_postrouting_rules:
@@ -293,6 +299,8 @@ bind9_forward_servers:
   - 9.9.9.11
   - 149.112.112.11
 bind9_generate_ddns_key: true
+bind9_named_statistics_channel_enable: true
+bind9_named_statistics_port: 8053
 bind9_zones:
   - name: "{{ dns_domain }}"
     type: primary
@@ -317,7 +325,7 @@ bind9_zones:
         rdata: 10.20.0.1
       - label: gateway1
         type: A
-        rdata: 10.30.10.2
+        rdata: 10.30.2.1
       - label: ns
         type: A
         rdata: 10.20.0.1
