@@ -59,7 +59,7 @@
       become: false
       ansible.builtin.shell: |
         set -o pipefail
-        helmfile --quiet --file ../kubernetes/clusters/bootstrap/helmfile.yaml apply --skip-diff-on-install --suppress-diff
+        helmfile --quiet --file ../kubernetes/clusters/bootstrap/helmfile.yaml apply --skip-diff-on-install --suppress-diff --concurrency 1
       args:
         executable: /bin/bash
       register: output
