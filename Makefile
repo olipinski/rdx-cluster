@@ -90,6 +90,10 @@ deploy-monitoring-agent:
 .PHONY: shutdown
 shutdown:
 	${RUNNER} ansible-playbook shutdown.yml
+	
+.PHONY: reboot
+reboot:
+	${RUNNER} ansible-playbook reboot.yml
 
 .PHONY: kubernetes-vault-config
 kubernetes-vault-config:

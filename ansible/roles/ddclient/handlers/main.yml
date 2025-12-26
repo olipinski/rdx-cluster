@@ -1,7 +1,4 @@
 ---
-- name: reboot
-  reboot:
-
 - name: restart ddclient
   service:
     name: ddclient

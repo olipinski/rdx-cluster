@@ -3,3 +3,5 @@
 /ansible/vars/vault.yml
 /docs/_site
 /docs/Gemfile.lock
+
+.idea/
