@@ -38,7 +38,7 @@ collections:
   - name: ansible.posix
     version: 2.1.0
   - name: community.crypto
-    version: 3.0.5
+    version: 3.1.1
   - name: kpfleming.systemd_networkd
     version: 25.9.0
   - name: prometheus.prometheus
