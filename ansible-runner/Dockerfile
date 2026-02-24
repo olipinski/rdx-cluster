@@ -41,8 +41,9 @@ RUN for dir in \
 
 USER $USER
 
-# Install helmfile helm plugins
-RUN helmfile init --force
+# Install helmfile required plugins
+RUN helm plugin install https://github.com/aslafy-z/helm-git
+RUN helm plugin install https://github.com/databus23/helm-diff
 
 RUN echo "export GPG_TTY=\$(tty)" >> /home/runner/.bashrc
 
