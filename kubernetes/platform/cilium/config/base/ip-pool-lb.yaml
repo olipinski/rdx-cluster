@@ -5,5 +5,7 @@ metadata:
   name: "first-pool"
   namespace: kube-system
 spec:
+  # Do not allow the .0 and .255 IPs to be allocated
+  allowFirstLastIPs: No
   blocks:
-    - cidr: 10.0.0.64/26
+    - cidr: 10.128.0.0/24
