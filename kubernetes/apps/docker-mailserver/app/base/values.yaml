@@ -1,0 +1,133 @@
+# Docker mailserver helm values (base)
+
+certificate: docker-mailserver-tls
+
+deployment:
+  env:
+    OVERRIDE_HOSTNAME: mail.${CLUSTER_DOMAIN}
+    ACCOUNT_PROVISIONER: FILE # can be converted to LDAP
+    TZ: Europe/Warsaw
+    SPOOF_PROTECTION: 1
+    ENABLE_POP3: 0
+    ENABLE_IMAP: 1
+    ENABLE_CLAMAV: 1
+    RSPAMD_LEARN: 1
+    RSPAMD_NEURAL: 1
+    VIRUSMAILS_DELETE_DELAY: 30
+
+  resources:
+    requests:
+      cpu: "1"
+      memory: "1536Mi"
+      ephemeral-storage: "100Mi"
+    limits:
+      cpu: "2"
+      memory: "2048Mi"
+      ephemeral-storage: "500Mi"
+
+service:
+  type: "ClusterIP"
+  #externalTrafficPolicy: "Local"
+
+monitoring:
+  service:
+    ## monitoring should be configured to only scrape services that have a value of "true"
+    scrape: "true"
+    ## monitoring should be configured to only probe services that have a value of "true"
+    probe: "false"
+    ## Path on which metrics are exposed
+    path: "/metrics"
+    ## Port on which HTTP server is served
+    port: "9102"
+  pod:
+    ## monitoring should be configured to only scrape pods that have a value of `true`
+    scrape: "true"
+    ## monitoring should be configured to only probe services that have a value of "true"
+    probe: "false"
+    ## Path on which metrics are exposed
+    path: "/metrics"
+    ## Port on which HTTP server is served
+    port: "9102"
+
+dovecot:
+  fullTextSearch:
+    enabled: true
+    verbose: 0 # 0 (silent), 1 (verbose) or 2 (debug)
+    resources:
+      memory: 2GB
+    cron:
+      enabled: true       # Optimise index every day
+      schedule: 0 4 * * * # Every day at 4am
+      
+rspamd:
+  ingress:
+    enabled: false
+    ingressClassName: nginx
+    annotations: {}
+    host: rspamd.${CLUSTER_DOMAIN}
+    path: /
+    tls:
+      enabled: false
+      secret:
+
+proxyProtocol:
+  enabled: true
+  trustedNetworks: "10.128.0.0/16"
+
+# Persistence
+persistence:
+  enabled: true
+  storageClass: "longhorn"
+  accessMode: ReadWriteOnce
+  size: 10Gi
+  
+configMaps:
+  postfix-accounts.cf:
+    create: true
+    path: postfix-accounts.cf
+    data: |
+      ${dms-admin-user}@${CLUSTER_DOMAIN}|{SHA512-CRYPT}${dms-admin-hashed-passowrd}
+      
+  dovecot-quotas.cf:
+    create: true
+    path: dovecot-quotas.cf
+    data: |
+      ${dms-admin-user}@${CLUSTER_DOMAIN}:10G
+  
+  # documentation: https://rspamd.com/doc/modules/dkim_signing.html
+  dkim_signing.conf:
+    create: true
+    path: rspamd/override.d/dkim_signing.conf
+    data: |
+      enabled = true;
+
+      sign_authenticated = true;
+      sign_local = true;
+      
+      use_domain = "header";
+      use_redis = false; # don't change unless Redis also provides the DKIM keys
+      use_esld = true;
+      check_pubkey = false;
+      
+      selector = "mail";
+      # The path location is searched for a DKIM key with these variables:
+      # - `$domain` is sourced from the MIME mail message `From` header
+      # - `$selector` is configured for `mail` (as a default fallback)
+      path = "/tmp/docker-mailserver/dkim/keys/$domain/$selector.private";
+      
+      # domain specific configurations can be provided below:
+      domain {
+          ${CLUSTER_DOMAIN} {
+              path = "/tmp/docker-mailserver/rspamd/dkim/mail.private";
+              selector = "mail";
+          }
+      }
+      
+## The secrets key works the same way as the configs key. Use secrets to store sensitive information,
+## such as DKIM signing keys.
+secrets:
+  rspamd-dkim-private-key:
+    name: dms-dkim-keys-private
+    create: false
+    path: rspamd/dkim/mail.private
+      
