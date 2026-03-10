@@ -10,7 +10,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./kubernetes/platform/docker-mailserver/app/overlays/prod
+  path: ./kubernetes/apps/docker-mailserver/app/overlays/prod
   prune: true
   dependsOn:
     - name: cert-manager-app
