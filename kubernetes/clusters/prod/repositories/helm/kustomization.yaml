@@ -18,7 +18,6 @@ resources:
   - longhorn-helmrepo.yaml
   - metrics-server-helmrepo.yaml
   - minio-helmrepo.yaml
-  - mongodb-helmrepo.yaml
   - oauth2-proxy-helmrepo.yaml
   - prometheus-community-helmrepo.yaml
   - ricsanfre-helmrepo.yaml
