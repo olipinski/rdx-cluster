@@ -14,7 +14,7 @@ spec:
   prune: true
   dependsOn:
     - name: cert-manager-app
-    - name: cillium-app
+    - name: cilium-app
     - name: cloudnative-pg-app
     - name: external-dns-app
     - name: external-secrets-app
