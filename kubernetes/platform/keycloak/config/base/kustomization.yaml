@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: keycloak
 
 resources:
-  - kc-config-cli-env-externalsecret.yaml
+  - keycloak-config-cli-env-externalsecret.yaml
   - job.yaml
 
 configMapGenerator:
