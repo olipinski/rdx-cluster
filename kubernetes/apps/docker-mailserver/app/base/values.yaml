@@ -74,12 +74,51 @@ proxyProtocol:
   enabled: true
   trustedNetworks: "10.128.0.0/16"
 
-# Persistence
-persistence:
-  enabled: true
-  storageClass: "longhorn"
-  accessMode: ReadWriteOnce
-  size: 10Gi
+# Note this is a dictionary and not a list so individual keys can be overridden by --set or --value helm parameters
+persistent_volume_claims:
+  # Stores generated configuration files
+  mail-config:
+    enabled: true
+    existingClaim: ""
+    size: 5Mi
+    annotations: {}
+    accessModes:
+      - ReadWriteOnce
+    storageClass: "longhorn"
+    selector: {}
+
+  # Stores emails
+  mail-data:
+    enabled: true
+    existingClaim: ""
+    size: 20Gi
+    annotations: {}
+    accessModes:
+      - ReadWriteOnce
+    storageClass: "longhorn"
+    selector: {}
+
+  # Stores state for Postfix, Dovecot, Fail2Ban, Amavis, PostGrey, ClamAV, SpamAssassin, Rspamd & Redis
+  mail-state:
+    enabled: true
+    existingClaim: ""
+    size: 2Gi
+    annotations: {}
+    accessModes:
+      - ReadWriteOnce
+    storageClass: "longhorn"
+    selector: {}
+
+  # Store mail logs
+  mail-log:
+    enabled: true
+    existingClaim: ""
+    size: 2Gi
+    annotations: {}
+    accessModes:
+      - ReadWriteOnce
+    storageClass: "longhorn"
+    selector: {}
   
 configMaps:
   postfix-accounts.cf:
