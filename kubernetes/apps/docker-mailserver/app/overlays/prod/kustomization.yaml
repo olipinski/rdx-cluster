@@ -5,9 +5,6 @@ namespace: docker-mailserver
 resources:
   - ../../base
 
-components:
-  - ../../components/ingress
-
 configMapGenerator:
   - name: docker-mailserver-helm-values
     behavior: merge
