@@ -10,7 +10,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./kubernetes/apps/docker-mailserver/app/config/overlays/prod
+  path: ./kubernetes/apps/docker-mailserver/config/overlays/prod
   prune: true
   dependsOn:
     - name: external-secrets-app
