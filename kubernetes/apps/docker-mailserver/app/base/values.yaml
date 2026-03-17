@@ -134,7 +134,7 @@ configMaps:
       ${DMS_ADMIN_USER}@${CLUSTER_DOMAIN}:10G
   
   # documentation: https://rspamd.com/doc/modules/dkim_signing.html
-  dkim_signing.conf:
+  dkim-signing.conf:
     create: true
     path: rspamd/override.d/dkim_signing.conf
     data: |
