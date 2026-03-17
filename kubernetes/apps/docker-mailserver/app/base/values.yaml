@@ -125,7 +125,7 @@ configMaps:
     create: true
     path: postfix-accounts.cf
     data: |
-      ${DMS_ADMIN_USER}@${CLUSTER_DOMAIN}|{SHA512-CRYPT}${DMS_ADMIN_HASHED_PASSOWRD}
+      ${DMS_ADMIN_USER}@${CLUSTER_DOMAIN}|{SHA512-CRYPT}${DMS_ADMIN_HASHED_PASSWORD}
       
   dovecot-quotas.cf:
     create: true
