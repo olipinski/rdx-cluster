@@ -125,13 +125,13 @@ configMaps:
     create: true
     path: postfix-accounts.cf
     data: |
-      ${dms-admin-user}@${CLUSTER_DOMAIN}|{SHA512-CRYPT}${dms-admin-hashed-passowrd}
+      ${DMS_ADMIN_USER}@${CLUSTER_DOMAIN}|{SHA512-CRYPT}${DMS_ADMIN_HASHED_PASSOWRD}
       
   dovecot-quotas.cf:
     create: true
     path: dovecot-quotas.cf
     data: |
-      ${dms-admin-user}@${CLUSTER_DOMAIN}:10G
+      ${DMS_ADMIN_USER}@${CLUSTER_DOMAIN}:10G
   
   # documentation: https://rspamd.com/doc/modules/dkim_signing.html
   dkim_signing.conf:
@@ -166,7 +166,7 @@ configMaps:
 ## such as DKIM signing keys.
 secrets:
   rspamd-dkim-private-key:
-    name: dms-dkim-keys-private
+    name: DMS_DKIM_KEYS_PRIVATE
     create: false
     path: rspamd/dkim/mail.private
       
