@@ -6,7 +6,6 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  targetNamespace: docker-mailserver
   sourceRef:
     kind: GitRepository
     name: flux-system
