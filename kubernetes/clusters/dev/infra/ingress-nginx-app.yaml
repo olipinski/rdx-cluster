@@ -11,7 +11,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./kubernetes/platform/nginx/app/overlays/prod
+  path: ./kubernetes/platform/ingress-nginx/app/overlays/dev
   prune: true
   wait: true
   postBuild:
