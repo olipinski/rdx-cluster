@@ -58,4 +58,4 @@ spec:
       - kind: ConfigMap
         name: domain-settings
       - kind: Secret
-        name: docker-mailserver-secret
+        name: docker-mailserver-config-secret

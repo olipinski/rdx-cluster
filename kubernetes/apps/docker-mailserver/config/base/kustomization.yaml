@@ -3,4 +3,4 @@ kind: Kustomization
 
 resources:
   - ns.yaml
-  - docker-mailserver-externalsecret.yaml
+  - docker-mailserver-config-externalsecret.yaml

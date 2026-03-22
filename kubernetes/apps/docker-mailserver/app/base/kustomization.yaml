@@ -3,6 +3,8 @@ kind: Kustomization
 
 resources:
   - helm.yaml
+  - docker-mailserver-app-externalsecret.yaml
+  - docker-mailserver-certificate.yaml
 
 configMapGenerator:
   - name: docker-mailserver-helm-values

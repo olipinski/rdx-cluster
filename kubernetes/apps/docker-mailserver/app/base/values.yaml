@@ -28,6 +28,10 @@ deployment:
 service:
   type: "ClusterIP"
   #externalTrafficPolicy: "Local"
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: mail.${CLUSTER_DOMAIN}
+    external-dns.alpha.kubernetes.io/ttl: "120"
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
 
 monitoring:
   service:
