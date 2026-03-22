@@ -161,7 +161,7 @@ configMaps:
       # domain specific configurations can be provided below:
       domain {
           ${CLUSTER_DOMAIN} {
-              path = "/tmp/docker-mailserver/rspamd/dkim/secrets/DMS_DKIM_KEYS_PRIVATE";
+              path = "/tmp/docker-mailserver/rspamd/dkim/mail.private";
               selector = "mail";
           }
       }
@@ -171,6 +171,7 @@ configMaps:
 secrets:
   docker-mailserver-app-secret:
     name: docker-mailserver-app-secret
+    key: DMS_DKIM_KEYS_PRIVATE
     create: false
-    path: rspamd/dkim/secrets
+    path: rspamd/dkim/mail.private
       
