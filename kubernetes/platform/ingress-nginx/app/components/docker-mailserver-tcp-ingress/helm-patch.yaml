@@ -2,5 +2,5 @@
   path: /spec/valuesFrom/-
   value:
     kind: ConfigMap
-    name: docker-mailserver-tcp-ingress-values
+    name: ingress-nginx-helm-values
     valuesKey: docker-mailserver-tcp-ingress-values.yaml
