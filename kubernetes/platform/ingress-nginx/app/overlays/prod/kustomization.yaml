@@ -8,7 +8,7 @@ resources:
 components:
   - ../../components/opentelemetry
   - ../../components/loadbalancer
-  - ../../components/dms-ingress
+  - ../../components/docker-mailserver-tcp-ingress
 
 configMapGenerator:
   - name: ingress-nginx-helm-values
