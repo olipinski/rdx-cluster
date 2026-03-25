@@ -31,7 +31,7 @@ service:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: mail.${CLUSTER_DOMAIN}
     external-dns.alpha.kubernetes.io/ttl: "120"
-    external-dns.alpha.kubernetes.io/targets: ${NGINX_LOAD_BALANCER_IP} # Uses nginx for now
+    external-dns.alpha.kubernetes.io/target: ${NGINX_LOAD_BALANCER_IP} # Uses nginx for now
 
 monitoring:
   service:
