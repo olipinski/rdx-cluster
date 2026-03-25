@@ -15,7 +15,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/instance: nginx-mta-sts
-        app.kubernetes.io/name: v
+        app.kubernetes.io/name: nginx-mta-sts
     spec:
       containers:
       - name: nginx-mta-sts
