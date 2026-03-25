@@ -48,8 +48,9 @@ netplan_configuration:
           macaddress: 94:c6:91:1a:65:e8  # Changeme!
         set-name: enoInternal
         addresses:
-          - '10.20.0.1/24'
           - '10.0.0.1/24'
+          - '10.20.0.1/24'
+          - '10.128.0.1/24' # Cilium external IPs
         nameservers:
           search:
             - "maas.{{ vault.general.domains.dns }}"
