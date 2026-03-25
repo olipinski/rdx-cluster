@@ -14,6 +14,7 @@ deployment:
     RSPAMD_LEARN: 1
     RSPAMD_NEURAL: 1
     VIRUSMAILS_DELETE_DELAY: 30
+    ENABLE_MTA_STS: 1
 
   resources:
     requests:
