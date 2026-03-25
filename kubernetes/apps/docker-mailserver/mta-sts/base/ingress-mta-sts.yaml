@@ -16,9 +16,9 @@ spec:
       paths:
       - backend:
           service:
-            name: mta-sts
+            name: nginx-mta-sts
             port:
-              name: mta-sts
+              name: http
         path: /
         pathType: ImplementationSpecific
   tls:
