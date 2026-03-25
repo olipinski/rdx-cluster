@@ -4,9 +4,8 @@ metadata:
   name: mta-sts-file
   namespace: docker-mailserver-mta-sts
 data:
-  .well_known:
-    mta-sts.txt: |
-      version: STSv1
-      mode: enforce
-      mx: *.${CLUSTER_DOMAIN}
-      max_age: 604800
+  mta-sts.txt: |
+    version: STSv1
+    mode: enforce
+    mx: *.${CLUSTER_DOMAIN}
+    max_age: 604800
