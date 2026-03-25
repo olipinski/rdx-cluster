@@ -16,7 +16,7 @@ spec:
       paths:
       - backend:
           service:
-            name: nginx-mta-sts
+            name: nginx-mta-sts-svc
             port:
               name: http
         path: /

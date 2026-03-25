@@ -6,3 +6,4 @@ resources:
   - mta-sts-file.yaml
   - ingress-mta-sts.yaml
   - nginx-mta-sts.yaml
+  - nginx-mta-sts-svc.yaml
