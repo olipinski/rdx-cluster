@@ -1,18 +1,37 @@
 ---
 # Enable ip forwarding
 - name: Enable IPv4 forwarding
-  ansible.builtin.sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.ip_forward
     value: "1"
     state: present
     reload: true
+    sysctl_set: true
 
 - name: Enable IPv6 forwarding
-  ansible.builtin.sysctl:
+  ansible.posix.sysctl:
     name: net.ipv6.conf.all.forwarding
     value: "1"
     state: present
     reload: true
+    sysctl_set: true
+    
+# Increase number of open files for fluent-bit
+- name: Increase fs.inotify.max_user_instances
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_instances
+    value: "512" # from 128
+    state: present
+    reload: true
+    sysctl_set: true
+
+- name: Increase fs.inotify.max_user_watches
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_watches
+    value: "131072" # from 122975
+    state: present
+    reload: true
+    sysctl_set: true
 
 # Enable iptables to see bridged traffic
 - name: Add br_netfilter to /etc/modules-load.d/
@@ -27,11 +46,12 @@
     state: present
 
 - name: Set bridge-nf-call-iptables
-  ansible.builtin.sysctl:
+  ansible.posix.sysctl:
     name: "{{ item }}"
     value: "1"
     state: present
     reload: true
+    sysctl_set: true
   loop:
     - net.bridge.bridge-nf-call-iptables
     - net.bridge.bridge-nf-call-ip6tables
