@@ -131,6 +131,13 @@ configMaps:
     data: |
       ${DMS_ADMIN_USER}@${CLUSTER_DOMAIN}|{SHA512-CRYPT}${DMS_ADMIN_HASHED_PASSWORD}
       
+  postfix-virtual.cf:
+    create: true
+    path: postfix-virtual.cf
+    data: |
+      abuse@${CLUSTER_DOMAIN} {DMS_ADMIN_USER}@${CLUSTER_DOMAIN}
+      postmaster@${CLUSTER_DOMAIN} {DMS_ADMIN_USER}@${CLUSTER_DOMAIN}
+      
   dovecot-quotas.cf:
     create: true
     path: dovecot-quotas.cf
