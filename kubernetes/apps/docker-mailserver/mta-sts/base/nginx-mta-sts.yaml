@@ -18,16 +18,16 @@ spec:
         app.kubernetes.io/name: nginx-mta-sts
     spec:
       containers:
-      - name: nginx-mta-sts
-        image: nginx:alpine
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 80
-          name: http
-          protocol: TCP
-        volumeMounts:
-          - mountPath: /usr/share/nginx/html/.well-known
-            name: mta-sts-file
+        - name: nginx-mta-sts
+          image: nginx:alpine
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html/.well-known
+              name: mta-sts-file
       readinessProbe:
         failureThreshold: 3
         httpGet:

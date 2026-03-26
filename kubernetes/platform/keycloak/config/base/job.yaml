@@ -40,8 +40,8 @@ spec:
               value: ${PI_ADMIN_LASTNAME}
           # Additional environment variables in secret
           envFrom:
-          - secretRef:
-              name: keycloak-config-cli-env
+            - secretRef:
+                name: keycloak-config-cli-env
           volumeMounts:
             - name: config
               mountPath: /config

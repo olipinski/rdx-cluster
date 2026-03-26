@@ -9,8 +9,8 @@ configMapGenerator:
       - ingress-values.yaml=values.yaml
 
 patches:
-- target:
-    group: helm.toolkit.fluxcd.io
-    kind: HelmRelease
-    name: oauth2-proxy
-  path: helm-patch.yaml
+  - target:
+      group: helm.toolkit.fluxcd.io
+      kind: HelmRelease
+      name: oauth2-proxy
+    path: helm-patch.yaml

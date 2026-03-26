@@ -1,5 +1,4 @@
 ---
-
 - name: Cilium installation
   become: false
   shell: |

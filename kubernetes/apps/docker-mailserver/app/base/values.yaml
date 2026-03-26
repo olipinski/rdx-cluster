@@ -61,9 +61,9 @@ dovecot:
     resources:
       memory: 2GB
     cron:
-      enabled: true       # Optimise index every day
+      enabled: true # Optimise index every day
       schedule: 0 4 * * * # Every day at 4am
-      
+
 rspamd:
   ingress:
     enabled: false
@@ -124,27 +124,27 @@ persistent_volume_claims:
       - ReadWriteOnce
     storageClass: "longhorn"
     selector: {}
-  
+
 configMaps:
   postfix-accounts.cf:
     create: true
     path: postfix-accounts.cf
     data: |
       ${DMS_ADMIN_USER}@${CLUSTER_DOMAIN}|{SHA512-CRYPT}${DMS_ADMIN_HASHED_PASSWORD}
-      
+
   postfix-virtual.cf:
     create: true
     path: postfix-virtual.cf
     data: |
       abuse@${CLUSTER_DOMAIN} {DMS_ADMIN_USER}@${CLUSTER_DOMAIN}
       postmaster@${CLUSTER_DOMAIN} {DMS_ADMIN_USER}@${CLUSTER_DOMAIN}
-      
+
   dovecot-quotas.cf:
     create: true
     path: dovecot-quotas.cf
     data: |
       ${DMS_ADMIN_USER}@${CLUSTER_DOMAIN}:10G
-  
+
   # documentation: https://rspamd.com/doc/modules/dkim_signing.html
   dkim-signing.conf:
     create: true
@@ -154,18 +154,18 @@ configMaps:
 
       sign_authenticated = true;
       sign_local = true;
-      
+
       use_domain = "header";
       use_redis = false; # don't change unless Redis also provides the DKIM keys
       use_esld = true;
       check_pubkey = false;
-      
+
       selector = "mail";
       # The path location is searched for a DKIM key with these variables:
       # - `$domain` is sourced from the MIME mail message `From` header
       # - `$selector` is configured for `mail` (as a default fallback)
       path = "/tmp/docker-mailserver/dkim/keys/$domain/$selector.private";
-      
+
       # domain specific configurations can be provided below:
       domain {
           ${CLUSTER_DOMAIN} {
@@ -173,7 +173,7 @@ configMaps:
               selector = "mail";
           }
       }
-      
+
 ## The secrets key works the same way as the configs key. Use secrets to store sensitive information,
 ## such as DKIM signing keys.
 secrets:
@@ -182,4 +182,3 @@ secrets:
     key: DMS_DKIM_KEYS_PRIVATE
     create: false
     path: rspamd/dkim/mail.private
-      

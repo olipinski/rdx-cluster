@@ -13,4 +13,3 @@ instance:
   commonMetadata:
     labels:
       app.kubernetes.io/name: flux
-  

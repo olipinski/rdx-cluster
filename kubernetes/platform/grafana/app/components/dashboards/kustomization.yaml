@@ -9,8 +9,8 @@ configMapGenerator:
       - dashboards-values.yaml=values.yaml
 
 patches:
-- target:
-    group: helm.toolkit.fluxcd.io
-    kind: HelmRelease
-    name: grafana
-  path: helm-patch.yaml
+  - target:
+      group: helm.toolkit.fluxcd.io
+      kind: HelmRelease
+      name: grafana
+    path: helm-patch.yaml

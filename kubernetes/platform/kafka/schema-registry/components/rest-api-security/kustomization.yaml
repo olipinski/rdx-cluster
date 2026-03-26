@@ -4,15 +4,14 @@ kind: Component
 resources:
   - external-secret.yaml
 
-
 configMapGenerator:
   - name: schema-registry-jaas
     files:
       - registry-jaas.conf=registry-jaas.conf
 
 patches:
-- target:
-    group: apps
-    kind: Deployment
-    name: schema-registry
-  path: deployment-patch.yaml
+  - target:
+      group: apps
+      kind: Deployment
+      name: schema-registry
+    path: deployment-patch.yaml

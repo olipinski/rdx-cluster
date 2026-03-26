@@ -84,7 +84,6 @@ spec:
       - kind: ConfigMap
         name: domain-settings
 
-
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization

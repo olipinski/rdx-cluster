@@ -1,5 +1,4 @@
 ---
-
 - name: Vault login
   ansible.builtin.shell: bash -ilc 'vault login -format=json $VAULT_TOKEN'
   # Interactive bash so .bashrc is loaded

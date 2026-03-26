@@ -9,10 +9,10 @@ metadata:
 spec:
   clusterIP: None
   ports:
-  - name: vaultport
-    port: 8200
-    protocol: TCP
-    targetPort: 8200
+    - name: vaultport
+      port: 8200
+      protocol: TCP
+      targetPort: 8200
   type: ClusterIP
 
 ---
@@ -22,12 +22,12 @@ kind: Endpoints
 metadata:
   name: vault-ext-service
 subsets:
-- addresses:
-  - ip: 10.20.0.8
-  ports:
-  - name: vaultport
-    port: 8200
-    protocol: TCP
+  - addresses:
+      - ip: 10.20.0.8
+    ports:
+      - name: vaultport
+        port: 8200
+        protocol: TCP
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -44,7 +44,7 @@ spec:
     - interval: 30s
       path: /v1/sys/metrics
       params:
-        format: 
+        format:
           - prometheus
       port: vaultport
       scheme: https

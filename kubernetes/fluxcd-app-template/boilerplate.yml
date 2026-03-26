@@ -16,5 +16,3 @@ variables:
 
   - name: chart_release_name
     description: Enter chart release name
-
- 

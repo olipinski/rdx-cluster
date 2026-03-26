@@ -5,7 +5,6 @@ namespace: elastic
 resources:
   - ../../base
 
-
 configMapGenerator:
   - name: eck-operator-helm-values
     behavior: merge
@@ -13,8 +12,8 @@ configMapGenerator:
       - overlay-values.yaml=values.yaml
 
 patches:
-- target:
-    group: helm.toolkit.fluxcd.io
-    kind: HelmRelease
-    name: eck-operator
-  path: helm-patch.yaml
+  - target:
+      group: helm.toolkit.fluxcd.io
+      kind: HelmRelease
+      name: eck-operator
+    path: helm-patch.yaml

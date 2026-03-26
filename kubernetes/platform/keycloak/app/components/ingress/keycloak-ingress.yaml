@@ -17,15 +17,15 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-      - sso.${CLUSTER_DOMAIN}
+        - sso.${CLUSTER_DOMAIN}
       secretName: keycloak-tls-secret
   rules:
-  - host: sso.${CLUSTER_DOMAIN}
-    http:
-      paths:
-      - backend:
-          service:
-            name: keycloak-service
-            port:
-              name: http
-        pathType: ImplementationSpecific 
+    - host: sso.${CLUSTER_DOMAIN}
+      http:
+        paths:
+          - backend:
+              service:
+                name: keycloak-service
+                port:
+                  name: http
+            pathType: ImplementationSpecific

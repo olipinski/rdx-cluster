@@ -5,8 +5,8 @@ resources:
   - kafka-metrics-cm.yaml
 
 patches:
-- target:
-    group: kafka.strimzi.io
-    kind: Kafka
-    name: cluster
-  path: cluster-patch.yaml
+  - target:
+      group: kafka.strimzi.io
+      kind: Kafka
+      name: cluster
+    path: cluster-patch.yaml

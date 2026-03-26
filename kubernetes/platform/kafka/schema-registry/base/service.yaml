@@ -9,10 +9,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: http
-    port: 8081
-    protocol: TCP
-    targetPort: http
+    - name: http
+      port: 8081
+      protocol: TCP
+      targetPort: http
   selector:
     app: schema-registry-schema-registry
     app.kubernetes.io/name: schema-registry

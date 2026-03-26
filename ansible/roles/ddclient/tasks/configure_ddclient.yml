@@ -1,5 +1,4 @@
 ---
-
 - name: Configure ddclient
   ansible.builtin.template:
     src: ddclient.conf.j2

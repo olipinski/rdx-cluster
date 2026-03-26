@@ -1,5 +1,4 @@
 ---
-
 - name: Detect if multiple masters are defined
   ansible.builtin.set_fact:
     k3s_build_cluster: true

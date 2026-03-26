@@ -1,5 +1,4 @@
 ---
-
 - name: Bootstrap Cluster
   hosts: localhost
   gather_facts: false
@@ -13,7 +12,6 @@
     K8S_AUTH_KUBECONFIG: ~/.kube/config
 
   pre_tasks:
-
     # Install Python PIP and jq utility packages
     - name: Ensure required packages are installed.
       ansible.builtin.package:
@@ -49,7 +47,6 @@
       ansible.builtin.include_vars: "vars/picluster.yml"
 
   tasks:
-
     - name: Set overlay to prod in case not defined by an input argument
       ansible.builtin.set_fact:
         overlay: "prod"

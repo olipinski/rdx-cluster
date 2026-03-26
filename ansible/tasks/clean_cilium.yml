@@ -1,5 +1,4 @@
 ---
-
 - name: Clean Cilium installation
   become: true
   shell: |

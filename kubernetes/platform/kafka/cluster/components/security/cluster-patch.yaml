@@ -1,4 +1,3 @@
-
 - op: add
   path: /spec/kafka/listeners/0/authentication
   value:

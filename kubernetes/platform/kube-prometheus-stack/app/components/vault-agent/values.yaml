@@ -13,10 +13,10 @@ prometheus:
       - job_name: vault
         metrics_path: /v1/sys/metrics
         params:
-          format: ['prometheus']
+          format: ["prometheus"]
         scheme: https
         authorization:
           credentials_file: /vault/secrets/token
         static_configs:
-        - targets: 
-          - "vault.${CLUSTER_DOMAIN}:8200"
+          - targets:
+              - "vault.${CLUSTER_DOMAIN}:8200"

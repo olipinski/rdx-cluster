@@ -22,7 +22,7 @@ spec:
           name: confluent-schemas
           patternType: literal
         operations:
-         - All
+          - All
         host: "*"
       - resource:
           type: topic

@@ -30,5 +30,5 @@ ingress:
     - monitoring.${CLUSTER_DOMAIN}
   tls:
     - hosts:
-      - monitoring.${CLUSTER_DOMAIN}
+        - monitoring.${CLUSTER_DOMAIN}
       secretName: monitoring-tls

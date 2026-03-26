@@ -38,5 +38,5 @@ spec:
   # TLS options are not supported. Ingress resource to be created separatedly.
   ingress:
     enabled: false
-  # Additional Options  
+  # Additional Options
   additionalOptions: []

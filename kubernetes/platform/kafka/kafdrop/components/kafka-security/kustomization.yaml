@@ -6,8 +6,8 @@ resources:
   - kafka-user.yaml
 
 patches:
-- target:
-    group: apps
-    kind: Deployment
-    name: kafdrop
-  path: deployment-patch.yaml
+  - target:
+      group: apps
+      kind: Deployment
+      name: kafdrop
+    path: deployment-patch.yaml

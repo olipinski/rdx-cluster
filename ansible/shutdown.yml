@@ -5,7 +5,7 @@
   tasks:
     - name: Shutdown agents
       community.general.shutdown:
-        delay: 60  # in seconds
+        delay: 60 # in seconds
 
 - hosts: k3s_master
   become: true
@@ -13,7 +13,7 @@
   tasks:
     - name: Shutdown servers
       community.general.shutdown:
-        delay: 80  # in seconds
+        delay: 80 # in seconds
 
 - hosts: service0
   become: true
@@ -21,7 +21,7 @@
   tasks:
     - name: Shutdown service node
       community.general.shutdown:
-        delay: 80  # in seconds
+        delay: 80 # in seconds
 
 - hosts: gateways
   become: true
@@ -29,4 +29,4 @@
   tasks:
     - name: Shutdown gateway
       community.general.shutdown:
-        delay: 80  # in seconds
+        delay: 80 # in seconds

@@ -61,9 +61,9 @@ spec:
             - name: SCHEMA_REGISTRY_SCHEMA_COMPATIBILITY_LEVEL
               value: "backward"
           ports:
-          - name: http
-            containerPort: 8081
-            protocol: TCP
+            - name: http
+              containerPort: 8081
+              protocol: TCP
           livenessProbe:
             tcpSocket:
               port: http
@@ -82,15 +82,15 @@ spec:
             successThreshold: 1
             failureThreshold: 6
           volumeMounts:
-          - name: tmp
-            mountPath: /tmp
-          - name: config
-            mountPath: /etc/schema-registry
+            - name: tmp
+              mountPath: /tmp
+            - name: config
+              mountPath: /etc/schema-registry
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
             readOnlyRootFilesystem: true
             runAsGroup: 1000
             runAsUser: 1000
@@ -102,7 +102,7 @@ spec:
               cpu: 500m
               memory: 512Mi
       volumes:
-      - name: tmp
-        emptyDir: {}
-      - name: config
-        emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+        - name: config
+          emptyDir: {}

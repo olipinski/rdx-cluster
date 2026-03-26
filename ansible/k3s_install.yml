@@ -1,5 +1,4 @@
 ---
-
 - name: Gather facts from the whole cluster
   hosts: k3s_cluster
   gather_facts: true

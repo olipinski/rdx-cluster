@@ -1,5 +1,4 @@
 ---
-
 - name: Install HA k3s masters
   when: k3s_build_cluster
   block:

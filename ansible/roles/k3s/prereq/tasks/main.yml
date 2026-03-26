@@ -15,7 +15,7 @@
     state: present
     reload: true
     sysctl_set: true
-    
+
 # Increase number of open files for fluent-bit
 - name: Increase fs.inotify.max_user_instances
   ansible.posix.sysctl:

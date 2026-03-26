@@ -1,10 +1,9 @@
 ---
-
 - name: Clean Longhorn storage | get content
   become: true
   find:
     paths: /storage
-    patterns: '*'
+    patterns: "*"
     file_type: any
     hidden: true
   register: directory_content_result
@@ -45,7 +44,7 @@
 - name: Clean fluentd pos files | get pos files
   find:
     paths: /var/log
-    patterns: '*.pos'
+    patterns: "*.pos"
   register: files_to_delete
 
 - name: Clean fluentd pos files | delete pos files
