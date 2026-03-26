@@ -65,7 +65,7 @@ netplan_configuration:
           # macaddress: ae:fd:ce:27:21:90
         # set-name: wlExternal
         # The above does not work, with netplan:
-        # "networkd backend does not support wifi with match:, only by interface name"
+        # "networkd backend does not support Wi-Fi with match:, only by interface name"
         # Therefore, we use the systemd-networkd roles to rename the interface
         # See above for
         dhcp4: true
@@ -376,7 +376,7 @@ bind9_zones:
 ############################
 # NTP role variables
 ############################
-# Setup the NTP server on the gateway
+# Set up the NTP server on the gateway
 ntp_timezone: Europe/Warsaw
 ntp_servers:
   - server: 1.ntp.ubuntu.com
