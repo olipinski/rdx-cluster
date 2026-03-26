@@ -11,5 +11,5 @@
 - name: Verify ddclient is enabled and running
   ansible.builtin.service:
     name: ddclient
-    enabled: yes
+    enabled: true
     state: started

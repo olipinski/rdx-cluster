@@ -1,3 +1,4 @@
+---
 # minio helm values (prod overlay)
 
 # Run minio server only on amd64 nodes

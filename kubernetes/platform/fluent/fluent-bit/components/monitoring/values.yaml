@@ -1,3 +1,4 @@
+---
 # fluent-bit helm values (monitoring)
 
 # Enable Prometheus operator service monitor

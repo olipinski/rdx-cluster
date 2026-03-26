@@ -1,9 +1,9 @@
 ---
 # k3s_master group variables
 
-##################################
+# #################################
 # ricsanfre.k8s_cli role variables
-##################################
+# #################################
 
 install_helm: true
 helm_version: "v4.1.1"

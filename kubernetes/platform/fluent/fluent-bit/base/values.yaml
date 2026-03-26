@@ -1,3 +1,4 @@
+---
 # fluent-bit helm values (base)
 
 # Deploy fluent-bit as daemonSet. One POD per node

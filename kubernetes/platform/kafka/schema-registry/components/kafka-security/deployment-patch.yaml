@@ -1,3 +1,4 @@
+---
 # Replace SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS enviroment variable
 - op: replace
   path: /spec/template/spec/containers/0/env/2/value
@@ -20,7 +21,7 @@
       secretKeyRef:
         name: schema-registry-jaas-config
         key: plain-jaas.conf
-  # Replace name of default topic _schemas
+# Replace name of default topic _schemas
 - op: add
   path: /spec/template/spec/containers/0/env/-
   value:

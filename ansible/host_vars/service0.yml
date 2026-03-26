@@ -1,9 +1,9 @@
 ---
 # service node variables
 
-############################
+# ###########################
 # restic backup role variables
-############################
+# ###########################
 restic_clean_service: true
 
 ############################
@@ -43,7 +43,7 @@ fluentbit_custom_parsers: |
       Time_Key time
       Time_Format %b %d %H:%M:%S
       Time_Keep False
-################################
+# ###############################
 # Node-exporter Agent configuration
 ################################
 

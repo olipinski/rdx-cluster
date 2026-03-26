@@ -1,6 +1,6 @@
 ---
-## Generate TLS certificates for external services
-## Generated using certbot (letsencrypt) or selfsigned certificates
+# Generate TLS certificates for external services
+# Generated using certbot (letsencrypt) or selfsigned certificates
 - name: Generate external services certificates
   hosts: localhost
   gather_facts: true
@@ -20,7 +20,7 @@
       template:
         src: "{{ item.template }}"
         dest: "{{ item.dest }}"
-        mode: 0600
+        mode: "0600"
       with_items:
         - template: cloudflare-credentials.ini.j2
           dest: "~/.secrets/cloudflare-credentials.ini"
@@ -56,7 +56,7 @@
           file:
             path: "{{ selfsigned_certificates_path }}"
             state: directory
-            mode: 0750
+            mode: "0750"
         # Include selfsigned certificates variables
         - name: Include selfsigned certificates variables
           include_vars: "vars/selfsigned-certificates.yml"
@@ -119,8 +119,8 @@
             cert_path: "{{ certbot_certificates.stdout | regex_search(regexp1,'\\1') }}"
             cert_key_path: "{{ certbot_certificates.stdout | regex_search(regexp2,'\\1') }}"
           vars:
-            regexp1: 'Certificate Path: (\S+)'
-            regexp2: 'Private Key Path: (\S+)'
+            regexp1: "Certificate Path: (\\S+)"
+            regexp2: "Private Key Path: (\\S+)"
           when:
             - certbot_certificates.rc==0
             - '"Certificate Name: " + minio_hostname in certbot_certificates.stdout'
@@ -175,8 +175,8 @@
             cert_path: "{{ certbot_certificates.stdout | regex_search(regexp1,'\\1') }}"
             cert_key_path: "{{ certbot_certificates.stdout | regex_search(regexp2,'\\1') }}"
           vars:
-            regexp1: 'Certificate Path: (\S+)'
-            regexp2: 'Private Key Path: (\S+)'
+            regexp1: "Certificate Path: (\\S+)"
+            regexp2: "Private Key Path: (\\S+)"
           when:
             - certbot_certificates.rc==0
             - '"Certificate Name: " + vault_hostname in certbot_certificates.stdout'
@@ -199,7 +199,7 @@
         line: "export VAULT_ADDR='https://{{ vault_hostname }}:8200'"
         owner: "{{ ansible_user }}"
         create: true
-        mode: 0644
+        mode: "0644"
     - name: Insert CA cert export in dotfile
       become: true
       lineinfile:
@@ -208,7 +208,7 @@
         line: "export VAULT_CACERT=/etc/vault/tls/vault-ca.crt"
         owner: "{{ ansible_user }}"
         create: true
-        mode: 0644
+        mode: "0644"
       when: custom_ca
 
     - name: Insert VAULT_TOKEN in dotfile
@@ -219,7 +219,7 @@
         line: "export VAULT_TOKEN=$(sudo jq -r '.root_token' /etc/vault/unseal.json)"
         owner: "{{ ansible_user }}"
         create: true
-        mode: 0644
+        mode: "0644"
 
 ## Load all credentials into HashiCorp Vault Server
 - name: Load Vault Credentials

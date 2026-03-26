@@ -1,3 +1,4 @@
+---
 variables:
   - name: app_name
     description: Enter application name

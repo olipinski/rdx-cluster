@@ -1,3 +1,4 @@
+---
 # Docker mailserver helm values (base)
 
 certificate: docker-mailserver-tls
@@ -74,7 +75,6 @@ rspamd:
     tls:
       enabled: false
       secret:
-
 proxyProtocol:
   enabled: true
   trustedNetworks: "10.128.0.0/16"
@@ -91,7 +91,6 @@ persistent_volume_claims:
       - ReadWriteOnce
     storageClass: "longhorn"
     selector: {}
-
   # Stores emails
   mail-data:
     enabled: true
@@ -102,7 +101,6 @@ persistent_volume_claims:
       - ReadWriteOnce
     storageClass: "longhorn"
     selector: {}
-
   # Stores state for Postfix, Dovecot, Fail2Ban, Amavis, PostGrey, ClamAV, SpamAssassin, Rspamd & Redis
   mail-state:
     enabled: true
@@ -113,7 +111,6 @@ persistent_volume_claims:
       - ReadWriteOnce
     storageClass: "longhorn"
     selector: {}
-
   # Store mail logs
   mail-log:
     enabled: true
@@ -124,7 +121,6 @@ persistent_volume_claims:
       - ReadWriteOnce
     storageClass: "longhorn"
     selector: {}
-
 configMaps:
   postfix-accounts.cf:
     create: true

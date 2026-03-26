@@ -1,3 +1,4 @@
+---
 # kube-prom-stack helm values (ingress)
 
 alertmanager:

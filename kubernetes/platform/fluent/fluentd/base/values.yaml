@@ -1,3 +1,4 @@
+---
 # fluentd helm values (base)
 
 # Fluentd image
@@ -44,8 +45,8 @@ env:
       configMapKeyRef:
         name: fluentd-env
         key: elasticsearchHost
-    # value: efk-es-http
-    # Default elasticsearch default port
+  # value: efk-es-http
+  # Default elasticsearch default port
   - name: FLUENT_ELASTICSEARCH_PORT
     value: "9200"
   # Elasticsearch user
@@ -72,7 +73,7 @@ env:
       configMapKeyRef:
         name: fluentd-env
         key: lokiURL
-    # value: "http://loki-gateway"
+  # value: "http://loki-gateway"
   # Loki username
   - name: LOKI_USERNAME
     value: ""
@@ -91,7 +92,6 @@ extraFilesConfigMapNameOverride: fluentd-extra-files
 ## Do not create additional config maps
 ##
 configMapConfigs: []
-
 # Volumes and VolumeMounts (only template and and certificates)
 volumes:
   - name: fluentd-tls
@@ -100,7 +100,7 @@ volumes:
   - name: etcfluentd-template
     configMap:
       name: fluentd-template
-      defaultMode: 0777
+      defaultMode: "0777"
 
 volumeMounts:
   - name: etcfluentd-template

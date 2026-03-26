@@ -1,3 +1,4 @@
+---
 # kube-prometheus-stack helm values (base)
 
 # Produce cleaner resources names
@@ -5,8 +6,8 @@ cleanPrometheusOperatorObjectNames: true
 # AlertManager configuration
 alertmanager:
   alertmanagerSpec:
-    ##
-    ## Configure access to AlertManager via sub-path
+    # #
+    # # Configure access to AlertManager via sub-path
     externalUrl: http://monitoring.${CLUSTER_DOMAIN}/alertmanager/
     routePrefix: /alertmanager
     ##
@@ -23,16 +24,16 @@ alertmanager:
           resources:
             requests:
               storage: 1Gi
-    ##
+##
 # Prometheus configuration
 prometheus:
   prometheusSpec:
-    ##
-    ## Removing default filter Prometheus selectors
-    ## Default selector filters defined by default in helm chart.
-    ## matchLabels:
-    ##   release: {{ $.Release.Name | quote }}
-    ## ServiceMonitor, PodMonitor, Probe and Rules need to have label 'release' equals to kube-prom-stack helm release (kube-prom-stack)
+    # #
+    # # Removing default filter Prometheus selectors
+    # # Default selector filters defined by default in helm chart.
+    # # matchLabels:
+    # #   release: {{ $.Release.Name | quote }}
+    # # ServiceMonitor, PodMonitor, Probe and Rules need to have label 'release' equals to kube-prom-stack helm release (kube-prom-stack)
     podMonitorSelectorNilUsesHelmValues: false
     probeSelectorNilUsesHelmValues: false
     ruleSelectorNilUsesHelmValues: false
@@ -84,7 +85,7 @@ prometheus:
           resources:
             requests:
               storage: 10Gi
-    ##
+##
 # Prometheus Node Exporter Configuration
 nodeExporter:
   enabled: true
@@ -258,10 +259,10 @@ grafana:
 ##
 # Enable kubelet service
 kubeletService:
-  ## Prometheus Operator creates Kubelet service
-  ## Prometheus Operator started with options
-  ## `--kubelet-service=kube-system/kube-prometheus-stack-kubelet`
-  ## `--kubelet-endpoints=true`
+  # # Prometheus Operator creates Kubelet service
+  # # Prometheus Operator started with options
+  # # `--kubelet-service=kube-system/kube-prometheus-stack-kubelet`
+  # # `--kubelet-endpoints=true`
   enabled: true
   namespace: kube-system
 
@@ -281,12 +282,12 @@ kubeApiServer:
 
 ## Kube Controller Manager
 kubeControllerManager:
-  ## K3s controller manager is not running as a POD
-  ## ServiceMonitor and Headless service is generated
-  ## headless service is needed, So prometheus can discover each of the endpoints/PODs behind the service.
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#headless-services
-  ## Required headless service to extract the metrics the service need to be defined without selector and so the endpoints must be defined explicitly
-  ##
+  # # K3s controller manager is not running as a POD
+  # # ServiceMonitor and Headless service is generated
+  # # headless service is needed, So prometheus can discover each of the endpoints/PODs behind the service.
+  # # ref: https://kubernetes.io/docs/concepts/services-networking/service/#headless-services
+  # # Required headless service to extract the metrics the service need to be defined without selector and so the endpoints must be defined explicitly
+  # #
   # ref: https://kubernetes.io/docs/concepts/services-networking/service/#services-without-selectors
 
   # Enable KubeController manager montoring
@@ -315,12 +316,12 @@ kubeEtcd:
 
 ## Kube Scheduler
 kubeScheduler:
-  ## K3s Kube-scheduler is not running as a POD
-  ## ServiceMonitor and Headless service is generated
-  ## headless service is needed, So prometheus can discover each of the endpoints/PODs behind the service.
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#headless-services
-  ## Required headless service to extract the metrics the service need to be defined without selector and so the endpoints must be defined explicitly
-  ##
+  # # K3s Kube-scheduler is not running as a POD
+  # # ServiceMonitor and Headless service is generated
+  # # headless service is needed, So prometheus can discover each of the endpoints/PODs behind the service.
+  # # ref: https://kubernetes.io/docs/concepts/services-networking/service/#headless-services
+  # # Required headless service to extract the metrics the service need to be defined without selector and so the endpoints must be defined explicitly
+  # #
   # ref: https://kubernetes.io/docs/concepts/services-networking/service/#services-without-selectors
   enabled: true
   # K3s kube-scheduler not running as a POD
@@ -332,12 +333,12 @@ kubeScheduler:
     enabled: true
 
 kubeProxy:
-  ## K3s kube-proxy is not running as a POD
-  ## ServiceMonitor and Headless service is generated
-  ## headless service is needed, So prometheus can discover each of the endpoints/PODs behind the service.
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#headless-services
-  ## Required headless service to extract the metrics the service need to be defined without selector and so the endpoints must be defined explicitly
-  ##
+  # # K3s kube-proxy is not running as a POD
+  # # ServiceMonitor and Headless service is generated
+  # # headless service is needed, So prometheus can discover each of the endpoints/PODs behind the service.
+  # # ref: https://kubernetes.io/docs/concepts/services-networking/service/#headless-services
+  # # Required headless service to extract the metrics the service need to be defined without selector and so the endpoints must be defined explicitly
+  # #
   enabled: true
   # K3s kube-proxy not running as a POD
   endpoints:

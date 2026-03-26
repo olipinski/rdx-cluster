@@ -1,3 +1,4 @@
+---
 # oauth2-proxy helm values (base)
 config:
   # Add config annotations

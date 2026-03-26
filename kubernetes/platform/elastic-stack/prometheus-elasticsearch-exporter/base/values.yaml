@@ -1,3 +1,4 @@
+---
 # prometheus-elasticsearch-exporter helm values (base)
 
 # Elastic search passord from secret

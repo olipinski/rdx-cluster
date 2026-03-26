@@ -1,8 +1,9 @@
+---
 # longhorn helm values (ingress)
 
 # Ingress Resource. Longhorn dashboard.
 ingress:
-  ## Enable creation of ingress resource
+  # # Enable creation of ingress resource
   enabled: true
   ## Add ingressClassName to the Ingress
   ingressClassName: nginx

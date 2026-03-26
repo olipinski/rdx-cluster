@@ -4,7 +4,7 @@
   gather_facts: false
   tasks:
     - name: Stop K3S Service
-      service:
+      ansible.builtin.service:
         name: k3s
         state: stopped
 
@@ -13,7 +13,7 @@
   gather_facts: false
   tasks:
     - name: Stop K3S Service
-      service:
+      ansible.builtin.service:
         name: k3s-agent
         state: stopped
 
@@ -22,7 +22,7 @@
   gather_facts: false
   tasks:
     - name: Stop k3s containers and free network resources
-      command: /usr/local/bin/k3s-killall.sh
+      ansible.builtin.command: /usr/local/bin/k3s-killall.sh
       changed_when: true
 
 - hosts: k3s_worker
@@ -30,5 +30,5 @@
   gather_facts: false
   tasks:
     - name: Stop k3s containers and free network resources
-      command: /usr/local/bin/k3s-killall.sh
+      ansible.builtin.command: /usr/local/bin/k3s-killall.sh
       changed_when: true

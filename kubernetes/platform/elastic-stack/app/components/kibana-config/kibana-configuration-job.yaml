@@ -1,3 +1,4 @@
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -42,4 +43,4 @@ spec:
         - name: kibana-config-data
           configMap:
             name: kibana-config-data
-            defaultMode: 0777
+            defaultMode: "0777"

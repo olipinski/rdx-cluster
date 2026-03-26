@@ -4,7 +4,7 @@
   gather_facts: false
   tasks:
     - name: Start K3S Service
-      service:
+      ansible.builtin.service:
         name: k3s
         state: started
 - hosts: k3s_worker
@@ -12,6 +12,6 @@
   gather_facts: false
   tasks:
     - name: Start K3S Service
-      service:
+      ansible.builtin.service:
         name: k3s-agent
         state: started

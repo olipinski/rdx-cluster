@@ -1,3 +1,4 @@
+---
 # vault helm values (base)
 global:
   # External vault server address for the injector and CSI provider to use.

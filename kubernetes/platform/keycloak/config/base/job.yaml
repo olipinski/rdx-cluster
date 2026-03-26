@@ -1,3 +1,4 @@
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -49,4 +50,4 @@ spec:
         - name: config
           configMap:
             name: "keycloak-realm-configmap"
-            defaultMode: 0555
+            defaultMode: "0555"
