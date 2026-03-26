@@ -1,48 +1,46 @@
+---
+exclude: "docs|design"
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-symlinks
       - id: destroyed-symlinks
       - id: trailing-whitespace
       - id: end-of-file-fixer
-      - id: check-yaml
       - id: check-toml
-      - id: check-ast
       - id: check-added-large-files
       - id: check-merge-conflict
       - id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
       - id: detect-private-key
-      - id: debug-statements
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
+    rev: v2.4.2
     hooks:
       - id: codespell
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.22
+    rev: 1.0.0
     hooks:
       - id: mdformat
         additional_dependencies:
           - mdformat-gfm
           - mdformat-black
         args:
-          - --wrap=80
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
-    hooks:
-      - id: prettier
-        args: ["--tab-width=2"]
+          - --wrap=100
+        types: [markdown]
   - repo: https://github.com/ansible/ansible-lint
     rev: v26.3.0
     hooks:
       - id: ansible-lint
         args: ["--strict", "--fix"]
+        files: "ansible|ansible-runner"
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.38.0
     hooks:
       - id: yamllint
+        types: [yaml]
   - repo: https://github.com/stackrox/kube-linter
     rev: v0.8.3
     hooks:
       - id: kube-linter
+        files: "kubernetes"

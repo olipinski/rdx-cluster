@@ -6,7 +6,7 @@ RUN apt-get update -qq && \
     apt-get clean && \
     rm -rf /usr/share/doc/* /usr/share/man/* /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Intall basic Python packages
+# Install basic Python packages
 RUN pip3 install --upgrade pip setuptools
 
 ADD build /build

@@ -11,5 +11,5 @@
 .pixi/*
 !.pixi/config.toml
 
-# Prettier
-node_modules
+# Ansible lint
+.ansible

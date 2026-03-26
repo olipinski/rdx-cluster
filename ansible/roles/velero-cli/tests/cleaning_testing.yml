@@ -5,7 +5,7 @@
   tasks:
     - name: Cleaning testing
       kubernetes.core.k8s:
-        definition: "{{ lookup('file', 'files/' + item ) }}"
+        definition: "{{ lookup('file', 'files/' + item) }}"
         state: absent
       with_items:
         - nginx_test_application.yml

@@ -2,7 +2,7 @@
 # kube-prom-stack helm values (ingress)
 
 alertmanager:
-  ## Configure Ingress
+  # Configure Ingress
   ingress:
     enabled: true
     ingressClassName: nginx
@@ -25,7 +25,7 @@ alertmanager:
         secretName: monitoring-tls
 
 prometheus:
-  ## Configuring Ingress
+  # Configuring Ingress
   ingress:
     enabled: true
     ingressClassName: nginx

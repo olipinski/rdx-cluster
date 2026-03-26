@@ -41,7 +41,7 @@
     mode: "u=rw,g=,o="
 
 - name: Load br_netfilter
-  ansible.builtin.modprobe:
+  community.general.modprobe:
     name: br_netfilter
     state: present
 
@@ -57,7 +57,7 @@
     - net.bridge.bridge-nf-call-ip6tables
 
 - name: Disable swap memory
-  include_tasks: disable_swap.yml
+  ansible.builtin.include_tasks: disable_swap.yml
 
 # Enable cgroups RaspberryPi
 - name: Enable cgroup via boot commandline if not already enabled for Ubuntu on a Raspberry Pi

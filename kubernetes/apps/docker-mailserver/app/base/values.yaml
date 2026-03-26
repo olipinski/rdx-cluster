@@ -37,22 +37,22 @@ service:
 
 monitoring:
   service:
-    ## monitoring should be configured to only scrape services that have a value of "true"
+    # monitoring should be configured to only scrape services that have a value of "true"
     scrape: "true"
-    ## monitoring should be configured to only probe services that have a value of "true"
+    # monitoring should be configured to only probe services that have a value of "true"
     probe: "false"
-    ## Path on which metrics are exposed
+    # Path on which metrics are exposed
     path: "/metrics"
-    ## Port on which HTTP server is served
+    # Port on which HTTP server is served
     port: "9102"
   pod:
-    ## monitoring should be configured to only scrape pods that have a value of `true`
+    # monitoring should be configured to only scrape pods that have a value of `true`
     scrape: "true"
-    ## monitoring should be configured to only probe services that have a value of "true"
+    # monitoring should be configured to only probe services that have a value of "true"
     probe: "false"
-    ## Path on which metrics are exposed
+    # Path on which metrics are exposed
     path: "/metrics"
-    ## Port on which HTTP server is served
+    # Port on which HTTP server is served
     port: "9102"
 
 dovecot:
@@ -170,8 +170,8 @@ configMaps:
           }
       }
 
-## The secrets key works the same way as the configs key. Use secrets to store sensitive information,
-## such as DKIM signing keys.
+# The secrets key works the same way as the configs key. Use secrets to store sensitive information,
+# such as DKIM signing keys.
 secrets:
   docker-mailserver-app-secret:
     name: docker-mailserver-app-secret
