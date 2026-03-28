@@ -17,7 +17,7 @@
   with_items: "{{ directory_content_result.files }}"
   when: "'k3s_worker' in group_names"
 
-- name: Clean longhorn iscsi targets and nodes
+- name: Clean longhorn iscsi targets and nodes # noqa: no-changed-when
   ansible.builtin.shell: |
     set -o pipefail
     for i in `sudo iscsiadm -m discovery -o show | grep -v 10.20.0.1 | awk '{print $1}'`
@@ -28,7 +28,6 @@
   args:
     executable: /bin/bash
   register: output
-  changed_when: true
   when: "'k3s_worker' in group_names"
 
 - name: Clean container/pod logs, cni config, and fluentbit db

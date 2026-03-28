@@ -7,6 +7,8 @@ metadata:
   annotations:
     lbipam.cilium.io/ips: ${FLUENTD_LOAD_BALANCER_IP}
     external-dns.alpha.kubernetes.io/hostname: fluentd.${CLUSTER_DOMAIN}
+    ignore-check.kube-linter.io/dangling-service: |
+      "PyCharm can see the selectors correctly, kube-linter does not want to pick them up"
   name: fluentd-ext
   namespace: fluent
 spec:

@@ -18,6 +18,16 @@ spec:
         app.kubernetes.io/instance: nginx-mta-sts
         app.kubernetes.io/name: nginx-mta-sts
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: nginx-mta-sts
+                    app.kubernetes.io/name: nginx-mta-sts
+              weight: 100
       containers:
         - name: nginx-mta-sts
           image: nginx:alpine
@@ -49,10 +59,15 @@ spec:
             periodSeconds: 30
             successThreshold: 1
             timeoutSeconds: 10
-      resources:
-        requests:
-          cpu: 1m
-          memory: 128Mi
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          resources:
+            requests:
+              cpu: 1m
+              memory: 128Mi
+            limits:
+              memory: 256Mi
       volumes:
         - name: mta-sts-file
           configMap:

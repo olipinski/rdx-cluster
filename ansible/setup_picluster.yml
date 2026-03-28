@@ -39,7 +39,9 @@
       tags: [networking]
       register: networkd_result
     # Reboot for WLAN to take effect
-    - name: Reboot to apply WLAN naming
+    # This needs to run right here, so that netplan can use the correct interface names
+    # Therefore we ignore ansible-lint.
+    - name: Reboot to apply WLAN naming # noqa: no-handler
       ansible.builtin.reboot:
         msg: "Rebooting to install systemd-networkd links."
       tags: [networking]
@@ -149,5 +151,6 @@
           ansible.builtin.include_role:
             name: ricsanfre.iscsi_initiator
           vars:
-            open_iscsi_initiator_name: "iqn.2025-06.com.{{ vault.general.domains.dns }}.longhorn:{{ ansible_facts['nodename'] }}"
+            open_iscsi_initiator_name: "iqn.2026-04.com.{{ vault.general.domains.dns }}.longhorn:{{ ansible_facts['nodename']
+              }}"
             open_iscsi_automatic_startup: true

@@ -12,37 +12,34 @@
 
 **K3S Kubernetes Cluster at home automated with Ansible and FluxCD**
 
-This is an educational project to build a hybrid x86/ARM Kubernetes cluster at home, using Raspberry
-Pi and refurbished x86 mini PCs, learn to deploy basic kubernetes services and automate its
-deployment and configuration applying IaC (infrastructure as a code) and GitOps methodologies.
+This is an educational project to build a hybrid x86/ARM Kubernetes cluster at home, using Raspberry Pi and refurbished
+x86 mini PCs, learn to deploy basic kubernetes services and automate its deployment and configuration applying IaC
+(infrastructure as a code) and GitOps methodologies.
 
-The entire process for creating this cluster at home, from cluster design and architecture to
-step-by-step manual configuration guides, has been documented and it is published in the project
-website: https://picluster.ricsanfre.com.
+The entire process for creating this cluster at home, from cluster design and architecture to step-by-step manual
+configuration guides, has been documented and it is published in the project website: https://picluster.ricsanfre.com.
 
-This repository contains all source code used to automate all manual tasks described in the
-documentation: Cloud-init's configuration files, Ansible's source code (playbooks/roles), and
-packaged Kubernetes applications (helm and kustomize) to be deployed using FluxCD.
+This repository contains all source code used to automate all manual tasks described in the documentation: Cloud-init's
+configuration files, Ansible's source code (playbooks/roles), and packaged Kubernetes applications (helm and kustomize)
+to be deployed using FluxCD.
 
-Since its deployment is completely automated, the cluster can be re-deployed in minutes as many
-times as needed for testing new cluster configurations, new software versions or just take you out
-of any mesh you could cause playing with the cluster.
+Since its deployment is completely automated, the cluster can be re-deployed in minutes as many times as needed for
+testing new cluster configurations, new software versions or just take you out of any mesh you could cause playing with
+the cluster.
 
 ## Scope
 
-The scope of this project is to build a hybrid x86/ARM kubernetes cluster at home, using low cost
-Raspeberry PIs and old refurbished mini PCs, and automate its deployment and configuration applying
-**IaC (infrastructure as a code)** and **GitOps** methodologies with tools like
-[Ansible](https://docs.ansible.com/), [cloud-init](https://cloudinit.readthedocs.io/en/latest/) and
-[Flux CD](https://fluxcd.io/).
+The scope of this project is to build a hybrid x86/ARM kubernetes cluster at home, using low cost Raspeberry PIs and old
+refurbished mini PCs, and automate its deployment and configuration applying **IaC (infrastructure as a code)** and
+**GitOps** methodologies with tools like [Ansible](https://docs.ansible.com/),
+[cloud-init](https://cloudinit.readthedocs.io/en/latest/) and [Flux CD](https://fluxcd.io/).
 
-As part of the project, the goal is to use a lightweight Kubernetes flavor based on
-[K3S](https://k3s.io/) and deploy cluster basic services such as:
+As part of the project, the goal is to use a lightweight Kubernetes flavor based on [K3S](https://k3s.io/) and deploy
+cluster basic services such as:
 
 - Distributed block storage for POD's persistent volumes, [LongHorn](https://longhorn.io/).
 - S3 Object storage, [Minio](https://min.io/).
-- Backup/restore solution for the cluster, [Velero](https://velero.io/) and
-  [Restic](https://restic.net/).
+- Backup/restore solution for the cluster, [Velero](https://velero.io/) and [Restic](https://restic.net/).
 - Certificate management, [Cert-Manager](https://cert-manager.io).
 - Secrets Management solution with [Vault](https://www.vaultproject.io/) and
   [External Secrets](https://external-secrets.io/)
@@ -54,18 +51,16 @@ As part of the project, the goal is to use a lightweight Kubernetes flavor based
     \+ [Loki](https://grafana.com/oss/loki/)-[Grafana](https://grafana.com/oss/grafana/))
   - Distributed tracing solution, [Tempo](https://grafana.com/oss/tempo/).
 
-Also deployment of services for building a cloud-native microservices architecture are include as
-part of the scope:
+Also deployment of services for building a cloud-native microservices architecture are include as part of the scope:
 
 - Service mesh architecture, [Istio](https://istio.io/)
-- API security with Oauth2.0 and OpenId Connect, using IAM solution,
-  [Keycloak](https://www.keycloak.org/)
+- API security with Oauth2.0 and OpenId Connect, using IAM solution, [Keycloak](https://www.keycloak.org/)
 - Streaming platform, [Kafka](https://kafka.apache.org/)
 
 ## Technology Stack
 
-The following picture shows the set of opensource solutions used so far in the cluster, which
-installation process has been documented and its deployment has been automated with Ansible/FluxCD:
+The following picture shows the set of opensource solutions used so far in the cluster, which installation process has
+been documented and its deployment has been automated with Ansible/FluxCD:
 
 <p align="center">
   <img src="docs/assets/img/pi-cluster-tech-stack.png" width="500"/>
@@ -248,8 +243,8 @@ installation process has been documented and its deployment has been automated w
 
 ## Deprecated Technology
 
-The following technologies have been used in previous releases of PiCluster but they have been
-deprecated and not longer maintained
+The following technologies have been used in previous releases of PiCluster but they have been deprecated and not longer
+maintained
 
 |                                                           | Name                                                | Description                                                                                                         |
 | --------------------------------------------------------- | --------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------ |
@@ -260,9 +255,8 @@ deprecated and not longer maintained
 
 ## External Resources and Services
 
-Even when the premise is to deploy all services in the kubernetes cluster, there is still a need for
-a few external services/resources. Below is a list of external resources/services and why we need
-them.
+Even when the premise is to deploy all services in the kubernetes cluster, there is still a need for a few external
+services/resources. Below is a list of external resources/services and why we need them.
 
 ### Cloud external services
 
@@ -271,8 +265,7 @@ them.
 | <img width="60" src="docs/assets/img/logos/letsencrypt.svg" > | [Letsencrypt](https://letsencrypt.org/) | TLS CA Authority | Signed valid TLS certificates                                                                               |
 | <img width="60" src="docs/assets/img/logos/ionos.png">        | [IONOS](https://www.ionos.es/)          | DNS              | DNS and [DNS-01 challenge](https://letsencrypt.org/docs/challenge-types/#dns-01-challenge) for certificates |
 
-> **NOTE:** These resources are optional, the homelab still works without them, but it won't have
-> trusted certificates
+> **NOTE:** These resources are optional, the homelab still works without them, but it won't have trusted certificates
 
 **Alternatives:**
 
@@ -283,19 +276,16 @@ them.
 
 1. Use other DNS provider.
 
-   Cert-manager / Certbot, which are the tools that automatically obtain certificates from Let's
-   Encrypt, can be configured to use other DNS providers. It will need further modifications in the
-   way cert-manager application is deployed (new providers and/or webhooks/plugins might be
-   required).
+   Cert-manager / Certbot, which are the tools that automatically obtain certificates from Let's Encrypt, can be
+   configured to use other DNS providers. It will need further modifications in the way cert-manager application is
+   deployed (new providers and/or webhooks/plugins might be required).
 
-   Currently only acme issuer (letsencytp) using IONOS as dns-01 challenge provider is configured.
-   Check list of
+   Currently only acme issuer (letsencytp) using IONOS as dns-01 challenge provider is configured. Check list of
    [supported dns01 providers](https://cert-manager.io/docs/configuration/acme/dns01/#supported-dns01-providers).
 
 ### Self-hosted external services
 
-There is another list of services that I have decided to run outside the kubernetes cluster self
-hosting them.
+There is another list of services that I have decided to run outside the kubernetes cluster self hosting them.
 
 |                                                        | External Service                                | Resource           | Purpose                    |
 | ------------------------------------------------------ | ----------------------------------------------- | ------------------ | -------------------------- |
@@ -305,14 +295,14 @@ hosting them.
 Minio backup service is hosted in a VM running in Public Cloud, using
 [Oracle Cloud Infrastructure (OCI) free tier](https://www.oracle.com/es/cloud/free/).
 
-Vault service is running in `gateway` node, since Vault kubernetes authentication method need access
-to Kubernetes API, I won't host Vault service in Public Cloud.
+Vault service is running in `gateway` node, since Vault kubernetes authentication method need access to Kubernetes API,
+I won't host Vault service in Public Cloud.
 
 ## Cluster architecture and hardware
 
-Home lab architecture, showed in the picture below, consist of a Kubernetes cluster of ARM
-(Raspberry PI) and x86 (HP elite desk 800 G3 mini PCs) nodes and a firewall, built with another
-Raspberry PI, to isolate cluster network from your home network.
+Home lab architecture, showed in the picture below, consist of a Kubernetes cluster of ARM (Raspberry PI) and x86 (HP
+elite desk 800 G3 mini PCs) nodes and a firewall, built with another Raspberry PI, to isolate cluster network from your
+home network.
 
 <p align="center">
   <img src="docs/assets/img/pi-cluster-architecture.png" width="500"/>
@@ -325,15 +315,14 @@ See further details about the architecture and hardware in the
 
 You can browse more information about Pi Cluster Project on https://picluster.ricsanfre.com/.
 
-The content of this website and the source code to build it (Jekyll static based website) are also
-stored in this repo: `/docs` folder.
+The content of this website and the source code to build it (Jekyll static based website) are also stored in this repo:
+`/docs` folder.
 
 ## Usage
 
-Check out the documentation [Quick Start guide](http://picluster.ricsanfre.com/docs/ansible/) to
-know how to use and tweak cloud-init files (`/cloud-init` folder), Ansible playbooks (`/ansible`
-folder) and packaged Kubernetes applications ( `/kubernetes` folder) contained in this repository,
-so you can use in for your own homelab.
+Check out the documentation [Quick Start guide](http://picluster.ricsanfre.com/docs/ansible/) to know how to use and
+tweak cloud-init files (`/cloud-init` folder), Ansible playbooks (`/ansible` folder) and packaged Kubernetes
+applications ( `/kubernetes` folder) contained in this repository, so you can use in for your own homelab.
 
 ## About the Project
 

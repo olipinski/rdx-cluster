@@ -31,9 +31,9 @@
       ansible.builtin.include_vars: "vars/picluster.yml"
       tags: ["always"]
   roles:
-    - role: k3s/prereq
+    - role: k3s_prereq
 
-- name: Install K3S master node
+- name: Install K3s server node
   hosts: k3s_master
   tags: [install]
   become: true
@@ -45,10 +45,10 @@
       ansible.builtin.include_vars: "vars/picluster.yml"
       tags: ["always"]
   roles:
-    - role: k3s/master
+    - role: k3s_server
     - role: ricsanfre.k8s_cli
 
-- name: Install K3S worker nodes
+- name: Install K3s agent nodes
   hosts: k3s_worker
   tags: [install]
   become: true
@@ -60,7 +60,7 @@
       ansible.builtin.include_vars: "vars/picluster.yml"
       tags: ["always"]
   roles:
-    - role: k3s/worker
+    - role: k3s_agent
 
 - name: Label K3S worker nodes
   hosts: k3s_master
@@ -83,12 +83,18 @@
     #   delay: 5
     #   with_items: "{{ groups['k3s_worker'] }}"
 
-    - name: Label k3s worker nodes
-      ansible.builtin.command:
-        cmd: "kubectl label nodes {{ item }} kubernetes.io/role=worker"
+    - name: Label k3s agent nodes
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: Node
+          metadata:
+            name: "{{ item }}"
+            labels:
+              node-role.kubernetes.io/agent:
       with_items: "{{ groups['k3s_worker'] }}"
 
-- name: Get Kubernets config file
+- name: Get Kubernetes config file
   hosts: k3s_master
   tags: [kube-config]
   tasks:

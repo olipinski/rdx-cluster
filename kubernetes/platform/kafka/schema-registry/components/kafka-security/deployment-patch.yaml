@@ -1,5 +1,5 @@
 ---
-# Replace SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS enviroment variable
+# Replace SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS environment variable
 - op: replace
   path: /spec/template/spec/containers/0/env/2/value
   value: SASL_PLAINTEXT://cluster-kafka-bootstrap:9092

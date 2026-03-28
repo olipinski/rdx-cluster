@@ -30,14 +30,16 @@
         name: wpasupplicant
         update_cache: true
         state: present
-    # wlan interface configuration
-    - name: Configure wlan link name using systemd-networkd
+    # WLAN interface configuration
+    - name: Configure WLAN link name using systemd-networkd
       ansible.builtin.include_role:
         name: kpfleming.systemd_networkd.link
       tags: [networking]
       register: networkd_result
-    # Reboot for wlan to take effect
-    - name: Reboot to apply wlan naming
+    # Reboot for WLAN to take effect
+    # This needs to run right here, so that netplan can use the correct interface names
+    # Therefore we ignore ansible-lint.
+    - name: Reboot to apply WLAN naming # noqa: no-handler
       ansible.builtin.reboot:
         msg: "Rebooting to install systemd-networkd links."
       tags: [networking]
@@ -79,11 +81,11 @@
         name: ricsanfre.ntp
       tags: [ntp]
       register: ntp_result
-    # This reboot does not use ansible because
-    # we need to ignore the reconnecting to the node.
+    # This reboot does not use ansible because we need to ignore the reconnecting to the node.
     # The gateway node will never be back under this IP address.
     # Now we can continue to setup_picluster.yml
-    - name: Reboot if required
+    # We also cannot use handlers, as include_role does not have a notify attribute.
+    - name: Reboot if required # noqa: no-handler no-changed-when
       ansible.builtin.command: "sleep 5 && reboot"
       async: 1
       poll: 0

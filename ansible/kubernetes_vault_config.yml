@@ -3,9 +3,6 @@
   hosts: localhost
   gather_facts: false
 
-  collections:
-    - kubernetes.core
-
   environment:
     # The location of the kubeconfig file on the master.
     K8S_AUTH_KUBECONFIG: ~/.kube/config
@@ -26,8 +23,8 @@
         name: kubernetes
         state: present
       become: true
-    # Install Hashicorp python packages (Ansible hashi module dependency)
-    - name: Ensure hashicorp vault python library is installed.
+    # Install HashiCorp python packages (Ansible vault module dependency)
+    - name: Ensure HashiCorp vault python library is installed.
       ansible.builtin.pip:
         name: hvac
         state: present

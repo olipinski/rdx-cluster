@@ -24,7 +24,7 @@ cr:
         # Public facing URL of Grafana
         external_url: "https://monitoring.${CLUSTER_DOMAIN}/grafana/"
         auth:
-          # Use same OAuth2.0 token used for accesing Kiali
+          # Use same OAuth2.0 token used for accessing Kiali
           type: bearer
           use_kiali_token: true
       tracing:

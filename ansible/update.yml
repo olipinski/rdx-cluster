@@ -1,10 +1,10 @@
 ---
-- hosts: rdxcluster:gateways
+- name: Update all nodes
+  hosts: rdxcluster:gateways
   become: true
   gather_facts: false
-
   tasks:
-    - name: Update apt repo and cache on all Debian/Ubuntu nodes
+    - name: Update apt repo and cache
       ansible.builtin.apt:
         update_cache: true
         cache_valid_time: 3600
@@ -24,7 +24,6 @@
         get_checksum: false
         # Algorithm to determine checksum of file
       register: reboot_required_file
-      # Save a result in and we are going to use it as follows to reboot the box
 
     - name: Reboot if kernel updated
       ansible.builtin.reboot:

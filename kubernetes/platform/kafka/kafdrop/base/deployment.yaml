@@ -59,5 +59,10 @@ spec:
             requests:
               cpu: 1m
               memory: 128Mi
+            limits:
+              memory: 256Mi
           volumeMounts: []
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
       volumes: []

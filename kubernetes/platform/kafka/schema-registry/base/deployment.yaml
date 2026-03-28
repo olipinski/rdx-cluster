@@ -3,21 +3,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: schema-registry
+  namespace: kafka
   labels:
-    app: schema-registry-schema-registry
     app.kubernetes.io/name: schema-registry
     app.kubernetes.io/instance: schema-registry
+  annotations:
+    ignore-check.kube-linter.io/non-existent-service-account: |
+      "Service account is defined in ../service-account.yaml. Uncertain why it is not picked up."
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: schema-registry-schema-registry
       app.kubernetes.io/name: schema-registry
       app.kubernetes.io/instance: schema-registry
   template:
     metadata:
       labels:
-        app: schema-registry-schema-registry
         app.kubernetes.io/name: schema-registry
         app.kubernetes.io/instance: schema-registry
     spec:

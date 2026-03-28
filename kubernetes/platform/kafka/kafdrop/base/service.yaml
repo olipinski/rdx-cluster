@@ -6,6 +6,9 @@ metadata:
   labels:
     app.kubernetes.io/instance: kafdrop
     app.kubernetes.io/name: kafdrop
+  annotations:
+    ignore-check.kube-linter.io/dangling-service: |
+      "PyCharm can see the selectors correctly, kube-linter does not want to pick them up"
 spec:
   ports:
     - port: 9000

@@ -290,7 +290,7 @@ kubeControllerManager:
   # #
   # ref: https://kubernetes.io/docs/concepts/services-networking/service/#services-without-selectors
 
-  # Enable KubeController manager montoring
+  # Enable KubeController manager monitoring
   enabled: true
   # endpoints : IP addresses of K3s control plane nodes
   # K3d tip: Get the K3d control plane node IPs e.g. as follows:

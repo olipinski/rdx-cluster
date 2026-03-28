@@ -17,10 +17,13 @@ jobs:
       - name: Set up Python 3.
         uses: actions/setup-python@v6
         with:
-          python-version: "3.x"
+          python-version: "3.13"
 
       - name: Install test dependencies.
         run: pip3 install yamllint hvac
+
+      - name: Check spelling.
+        uses: codespell-project/actions-codespell@v2
 
       - name: Lint all the Ansible YAMLs.
         run: yamllint .
@@ -30,13 +33,12 @@ jobs:
         run: yamllint .
         working-directory: ./kubernetes
 
-      - name: Scan Ansible YAMLs
+      - name: Ansible-lint the Ansible YAMLs.
         uses: ansible/ansible-lint@v26.3.0
         with:
           working-directory: ./ansible
 
-      - name: Scan Kubernetes YAMLs
-        id: kube-lint-scan
+      - name: Kube-lint the Kubernetes YAMLs.
         uses: stackrox/kube-linter-action@v1
         with:
           directory: ./kubernetes

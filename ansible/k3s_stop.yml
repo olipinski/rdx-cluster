@@ -1,5 +1,6 @@
 ---
-- hosts: k3s_master
+- name: Stop K3s servers
+  hosts: k3s_master
   become: true
   gather_facts: false
   tasks:
@@ -8,7 +9,8 @@
         name: k3s
         state: stopped
 
-- hosts: k3s_worker
+- name: Stop K3s agents
+  hosts: k3s_worker
   become: true
   gather_facts: false
   tasks:
@@ -17,18 +19,18 @@
         name: k3s-agent
         state: stopped
 
-- hosts: k3s_master
+- name: Stop all K3s server containers
+  hosts: k3s_master
   become: true
   gather_facts: false
   tasks:
-    - name: Stop k3s containers and free network resources
+    - name: Stop k3s containers and free network resources # noqa: no-changed-when
       ansible.builtin.command: /usr/local/bin/k3s-killall.sh
-      changed_when: true
 
-- hosts: k3s_worker
+- name: Stop all K3s agent containers
+  hosts: k3s_worker
   become: true
   gather_facts: false
   tasks:
-    - name: Stop k3s containers and free network resources
+    - name: Stop k3s containers and free network resources # noqa: no-changed-when
       ansible.builtin.command: /usr/local/bin/k3s-killall.sh
-      changed_when: true

@@ -13,8 +13,6 @@
     - name: Include picluster variables
       ansible.builtin.include_vars: "vars/picluster.yml"
       tags: ["always"]
-  collections:
-    - prometheus.prometheus
   roles:
     - role: ricsanfre.fluentbit
     - role: prometheus.prometheus.node_exporter
@@ -33,7 +31,5 @@
     - name: Include picluster variables
       ansible.builtin.include_vars: "vars/picluster.yml"
       tags: ["always"]
-  collections:
-    - prometheus.prometheus
   roles:
     - role: prometheus.prometheus.bind_exporter

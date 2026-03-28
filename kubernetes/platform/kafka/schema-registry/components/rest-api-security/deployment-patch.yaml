@@ -1,5 +1,5 @@
 ---
-# Add REST API Basic Auth Configuraiton
+# Add REST API Basic Auth Configuration
 - op: add
   path: /spec/template/spec/containers/0/env/-
   value:

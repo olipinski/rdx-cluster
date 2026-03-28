@@ -6,7 +6,7 @@
   gather_facts: true
   tags: [certificates]
   vars:
-    propagation_seconds: 300
+    certbot_propagation_seconds: 300
     selfsigned_certificates_path: "../certificates"
   pre_tasks:
     # Include vault variables
@@ -30,7 +30,7 @@
         certbot certonly \
         --dns-cloudflare \
         --dns-cloudflare-credentials ~/.secrets/cloudflare-credentials.ini \
-        --dns-cloudflare-propagation-seconds {{ propagation_seconds }} \
+        --dns-cloudflare-propagation-seconds {{ certbot_propagation_seconds }} \
         --server https://acme-v02.api.letsencrypt.org/directory \
         --agree-tos \
         --non-interactive \
@@ -202,7 +202,6 @@
         create: true
         mode: "0644"
       when: custom_ca
-
     - name: Insert VAULT_TOKEN in dotfile
       become: true
       ansible.builtin.lineinfile:
@@ -243,9 +242,8 @@
       become: true
 
   tasks:
-    # Vault Login using ansible environment variables for creating token file
-    # token file will be usd in next commands
-    - name: Vault login
+    # Vault Login using ansible environment variables for creating the token file used in the next tasks.
+    - name: Vault login # noqa: no-changed-when
       ansible.builtin.shell: bash -ilc 'vault login $VAULT_TOKEN'
       # Interactive bash so .bashrc is loaded
       # 'source ~/.bashrc && <command>' does not work because
@@ -263,11 +261,17 @@
       become: false
       register: vault_login
 
+    - name: Get vault token
+      ansible.builtin.set_fact:
+        vault_token: "{{ vault_login.stdout | from_json | community.hashi_vault.vault_login_token }}"
+
     # Create write token
     - name: Create KV write token
       community.hashi_vault.vault_token_create:
         url: "https://{{ vault_dns }}:8200"
         policies: ["write"]
+        auth_method: token
+        token: "{{ vault_token }}"
       register: token_data
       become: false
       vars:

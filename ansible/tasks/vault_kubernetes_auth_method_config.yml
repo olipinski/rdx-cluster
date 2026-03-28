@@ -1,5 +1,5 @@
 ---
-- name: Vault login
+- name: Vault login # noqa: no-changed-when
   ansible.builtin.shell: bash -ilc 'vault login -format=json $VAULT_TOKEN'
   # Interactive bash so .bashrc is loaded
   # 'source ~/.bashrc && <command>' does not work because
@@ -16,7 +16,6 @@
   # '-i' means interactive shell, so .bashrc won't be ignored '-l' means login shell which sources full user profile
   become: false
   register: vault_login
-  changed_when: false
   delegate_to: service0
 
 - name: Get vault token

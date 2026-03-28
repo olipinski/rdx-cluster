@@ -238,7 +238,7 @@ nft_input_host_rules:
   011_drop_unwanted_ipv6:
     - ip6 daddr @ip6blackhole counter drop
   015_localhost:
-    - iif lo accept
+    - iif lo accept # codespell:ignore iif
   050_icmp:
     - meta l4proto {icmp,icmpv6} accept
   200_input_udp_accepted:
@@ -259,13 +259,16 @@ nft_forward_host_rules:
   005_global:
     - jump global
   100_lan_to_lan:
-    - iifname {$lan_interface, $wg_interface} ip saddr $lan_network oifname {$lan_interface, $wg_interface} ct state new accept
+    - iifname {$lan_interface, $wg_interface} ip saddr $lan_network oifname {$lan_interface, $wg_interface} ct state new
+      accept
   200_lan_to_wan:
     - iifname {$lan_interface, $wg_interface} ip saddr $lan_network oifname $wan_interface ct state new accept
   300_wan_to_lan_tcp:
-    - iifname $wan_interface ip daddr $lan_network oifname {$lan_interface, $wg_interface} tcp dport @forward_tcp_accept ct state new accept
+    - iifname $wan_interface ip daddr $lan_network oifname {$lan_interface, $wg_interface} tcp dport @forward_tcp_accept
+      ct state new accept
   310_wan_to_lan_udp:
-    - iifname $wan_interface ip daddr $lan_network oifname {$lan_interface, $wg_interface} udp dport @forward_udp_accept ct state new accept
+    - iifname $wan_interface ip daddr $lan_network oifname {$lan_interface, $wg_interface} udp dport @forward_udp_accept
+      ct state new accept
 
 # NAT pre-routing, including DNAT
 nft_nat_host_prerouting_rules:

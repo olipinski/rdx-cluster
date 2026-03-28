@@ -1,5 +1,5 @@
 ---
-common_packages:
+basic_setup_common_packages:
   - curl
   - bridge-utils
   # Longhorn requirements
@@ -8,5 +8,6 @@ common_packages:
   - cryptsetup
   - dmsetup
 
-radxa_packages:
+# TODO add RaspberryPi packages
+basic_setup_radxa_packages:
   - fake-hwclock

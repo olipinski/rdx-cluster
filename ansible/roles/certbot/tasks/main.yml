@@ -6,7 +6,7 @@
       - python3-venv
     state: present
   become: true
-  when: install_python_packages
+  when: certbot_install_python_packages
 
 - name: Install certbot and Cloudflare plugin in a virtual Python environment
   ansible.builtin.pip:
