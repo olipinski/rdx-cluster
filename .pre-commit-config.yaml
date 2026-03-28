@@ -48,4 +48,17 @@ repos:
     rev: v0.8.3
     hooks:
       - id: kube-linter
-        files: "kubernetes"
+        files: "kubernetes/"
+#  - repo: https://github.com/olipinski/kubeconform
+#    rev: ee83d9c3ca41ed11023cb6f9cf47eaabda232b56
+#    hooks:
+#      - id: kubeconform
+#        args: 
+#          - "-strict"
+#          - "-schema-location"
+#          - "default"
+#          - "-schema-location"
+#          - "https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json"
+#          - "-schema-location"
+#          - "https://json.schemastore.org/{{.ResourceKind}}.json"
+#        files: "kubernetes/"

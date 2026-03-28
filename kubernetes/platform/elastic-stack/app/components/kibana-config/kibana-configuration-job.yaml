@@ -4,6 +4,7 @@ kind: Job
 metadata:
   name: kibana-config-job
 spec:
+  ttlSecondsAfterFinished: 3600 # Delete the job once done, if needed 1h to inspect logs
   parallelism: 1
   completions: 1
   template:
@@ -11,7 +12,8 @@ spec:
       restartPolicy: Never
       initContainers:
         - name: wait-for-kibana
-          image: alpine/curl:latest
+          # renovate: datasource=github-releases depName=curl/curl-container
+          image: alpine/curl:8.17.0
           imagePullPolicy: IfNotPresent
           env:
             - name: KIBANA_URL
@@ -22,9 +24,19 @@ spec:
           volumeMounts:
             - name: kibana-config-data
               mountPath: /kibana/
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          resources:
+            requests:
+              cpu: 1m
+              memory: 128Mi
+            limits:
+              memory: 128Mi
       containers:
         - name: kibana-config-job
-          image: alpine/curl:latest
+         # renovate: datasource=github-releases depName=curl/curl-container
+          image: alpine/curl:8.17.0
           env:
             - name: ELASTICSEARCH_PASSWORD
               valueFrom:
@@ -39,8 +51,17 @@ spec:
           volumeMounts:
             - name: kibana-config-data
               mountPath: /kibana/
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          resources:
+            requests:
+              cpu: 1m
+              memory: 128Mi
+            limits:
+              memory: 128Mi
       volumes:
         - name: kibana-config-data
           configMap:
             name: kibana-config-data
-            defaultMode: "0777"
+            defaultMode: 0777 # yamllint disable-line rule:octal-values
