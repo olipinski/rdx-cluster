@@ -13,7 +13,7 @@ repos:
       - id: check-merge-conflict
       - id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
-        exclude: "j2"
+         exclude: "j2|kubernetes/"
       - id: detect-private-key
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.2
@@ -43,17 +43,18 @@ repos:
       - id: yamllint
         types: [yaml]
         # Ansible-lint already uses yamllint
-        exclude: "ansible|ansible-runner"
+        exclude: "ansible|ansible-runner|fluxcd-app-template"
   - repo: https://github.com/stackrox/kube-linter
     rev: v0.8.3
     hooks:
       - id: kube-linter
         files: "kubernetes/"
+        exclude: "fluxcd-app-template"
 #  - repo: https://github.com/olipinski/kubeconform
 #    rev: ee83d9c3ca41ed11023cb6f9cf47eaabda232b56
 #    hooks:
 #      - id: kubeconform
-#        args: 
+#        args:
 #          - "-strict"
 #          - "-schema-location"
 #          - "default"

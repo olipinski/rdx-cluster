@@ -16,7 +16,6 @@ spec:
       protocol: TCP
       targetPort: 8200
   type: ClusterIP
-
 ---
 # Endpoint for the headless service without selector
 apiVersion: discovery.k8s.io/v1
@@ -35,7 +34,6 @@ ports:
   - name: vaultport
     port: 8200
     protocol: TCP
-
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor

@@ -1,7 +1,5 @@
 ---
-velero_version: v1.16.1
-velero_arch: amd64
-
+# renovate: datasource=github-releases depName=vmware-tanzu/velero
 velero_cli_velero_version: v1.18.0
 velero_cli_velero_arch: amd64
 
