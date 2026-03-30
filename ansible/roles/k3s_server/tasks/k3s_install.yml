@@ -6,7 +6,7 @@
     mode: "0766"
 
 - name: Install K3s # noqa: no-changed-when
-  ansible.builtin.command: "/tmp/k3s_install.sh server"
+  ansible.builtin.command: /tmp/k3s_install.sh server
   environment:
     INSTALL_K3S_VERSION: "{{ k3s_server_k3s_version }}"
 
@@ -15,7 +15,7 @@
     path: ~{{ ansible_user }}/.kube
     state: directory
     owner: "{{ ansible_user }}"
-    mode: "u=rwx,g=rx,o="
+    mode: u=rwx,g=rx,o=
 
 - name: Copy config file to user home directory
   ansible.builtin.copy:
@@ -23,4 +23,4 @@
     dest: ~{{ ansible_user }}/.kube/config
     remote_src: true
     owner: "{{ ansible_user }}"
-    mode: "u=rw,g=,o="
+    mode: u=rw,g=,o=

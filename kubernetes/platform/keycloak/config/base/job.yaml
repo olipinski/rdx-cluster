@@ -28,19 +28,19 @@ spec:
           image: "docker.io/adorsys/keycloak-config-cli:6.5.0-26.1.0"
           imagePullPolicy: IfNotPresent
           env:
-            - name: "IMPORT_PATH"
-              value: "/config/"
-            - name: "KEYCLOAK_URL"
+            - name: IMPORT_PATH
+              value: /config/
+            - name: KEYCLOAK_URL
               value: "http://keycloak-service:8080"
             # Enable variable substitution
-            - name: "IMPORT_VARSUBSTITUTION_ENABLED"
+            - name: IMPORT_VARSUBSTITUTION_ENABLED
               value: "true"
-            - name: "CLUSTER_DOMAIN"
-              value: ${CLUSTER_DOMAIN}
-            - name: "PI_ADMIN_FIRSTNAME"
-              value: ${PI_ADMIN_FIRSTNAME}
-            - name: "PI_ADMIN_LASTNAME"
-              value: ${PI_ADMIN_LASTNAME}
+            - name: CLUSTER_DOMAIN
+              value: "${CLUSTER_DOMAIN}"
+            - name: PI_ADMIN_FIRSTNAME
+              value: "${PI_ADMIN_FIRSTNAME}"
+            - name: PI_ADMIN_LASTNAME
+              value: "${PI_ADMIN_LASTNAME}"
           # Additional environment variables in secret
           envFrom:
             - secretRef:
@@ -60,5 +60,5 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: "keycloak-realm-configmap"
+            name: keycloak-realm-configmap
             defaultMode: 0555 # yamllint disable-line rule:octal-values

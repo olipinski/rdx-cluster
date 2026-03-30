@@ -3,7 +3,8 @@
   hosts: s3
   become: true
   gather_facts: false
-  tags: [s3]
+  tags:
+    - s3
   tasks:
     - name: Stop and disable Minio Server
       ansible.builtin.systemd:
@@ -31,7 +32,8 @@
   hosts: vault
   become: true
   gather_facts: false
-  tags: [vault]
+  tags:
+    - vault
   tasks:
     - name: Stop and disable Vault Server
       ansible.builtin.systemd:
@@ -62,7 +64,8 @@
   hosts: rdxcluster:gateways
   become: true
   gather_facts: false
-  tags: [restic]
+  tags:
+    - restic
   tasks:
     - name: Stop and disable restic backup service
       ansible.builtin.systemd:

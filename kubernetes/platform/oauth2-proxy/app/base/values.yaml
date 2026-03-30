@@ -17,7 +17,7 @@ config:
   #  cookieSecret: "bG5pRDBvL0VaWis3dksrZ05vYnJLclRFb2VNcVZJYkg="
   # The name of the cookie that oauth2-proxy will create
   # If left empty, it will default to the release name
-  cookieName: "oauth2-proxy"
+  cookieName: oauth2-proxy
 
   # Config file
   configFile: |-

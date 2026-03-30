@@ -5,12 +5,12 @@ cr:
   create: true
   namespace: kiali
   spec:
-    istio_namespace: "istio-system"
+    istio_namespace: istio-system
     auth:
       # strategy: "anonymous"
       strategy: openid
       openid:
-        client_id: "kiali"
+        client_id: kiali
         disable_rbac: true
         issuer_uri: "https://sso.${CLUSTER_DOMAIN}/realms/rdxcluster"
     external_services:
@@ -33,16 +33,16 @@ cr:
         enabled: true
         # Tempo service name is "query-frontend" and is in the "tempo" namespace.
         internal_url: "http://tempo-query-frontend.tempo.svc.cluster.local:3100/"
-        provider: "tempo"
+        provider: tempo
         tempo_config:
           org_id: "1"
-          datasource_uid: "a8d2ef1c-d31c-4de5-a90b-e7bc5252cd00"
+          datasource_uid: a8d2ef1c-d31c-4de5-a90b-e7bc5252cd00
         # Use grpc to speed up the download of metrics
         use_grpc: true
         grpc_port: 9095
     deployment:
       ingress:
-        class_name: "nginx"
+        class_name: nginx
         enabled: true
         override_yaml:
           metadata:

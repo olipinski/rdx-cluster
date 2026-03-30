@@ -7,7 +7,8 @@ metadata:
   labels:
     app.kubernetes.io/name: vault-ext-service
   annotations:
-    ignore-check.kube-linter.io/dangling-service: "This is a headless service, and so has no selectors."
+    ignore-check.kube-linter.io/dangling-service: This is a headless service, and so has no selectors.
+
 spec:
   clusterIP: None
   ports:
@@ -27,7 +28,7 @@ metadata:
 addressType: IPv4
 endpoints:
   - addresses:
-      - "10.20.0.8
+      - 10.20.0.8
     conditions:
       ready: true
 ports:

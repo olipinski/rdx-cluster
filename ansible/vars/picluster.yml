@@ -66,17 +66,17 @@ k3s_server_config:
     - metrics-server
   write-kubeconfig-mode: 644
   node-taint:
-    - "node-role.kubernetes.io/control-plane:NoSchedule"
+    - node-role.kubernetes.io/control-plane:NoSchedule
   etcd-expose-metrics: true
   kubelet-arg:
-    - "config=/etc/rancher/k3s/kubelet.config"
+    - config=/etc/rancher/k3s/kubelet.config
   # kube-proxy-arg:
   #  - 'metrics-bind-address=0.0.0.0'
   kube-controller-manager-arg:
-    - "bind-address=0.0.0.0"
-    - "terminated-pod-gc-threshold=10"
+    - bind-address=0.0.0.0
+    - terminated-pod-gc-threshold=10
   kube-scheduler-arg:
-    - "bind-address=0.0.0.0"
+    - bind-address=0.0.0.0
 
 # k3s agent-config
 # Equivalent to start agent installer with the following options
@@ -85,9 +85,10 @@ k3s_server_config:
 #  --kube-proxy-arg 'metrics-bind-address=0.0.0.0'
 k3s_agent_config:
   node-label:
-    - "node_type=worker"
+    - node_type=agent
   kubelet-arg:
-    - "config=/etc/rancher/k3s/kubelet.config"
+    - config=/etc/rancher/k3s/kubelet.config
+
 #  kube-proxy-arg:
 #    - 'metrics-bind-address=0.0.0.0'
 
@@ -150,11 +151,11 @@ minio_server_datadirs:
   - /naspool/s3
 
 # Minio admin credentials
-minio_root_user: "root"
+minio_root_user: root
 minio_root_password: "{{ vault.minio.root.key }}"
 
 # Minio site region configuration
-minio_site_region: "eu-east-0"
+minio_site_region: eu-east-0
 
 # Enabling TLS
 minio_enable_tls: true
@@ -258,7 +259,7 @@ minio_users:
 restic_version: 0.18.1
 
 # Restic S3 repository configuration
-restic_repository: "s3:{{ minio_url }}/restic"
+restic_repository: s3:{{ minio_url }}/restic
 restic_use_ca_cert: true
 restic_environment:
   - name: AWS_ACCESS_KEY_ID

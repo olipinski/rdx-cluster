@@ -1,8 +1,8 @@
 ---
 - name: Ensure haproxy package is installed
   ansible.builtin.package:
-    name: "haproxy"
-    state: "present"
+    name: haproxy
+    state: present
     update_cache: true
 
 - name: Copy haproxy config
@@ -15,6 +15,6 @@
 
 - name: Ensure haproxy is running and enabled
   ansible.builtin.service:
-    name: "haproxy"
+    name: haproxy
     state: started
     enabled: true

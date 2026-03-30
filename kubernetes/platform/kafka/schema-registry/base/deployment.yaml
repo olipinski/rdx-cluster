@@ -61,7 +61,7 @@ spec:
             # - name: SCHEMA_REGISTRY_ACCESS_CONTROL_ALLOW_ORIGIN
             #   value: "*"
             - name: SCHEMA_REGISTRY_SCHEMA_COMPATIBILITY_LEVEL
-              value: "backward"
+              value: backward
           ports:
             - name: http
               containerPort: 8081

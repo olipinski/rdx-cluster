@@ -7,12 +7,14 @@
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
-      ansible.builtin.include_vars: "vars/vault.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/vault.yml
+      tags:
+        - always
     # Include picluster variables
     - name: Include picluster variables
-      ansible.builtin.include_vars: "vars/picluster.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/picluster.yml
+      tags:
+        - always
   roles:
     - role: ricsanfre.fluentbit
     - role: prometheus.prometheus.node_exporter
@@ -25,11 +27,13 @@
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
-      ansible.builtin.include_vars: "vars/vault.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/vault.yml
+      tags:
+        - always
     # Include picluster variables
     - name: Include picluster variables
-      ansible.builtin.include_vars: "vars/picluster.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/picluster.yml
+      tags:
+        - always
   roles:
     - role: prometheus.prometheus.bind_exporter

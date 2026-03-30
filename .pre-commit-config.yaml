@@ -1,5 +1,5 @@
 ---
-exclude: "docs|design"
+exclude: docs|design
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -13,13 +13,15 @@ repos:
       - id: check-merge-conflict
       - id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
-         exclude: "j2|kubernetes/"
+        exclude: j2|kubernetes/
       - id: detect-private-key
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.2
     hooks:
       - id: codespell
-        args: ["--builtin clear,rare,informal,usage"]
+        args:
+          - --builtin
+          - clear,rare,informal,usage
   - repo: https://github.com/executablebooks/mdformat
     rev: 1.0.0
     hooks:
@@ -34,7 +36,12 @@ repos:
     rev: v26.3.0
     hooks:
       - id: ansible-lint
-        args: ["--strict", "--fix", "--format=brief", "-q", "-q"]
+        args:
+          - --strict
+          - --fix
+          - --format=brief
+          - -q
+          - -q
         additional_dependencies:
           - ansible
   - repo: https://github.com/adrienverge/yamllint.git
@@ -43,13 +50,14 @@ repos:
       - id: yamllint
         types: [yaml]
         # Ansible-lint already uses yamllint
-        exclude: "ansible|ansible-runner|fluxcd-app-template"
+        exclude: ansible|ansible-runner|fluxcd-app-template
   - repo: https://github.com/stackrox/kube-linter
     rev: v0.8.3
     hooks:
       - id: kube-linter
-        files: "kubernetes/"
-        exclude: "fluxcd-app-template"
+        files: kubernetes/
+        # Ignore the app template and the dashboard
+        exclude: fluxcd-app-template
 #  - repo: https://github.com/olipinski/kubeconform
 #    rev: ee83d9c3ca41ed11023cb6f9cf47eaabda232b56
 #    hooks:

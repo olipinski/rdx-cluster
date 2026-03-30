@@ -27,7 +27,7 @@
 
     - name: Reboot if kernel updated
       ansible.builtin.reboot:
-        msg: "Reboot initiated by Ansible for kernel updates."
+        msg: Reboot initiated by Ansible for kernel updates.
         connect_timeout: 5
         reboot_timeout: 300
         pre_reboot_delay: 120

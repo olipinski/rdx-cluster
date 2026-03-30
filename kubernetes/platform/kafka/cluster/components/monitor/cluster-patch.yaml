@@ -12,5 +12,5 @@ spec:
           name: kafka-metrics
           key: kafka-metrics-config.yml
   kafkaExporter:
-    topicRegex: ".*"
-    groupRegex: ".*"
+    topicRegex: .*
+    groupRegex: .*

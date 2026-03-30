@@ -14,7 +14,7 @@
       - certbot
       - certbot-dns-cloudflare
     virtualenv: "{{ certbot_venv }}"
-    virtualenv_command: "python3 -m venv"
+    virtualenv_command: python3 -m venv
     state: present
 
 - name: Create working directories

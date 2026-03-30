@@ -16,4 +16,4 @@ spec:
                       operator: In
                       values:
                         - cluster-kafka
-                topologyKey: "kubernetes.io/hostname"
+                topologyKey: kubernetes.io/hostname

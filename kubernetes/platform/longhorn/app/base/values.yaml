@@ -3,7 +3,7 @@
 
 # Storage path
 defaultSettings:
-  defaultDataPath: "/storage"
+  defaultDataPath: /storage
 
 # Hotfix for Longhorn memory leak
 image:

@@ -48,7 +48,7 @@ write:
   # Enable environment variables in config file
   # https://grafana.com/docs/loki/latest/configuration/#use-environment-variables-in-the-configuration
   extraArgs:
-    - "-config.expand-env=true"
+    - -config.expand-env=true
   extraEnv:
     - name: MINIO_ACCESS_KEY_ID
       valueFrom:
@@ -74,7 +74,7 @@ read:
   # Enable environment variables in config file
   # https://grafana.com/docs/loki/latest/configuration/#use-environment-variables-in-the-configuration
   extraArgs:
-    - "-config.expand-env=true"
+    - -config.expand-env=true
   extraEnv:
     - name: MINIO_ACCESS_KEY_ID
       valueFrom:
@@ -100,7 +100,7 @@ backend:
   # Enable environment variables in config file
   # https://grafana.com/docs/loki/latest/configuration/#use-environment-variables-in-the-configuration
   extraArgs:
-    - "-config.expand-env=true"
+    - -config.expand-env=true
   extraEnv:
     - name: MINIO_ACCESS_KEY_ID
       valueFrom:

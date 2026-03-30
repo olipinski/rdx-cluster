@@ -19,7 +19,7 @@
   path: /spec/template/spec/containers/0/env/-
   value:
     name: SCHEMA_REGISTRY_AUTHENTICATION_ROLES
-    value: "admin,user,developer"
+    value: admin,user,developer
 - op: add
   path: /spec/template/spec/containers/0/env/-
   value:

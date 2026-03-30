@@ -38,7 +38,7 @@ spec:
           ports:
             - containerPort: 80
           volumeMounts:
-            - mountPath: "/var/log/nginx"
+            - mountPath: /var/log/nginx
               name: nginx-logs
               readOnly: false
 

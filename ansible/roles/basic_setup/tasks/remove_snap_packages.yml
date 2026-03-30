@@ -25,6 +25,6 @@
       when: basic_setup_retry_count | int == 3
     - name: Printing retry message
       ansible.builtin.debug:
-        msg: "Removing snap package failed, retrying."
+        msg: Removing snap package failed, retrying.
     - name: Retrying deletion
       ansible.builtin.include_tasks: remove_snap_packages.yml

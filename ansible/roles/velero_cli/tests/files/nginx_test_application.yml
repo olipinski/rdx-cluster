@@ -55,7 +55,7 @@ spec:
           ports:
             - containerPort: 80
           volumeMounts:
-            - mountPath: "/var/log/nginx"
+            - mountPath: /var/log/nginx
               name: nginx-logs
               readOnly: false
         - image: ubuntu:bionic
@@ -63,13 +63,13 @@ spec:
           securityContext:
             privileged: true
           volumeMounts:
-            - mountPath: "/var/log/nginx"
+            - mountPath: /var/log/nginx
               name: nginx-logs
               readOnly: false
           command:
-            - "/bin/bash"
-            - "-c"
-            - "sleep infinity"
+            - /bin/bash
+            - -c
+            - sleep infinity
 
 ---
 apiVersion: v1

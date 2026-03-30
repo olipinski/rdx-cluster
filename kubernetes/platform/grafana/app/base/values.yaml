@@ -11,6 +11,7 @@ admin:
 # Install required plugins
 plugins:
   - grafana-piechart-panel
+
 # Relabel job name of Grafana's metrics
 serviceMonitor:
   enabled: true
@@ -20,10 +21,10 @@ datasources:
   datasources.yaml:
     apiVersion: 1
     deleteDatasources:
-      - { name: Alertmanager, orgId: 1 }
-      - { name: Loki, orgId: 1 }
-      - { name: Prometheus, orgId: 1 }
-      - { name: Tempo, orgId: 1 }
+      - {name: Alertmanager, orgId: 1}
+      - {name: Loki, orgId: 1}
+      - {name: Prometheus, orgId: 1}
+      - {name: Tempo, orgId: 1}
     datasources:
       - name: Prometheus
         type: prometheus
@@ -59,6 +60,7 @@ datasources:
         type: tempo
         access: proxy
         url: http://tempo-query-frontend-discovery.tempo.svc.cluster.local:3100
+
 ##
 ## Provisioning sidecars
 ##

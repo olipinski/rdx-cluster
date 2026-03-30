@@ -3,7 +3,7 @@
 apiVersion: cilium.io/v2
 kind: CiliumLoadBalancerIPPool
 metadata:
-  name: "first-pool"
+  name: first-pool
   namespace: kube-system
 spec:
   # Do not allow the .0 and .255 IPs to be allocated

@@ -20,7 +20,8 @@ alertmanager:
       volumeClaimTemplate:
         spec:
           storageClassName: ${STORAGE_CLASS:=longhorn}
-          accessModes: ["ReadWriteOnce"]
+          accessModes:
+            - ReadWriteOnce
           resources:
             requests:
               storage: 1Gi
@@ -81,7 +82,8 @@ prometheus:
       volumeClaimTemplate:
         spec:
           storageClassName: ${STORAGE_CLASS:=longhorn}
-          accessModes: ["ReadWriteOnce"]
+          accessModes:
+            - ReadWriteOnce
           resources:
             requests:
               storage: 10Gi
@@ -105,7 +107,8 @@ prometheus-node-exporter:
         - action: replace
           regex: (.*)
           replacement: $1
-          sourceLabels: ["__meta_kubernetes_pod_node_name"]
+          sourceLabels:
+            - __meta_kubernetes_pod_node_name
           targetLabel: kubernetes_node
 # Kube-State-Metrics Configuration
 kube-state-metrics:
@@ -121,13 +124,14 @@ kube-state-metrics:
         - action: replace
           regex: (.*)
           replacement: $1
-          sourceLabels: ["__meta_kubernetes_pod_node_name"]
+          sourceLabels:
+            - __meta_kubernetes_pod_node_name
           targetLabel: kubernetes_node
 # Grafana Configuration
 grafana:
   fullnameOverride: grafana
   # Admin user password
-  adminPassword: "s1cret0"
+  adminPassword: s1cret0
   # grafana configuration
   grafana.ini:
     server:
@@ -181,7 +185,7 @@ grafana:
             path: /var/lib/grafana/dashboards/default-folder
         - name: infrastructure
           orgId: 1
-          folder: "Infrastructure"
+          folder: Infrastructure
           type: file
           disableDeletion: false
           editable: true

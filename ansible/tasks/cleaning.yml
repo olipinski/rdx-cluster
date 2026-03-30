@@ -35,10 +35,10 @@
     path: "{{ item }}"
     state: absent
   with_items:
-    - "/var/log/pods"
-    - "/var/log/containers"
-    - "/var/log/fluentbit"
-    - "/etc/cni/net.d"
+    - /var/log/pods
+    - /var/log/containers
+    - /var/log/fluentbit
+    - /etc/cni/net.d
 
 - name: Clean fluentd pos files | get pos files
   ansible.builtin.find:

@@ -5,6 +5,7 @@ kind: Component
 resources:
   - external-secret.yaml
   - kafka-user.yaml
+
 patches:
   - target:
       group: kafka.strimzi.io

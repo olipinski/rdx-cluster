@@ -13,7 +13,7 @@ pools: 1
 # Persistence
 persistence:
   enabled: true
-  storageClass: "longhorn"
+  storageClass: longhorn
   accessMode: ReadWriteOnce
   size: 10Gi
 

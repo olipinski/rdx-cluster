@@ -1,7 +1,7 @@
 ---
 # Minio prometheus bearer token was created and stored in filesystem
 - name: Load prometheus bearer token from file in vault node # noqa: no-changed-when
-  ansible.builtin.command: "jq -r '.bearerToken' /etc/minio/prometheus_bearer.json"
+  ansible.builtin.command: jq -r '.bearerToken' /etc/minio/prometheus_bearer.json
   register: root_token
   become: true
   when: minio_prom_bearer_token is not defined

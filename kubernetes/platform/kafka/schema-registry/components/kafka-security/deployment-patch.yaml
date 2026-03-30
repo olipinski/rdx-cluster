@@ -26,4 +26,4 @@
   path: /spec/template/spec/containers/0/env/-
   value:
     name: SCHEMA_REGISTRY_KAFKASTORE_TOPIC
-    value: "confluent-schemas"
+    value: confluent-schemas

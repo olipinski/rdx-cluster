@@ -42,8 +42,8 @@
     headers:
       X-Vault-Token: "{{ vault_token }}"
     body:
-      type: "kubernetes"
-      description: "kubernetes auth"
+      type: kubernetes
+      description: kubernetes auth
     body_format: json
     status_code:
       - 200
@@ -77,7 +77,8 @@
     body:
       bound_service_account_names: external-secrets
       bound_service_account_namespaces: external-secrets
-      policies: ["read"]
+      policies:
+        - read
     body_format: json
     status_code:
       - 200
@@ -110,7 +111,9 @@
     body:
       bound_service_account_names: kube-prometheus-stack-prometheus
       bound_service_account_namespaces: kube-prom-stack
-      policies: ["default", "prometheus-monitoring"]
+      policies:
+        - default
+        - prometheus-monitoring
     body_format: json
     status_code:
       - 200

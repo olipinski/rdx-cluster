@@ -10,7 +10,8 @@
       ansible.builtin.command: /usr/local/bin/k3s-uninstall.sh
     - name: Clean server Longhorn and fluentd
       ansible.builtin.import_tasks: tasks/cleaning.yml
-      tags: ["clean"]
+      tags:
+        - clean
 
 - name: Reset k3s agents
   hosts: k3s_worker
@@ -23,4 +24,5 @@
       ansible.builtin.command: /usr/local/bin/k3s-agent-uninstall.sh
     - name: Clean agent Longhorn and fluentd
       ansible.builtin.import_tasks: tasks/cleaning.yml
-      tags: ["clean"]
+      tags:
+        - clean

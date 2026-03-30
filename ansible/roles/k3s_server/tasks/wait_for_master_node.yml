@@ -1,5 +1,5 @@
 ---
-- name: "Wait for server nodes to be ready" # noqa: no-changed-when
+- name: Wait for server nodes to be ready # noqa: no-changed-when
   ansible.builtin.command:
     cmd: "kubectl get nodes {{ item }}"
   register: k3s_server_nodes

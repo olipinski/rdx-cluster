@@ -9,7 +9,7 @@ restic_clean_service: true
 ############################
 # vault role variables
 ############################
-vault_venv_path: "/opt/vault-venv"
+vault_venv_path: /opt/vault-venv
 
 ################################
 # Fluent-bit Agent configuration

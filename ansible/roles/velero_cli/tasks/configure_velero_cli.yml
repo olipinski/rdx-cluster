@@ -1,7 +1,7 @@
 ---
 - name: Get CLI configured namespace # noqa: no-changed-when
   ansible.builtin.command:
-    cmd: "velero client config get namespace"
+    cmd: velero client config get namespace
   register: velero_cli_get_velero_namespace
   ignore_errors: true
 
@@ -15,13 +15,13 @@
 
 - name: Get CLI configured coloured # noqa: no-changed-when
   ansible.builtin.command:
-    cmd: "velero client config get colored"
+    cmd: velero client config get colored
   register: velero_cli_get_velero_colored
   ignore_errors: true
 
 - name: Configure velero CLI coloured output # noqa: no-changed-when
   ansible.builtin.command:
-    cmd: "velero client config set colored=true"
+    cmd: velero client config set colored=true
   when:
     - velero_cli_get_velero_colored.rc==0
     - '"colored: <NOT SET>" in velero_cli_get_velero_colored.stdout or "colored: true" not in velero_cli_get_velero_colored.stdout'

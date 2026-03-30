@@ -8,6 +8,6 @@
     mode: "0766"
 
 - name: Install K3s # noqa: no-changed-when
-  ansible.builtin.command: "/tmp/k3s_install.sh agent"
+  ansible.builtin.command: /tmp/k3s_install.sh agent
   environment:
     INSTALL_K3S_VERSION: "{{ k3s_agent_k3s_version }}"

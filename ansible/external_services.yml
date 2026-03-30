@@ -4,16 +4,17 @@
 - name: Generate external services certificates
   hosts: localhost
   gather_facts: true
-  tags: [certificates]
+  tags:
+    - certificates
   vars:
     certbot_propagation_seconds: 300
-    selfsigned_certificates_path: "../certificates"
+    selfsigned_certificates_path: ../certificates
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
-      ansible.builtin.include_vars: "vars/vault.yml"
+      ansible.builtin.include_vars: vars/vault.yml
     - name: Include picluster variables
-      ansible.builtin.include_vars: "vars/picluster.yml"
+      ansible.builtin.include_vars: vars/picluster.yml
     - name: Copy Cloudflare secret file
       ansible.builtin.template:
         src: "{{ item.template }}"
@@ -21,7 +22,7 @@
         mode: "0600"
       with_items:
         - template: cloudflare-credentials.ini.j2
-          dest: "~/.secrets/cloudflare-credentials.ini"
+          dest: ~/.secrets/cloudflare-credentials.ini
       when: enable_letsencrypt
 
   tasks:
@@ -57,7 +58,7 @@
             mode: "0750"
         # Include selfsigned certificates variables
         - name: Include selfsigned certificates variables
-          ansible.builtin.include_vars: "vars/selfsigned-certificates.yml"
+          ansible.builtin.include_vars: vars/selfsigned-certificates.yml
         - name: Generate custom CA
           ansible.builtin.include_tasks: tasks/generate_custom_ca.yml
           args:
@@ -82,17 +83,18 @@
 - name: Install Minio S3 Storage Server
   hosts: s3
   gather_facts: true
-  tags: [s3]
+  tags:
+    - s3
   become: true
   vars:
     server_hostname: "{{ minio_hostname }}"
-    selfsigned_certificates_path: "../certificates"
+    selfsigned_certificates_path: ../certificates
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
-      ansible.builtin.include_vars: "vars/vault.yml"
+      ansible.builtin.include_vars: vars/vault.yml
     - name: Include picluster variables
-      ansible.builtin.include_vars: "vars/picluster.yml"
+      ansible.builtin.include_vars: vars/picluster.yml
     - name: Load customCA-signed TLS certificate for minio
       ansible.builtin.set_fact:
         minio_key: "{{ lookup('file', selfsigned_certificates_path + '/' + server_hostname + '.key') }}"
@@ -133,18 +135,19 @@
 - name: Install Vault Server
   hosts: vault
   gather_facts: true
-  tags: [vault]
+  tags:
+    - vault
   become: true
   vars:
     server_hostname: "{{ vault_hostname }}"
-    selfsigned_certificates_path: "../certificates"
+    selfsigned_certificates_path: ../certificates
 
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
-      ansible.builtin.include_vars: "vars/vault.yml"
+      ansible.builtin.include_vars: vars/vault.yml
     - name: Include picluster variables
-      ansible.builtin.include_vars: "vars/picluster.yml"
+      ansible.builtin.include_vars: vars/picluster.yml
     - name: Load customCA-signed TLS certificate for minio
       ansible.builtin.set_fact:
         vault_key: "{{ lookup('file', selfsigned_certificates_path + '/' + server_hostname + '.key') }}"
@@ -187,8 +190,8 @@
       become: true
       ansible.builtin.lineinfile:
         path: ~{{ ansible_user }}/.bashrc
-        regexp: "^export VAULT_ADDR="
-        line: "export VAULT_ADDR='https://{{ vault_hostname }}:8200'"
+        regexp: ^export VAULT_ADDR=
+        line: export VAULT_ADDR='https://{{ vault_hostname }}:8200'
         owner: "{{ ansible_user }}"
         create: true
         mode: "0644"
@@ -196,8 +199,8 @@
       become: true
       ansible.builtin.lineinfile:
         path: ~{{ ansible_user }}/.bashrc
-        regexp: "^export VAULT_CACERT="
-        line: "export VAULT_CACERT=/etc/vault/tls/vault-ca.crt"
+        regexp: ^export VAULT_CACERT=
+        line: export VAULT_CACERT=/etc/vault/tls/vault-ca.crt
         owner: "{{ ansible_user }}"
         create: true
         mode: "0644"
@@ -206,8 +209,8 @@
       become: true
       ansible.builtin.lineinfile:
         path: ~{{ ansible_user }}/.bashrc
-        regexp: "^export VAULT_TOKEN="
-        line: "export VAULT_TOKEN=$(sudo jq -r '.root_token' /etc/vault/unseal.json)"
+        regexp: ^export VAULT_TOKEN=
+        line: export VAULT_TOKEN=$(sudo jq -r '.root_token' /etc/vault/unseal.json)
         owner: "{{ ansible_user }}"
         create: true
         mode: "0644"
@@ -216,14 +219,16 @@
 - name: Load Vault Credentials
   hosts: vault
   gather_facts: true
-  tags: [vault, credentials]
+  tags:
+    - vault
+    - credentials
   become: false
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
-      ansible.builtin.include_vars: "vars/vault.yml"
+      ansible.builtin.include_vars: vars/vault.yml
     - name: Include picluster variables
-      ansible.builtin.include_vars: "vars/picluster.yml"
+      ansible.builtin.include_vars: vars/picluster.yml
     - name: Ensure PIP is installed.
       ansible.builtin.package:
         name:
@@ -268,8 +273,9 @@
     # Create write token
     - name: Create KV write token
       community.hashi_vault.vault_token_create:
-        url: "https://{{ vault_dns }}:8200"
-        policies: ["write"]
+        url: https://{{ vault_dns }}:8200
+        policies:
+          - write
         auth_method: token
         token: "{{ vault_token }}"
       register: token_data

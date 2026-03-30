@@ -1,5 +1,5 @@
 ---
-- name: "Wait for K3S worker nodes to be ready. Nodes Ready status when Cilium has been installed" # noqa: no-changed-when
+- name: Wait for K3S worker nodes to be ready. Nodes Ready status when Cilium has been installed # noqa: no-changed-when
   ansible.builtin.command:
     cmd: "kubectl get nodes {{ item }}"
   register: nodes

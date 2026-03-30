@@ -20,7 +20,9 @@ spec:
               value: efk-kb-http
             - name: KIBANA_PORT
               value: "5601"
-          command: ["/bin/sh", "/kibana/wait-for-kibana.sh"]
+          command:
+            - /bin/sh
+            - /kibana/wait-for-kibana.sh
           volumeMounts:
             - name: kibana-config-data
               mountPath: /kibana/
@@ -47,7 +49,9 @@ spec:
               value: efk-kb-http
             - name: KIBANA_PORT
               value: "5601"
-          command: ["/bin/sh", "/kibana/create-data-view.sh"]
+          command:
+            - /bin/sh
+            - /kibana/create-data-view.sh
           volumeMounts:
             - name: kibana-config-data
               mountPath: /kibana/

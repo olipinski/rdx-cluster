@@ -44,12 +44,12 @@ netplan_configuration:
     ethernets:
       internal-lan:
         match:
-          macaddress: 94:c6:91:1a:65:e8 # Changeme!
+          macaddress: "94:c6:91:1a:65:e8" # Changeme!
         set-name: enoInternal
         addresses:
-          - "10.0.0.1/24"
-          - "10.20.0.1/24"
-          - "10.128.0.1/24" # Cilium external IPs
+          - 10.0.0.1/24
+          - 10.20.0.1/24
+          - 10.128.0.1/24 # Cilium external IPs
         nameservers:
           search:
             - "maas.{{ vault.general.domains.dns }}"
@@ -88,59 +88,59 @@ netplan_configuration:
         port: 51820
         key: "{{ vault.wireguard.auth.private_key }}"
         addresses:
-          - "10.30.0.1/16"
+          - 10.30.0.1/16
         peers:
           - keys:
-              public: "GZ/vB0iBjq5MgYadSYeU+pBw14p4iTOqMlPyZqTVhy8="
+              public: GZ/vB0iBjq5MgYadSYeU+pBw14p4iTOqMlPyZqTVhy8=
             allowed-ips:
-              - "10.30.2.1/32" # GW 1
-              - "0.0.0.0/0" # GW 1 Routing
+              - 10.30.2.1/32 # GW 1
+              - 0.0.0.0/0 # GW 1 Routing
             keepalive: 120
           - keys:
-              public: "JoM3rQKTHinMrcblya4v0EQT09FODzb16adECPuOXhU="
+              public: JoM3rQKTHinMrcblya4v0EQT09FODzb16adECPuOXhU=
             allowed-ips:
-              - "10.30.0.20/32" # AD 0
+              - 10.30.0.20/32 # AD 0
             keepalive: 120
           - keys:
-              public: "Y2nQoPbNi8mASF1wexXXieHdRHtZ0BFlB3ayFwv6Qkk="
+              public: Y2nQoPbNi8mASF1wexXXieHdRHtZ0BFlB3ayFwv6Qkk=
             allowed-ips:
-              - "10.30.1.10/32" # IP 0
+              - 10.30.1.10/32 # IP 0
             keepalive: 120
           - keys:
-              public: "nXR7lljBK3WvguZdbhW/ENIZxJNlLPHo3yaOcSUH7y4="
+              public: nXR7lljBK3WvguZdbhW/ENIZxJNlLPHo3yaOcSUH7y4=
             allowed-ips:
-              - "10.30.1.11/32" # EL 0
+              - 10.30.1.11/32 # EL 0
             keepalive: 120
           - keys:
-              public: "egP60UJhTdUy3HUsIzOZ7mW3N3Y7UVO3+5UuSIYocT4="
+              public: egP60UJhTdUy3HUsIzOZ7mW3N3Y7UVO3+5UuSIYocT4=
             allowed-ips:
-              - "10.30.1.12/32" # MM 0
+              - 10.30.1.12/32 # MM 0
             keepalive: 120
           - keys:
-              public: "8aK3s0GuRn0q+16yVbZDJW5utv6vJi0uV/oIUG9FRkY="
+              public: 8aK3s0GuRn0q+16yVbZDJW5utv6vJi0uV/oIUG9FRkY=
             allowed-ips:
-              - "10.30.1.13/32" # BR 0 PH
+              - 10.30.1.13/32 # BR 0 PH
             keepalive: 120
           - keys:
-              public: "uxyFErXpeb7wuj4AE4BzMF9Zm49I7yq2XlkrI45K9jw="
+              public: uxyFErXpeb7wuj4AE4BzMF9Zm49I7yq2XlkrI45K9jw=
             allowed-ips:
-              - "10.30.1.14/32" # BR 1 PD
+              - 10.30.1.14/32 # BR 1 PD
             keepalive: 120
           - keys:
-              public: "AgjpTZhztBayjmt72Gq2gTjRjMoQloLw7JrEQ/n+7i8="
+              public: AgjpTZhztBayjmt72Gq2gTjRjMoQloLw7JrEQ/n+7i8=
             allowed-ips:
-              - "10.30.1.15/32" # BR 2 KK
+              - 10.30.1.15/32 # BR 2 KK
             keepalive: 120
           - keys:
-              public: "kmsZCBqLS3ONX3IuF9w/tIcoVh17/1Me3rzumvy4oVs="
+              public: kmsZCBqLS3ONX3IuF9w/tIcoVh17/1Me3rzumvy4oVs=
             allowed-ips:
-              - "10.30.2.11/32" # DD 0
+              - 10.30.2.11/32 # DD 0
             keepalive: 120
           - keys:
-              public: "qY+TNzLHeUxO5K5tjtLn0rAoEzuid32BAkcQQju6+Vc="
+              public: qY+TNzLHeUxO5K5tjtLn0rAoEzuid32BAkcQQju6+Vc=
             allowed-ips:
-              - "10.30.3.10/32" # HAS 0
-              - "0.0.0.0/0" # GW2 Routing
+              - 10.30.3.10/32 # HAS 0
+              - 0.0.0.0/0 # GW2 Routing
             keepalive: 120
         nameservers:
           addresses:
@@ -193,24 +193,24 @@ firewall_nat_enabled: true
 nft_define_host:
   lan_interface:
     name: lan_interface
-    value: "enoInternal"
+    value: enoInternal
   wg_interface:
     name: wg_interface
-    value: "wg0"
+    value: wg0
   wan_interface:
     name: wan_interface
-    value: "wlExternal"
+    value: wlExternal
   lan_network:
     name: lan_network
-    value: "10.0.0.0/8"
+    value: 10.0.0.0/8
   k8s_lb_host:
     name: k8s_lb_host
-    value: "10.20.0.8"
+    value: 10.20.0.8
   # This has to by in sync with cluster-settings.yaml
   # TODO maybe there is an automated way?
   ingress_lb_host:
     name: ingress_lb_host
-    value: "10.128.0.100"
+    value: 10.128.0.100
   forward_tcp_accepted:
     name: forward_tcp_accept
     value: "{{ forward_tcp_port }}"
@@ -311,9 +311,9 @@ bind9_zones:
   - name: "{{ dns_domain }}"
     type: primary
     ddns_update_key: ddnskey
-    ddns_update_policy_grant: "zonesub any"
+    ddns_update_policy_grant: zonesub any
     secondary_servers:
-      - 'key "ddnskey"'
+      - key "ddnskey"
     default_ttl: 600
     serial: 2025061400
     refresh: 1D

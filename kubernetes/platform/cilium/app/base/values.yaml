@@ -13,7 +13,7 @@ operator:
 
   # Install operator on control-plane node
   nodeSelector:
-    node-role.kubernetes.io/control-plane: "true"
+    node-role.kubernetes.io/control-plane: true
 
 rollOutCiliumPods: true
 
@@ -29,7 +29,7 @@ kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
 # ref: https://docs.cilium.io/en/stable/network/concepts/ipam/
 ipam:
   operator:
-    clusterPoolIPv4PodCIDRList: "10.42.0.0/16"
+    clusterPoolIPv4PodCIDRList: 10.42.0.0/16
 
 l2announcements:
   enabled: true

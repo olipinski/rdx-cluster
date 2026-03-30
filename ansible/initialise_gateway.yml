@@ -12,17 +12,20 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      ansible.builtin.include_vars: "vars/vault.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/vault.yml
+      tags:
+        - always
     - name: Include gateway variables
-      ansible.builtin.include_vars: "host_vars/gateway0.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: host_vars/gateway0.yml
+      tags:
+        - always
   tasks:
     # OS basic setup tasks
     - name: Run basic setup
       ansible.builtin.include_role:
         name: basic_setup
-      tags: [os]
+      tags:
+        - os
       register: basic_setup_result
     # Make sure wpa_supplicant is installed
     - name: Ensure wpa_supplicant is installed
@@ -34,21 +37,24 @@
     - name: Configure WLAN link name using systemd-networkd
       ansible.builtin.include_role:
         name: kpfleming.systemd_networkd.link
-      tags: [networking]
+      tags:
+        - networking
       register: networkd_result
     # Reboot for WLAN to take effect
     # This needs to run right here, so that netplan can use the correct interface names
     # Therefore we ignore ansible-lint.
     - name: Reboot to apply WLAN naming # noqa: no-handler
       ansible.builtin.reboot:
-        msg: "Rebooting to install systemd-networkd links."
-      tags: [networking]
+        msg: Rebooting to install systemd-networkd links.
+      tags:
+        - networking
       when: networkd_result.changed
     # SSH configuration and hardening
     - name: SSH configuration
       ansible.builtin.include_role:
         name: willshersystems.sshd
-      tags: [security]
+      tags:
+        - security
       register: ssh_result
       vars:
         sshd_allow_reload: false # Don't apply new SSH config, might also kill the connection
@@ -57,13 +63,15 @@
     - name: DNS setup
       ansible.builtin.include_role:
         name: ricsanfre.bind9
-      tags: [dns]
+      tags:
+        - dns
       register: dns_result
     # Interface and routing configuration
     - name: Netplan config
       ansible.builtin.include_role:
         name: mrlesmithjr.netplan
-      tags: [networking]
+      tags:
+        - networking
       register: netplan_result
       vars:
         netplan_apply: false # Don't apply netplan, it will kill this connection
@@ -71,7 +79,8 @@
     - name: Firewall config
       ansible.builtin.include_role:
         name: ricsanfre.firewall
-      tags: [firewall]
+      tags:
+        - firewall
       register: firewall_result
       vars:
         firewall_apply: false # Don't apply firewall, only stage
@@ -79,14 +88,15 @@
     - name: NTP setup
       ansible.builtin.include_role:
         name: ricsanfre.ntp
-      tags: [ntp]
+      tags:
+        - ntp
       register: ntp_result
     # This reboot does not use ansible because we need to ignore the reconnecting to the node.
     # The gateway node will never be back under this IP address.
     # Now we can continue to setup_picluster.yml
     # We also cannot use handlers, as include_role does not have a notify attribute.
     - name: Reboot if required # noqa: no-handler no-changed-when
-      ansible.builtin.command: "sleep 5 && reboot"
+      ansible.builtin.command: sleep 5 && reboot
       async: 1
       poll: 0
       when: >
