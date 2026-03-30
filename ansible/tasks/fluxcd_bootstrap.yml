@@ -1,5 +1,4 @@
 ---
-
 - name: Deploy Flux CD Operator
   kubernetes.core.helm:
     name: flux-operator
@@ -13,22 +12,26 @@
       - ../kubernetes/platform/flux-operator/operator/components/monitoring/values.yaml
       - ../kubernetes/platform/flux-operator/operator/overlays/prod/values.yaml
 
-- name: Create Github secret
-  ansible.builtin.shell: |
-    kubectl create secret generic flux-system -n flux-system \
-    --from-literal=username=git \
-    --from-literal=password="{{ vault.flux.github.pat }}"
-  when: git_private_repo
-  args:
+- name: Create Github secret # noqa: no-changed-when
+  ansible.builtin.shell:
+    cmd: |
+      kubectl create secret generic flux-system -n flux-system \
+      --from-literal=username=git \
+      --from-literal=password="{{ vault.flux.github.pat }}"
     executable: /bin/bash
-  changed_when: false
+  when: git_private_repo
+
+# - name: Add cluster settings
+#  ansible.builtin.shell:
+#    cmd: |
+#      set -o pipefail
+#      kubectl kustomize ../kubernetes/clusters/"{{ overlay }}"/config | kubectl apply -f -
+#    executable: /bin/bash
 
 - name: Add cluster settings
-  ansible.builtin.shell: |
-    kubectl kustomize  \
-      ../kubernetes/clusters/"{{ overlay }}"/config | kubectl apply -f -
-  args:
-    executable: /bin/bash
+  kubernetes.core.k8s:
+    definition: "{{ lookup('kubernetes.core.kustomize', dir='../kubernetes/clusters/{{ overlay }}/config') }}"
+    state: present
 
 - name: Set the domain names in a ConfigMap
   kubernetes.core.k8s:

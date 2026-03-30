@@ -1,22 +1,28 @@
 ---
-- hosts: k3s_master
+- name: Reset K3s servers
+  hosts: k3s_master
   become: true
   gather_facts: false
   tasks:
-    - import_tasks: tasks/clean_cilium.yml
-    - name: Uninstall k3s
-      command: /usr/local/bin/k3s-uninstall.sh
-      changed_when: true
-    - import_tasks: tasks/cleaning.yml
-      tags: ['clean']
+    - name: Clean the server cilium install
+      ansible.builtin.import_tasks: tasks/clean_cilium.yml
+    - name: Uninstall server k3s # noqa: no-changed-when
+      ansible.builtin.command: /usr/local/bin/k3s-uninstall.sh
+    - name: Clean server Longhorn and fluentd
+      ansible.builtin.import_tasks: tasks/cleaning.yml
+      tags:
+        - clean
 
-- hosts: k3s_worker
+- name: Reset k3s agents
+  hosts: k3s_worker
   become: true
   gather_facts: false
   tasks:
-    - import_tasks: tasks/clean_cilium.yml
-    - name: Uninstall k3s
-      command: /usr/local/bin/k3s-agent-uninstall.sh
-      changed_when: true
-    - import_tasks: tasks/cleaning.yml
-      tags: ['clean']
+    - name: Clean the agent cilium install
+      ansible.builtin.import_tasks: tasks/clean_cilium.yml
+    - name: Uninstall agent k3s # noqa: no-changed-when
+      ansible.builtin.command: /usr/local/bin/k3s-agent-uninstall.sh
+    - name: Clean agent Longhorn and fluentd
+      ansible.builtin.import_tasks: tasks/cleaning.yml
+      tags:
+        - clean

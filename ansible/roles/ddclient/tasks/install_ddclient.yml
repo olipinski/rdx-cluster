@@ -1,5 +1,4 @@
 ---
-
 - name: Ensure ddclient is installed
   ansible.builtin.apt:
     name: ddclient

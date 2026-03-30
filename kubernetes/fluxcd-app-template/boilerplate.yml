@@ -1,3 +1,4 @@
+---
 variables:
   - name: app_name
     description: Enter application name
@@ -16,5 +17,3 @@ variables:
 
   - name: chart_release_name
     description: Enter chart release name
-
- 

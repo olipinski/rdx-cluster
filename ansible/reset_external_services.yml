@@ -3,17 +3,18 @@
   hosts: s3
   become: true
   gather_facts: false
-  tags: [s3]
+  tags:
+    - s3
   tasks:
     - name: Stop and disable Minio Server
-      systemd:
+      ansible.builtin.systemd:
         name: minio
         state: stopped
         enabled: false
       become: true
     - name: Delete directories and files
       become: true
-      file:
+      ansible.builtin.file:
         state: absent
         path: "{{ item }}"
       with_items:
@@ -24,17 +25,18 @@
         - /etc/systemd/system/minio.service
         - ~/.mc
     - name: Reload systemd daemon
-      systemd:
+      ansible.builtin.systemd:
         daemon_reload: true
 
 - name: Clean Vault Installation
   hosts: vault
   become: true
   gather_facts: false
-  tags: [vault]
+  tags:
+    - vault
   tasks:
     - name: Stop and disable Vault Server
-      systemd:
+      ansible.builtin.systemd:
         name: "{{ item }}"
         state: stopped
         enabled: false
@@ -44,7 +46,7 @@
         - vault-unseal
     - name: Delete directories and files
       become: true
-      file:
+      ansible.builtin.file:
         state: absent
         path: "{{ item }}"
       with_items:
@@ -55,17 +57,18 @@
         - /etc/systemd/system/vault.service
         - /etc/systemd/system/vault-unseal.service
     - name: Reload systemd daemon
-      systemd:
+      ansible.builtin.systemd:
         daemon_reload: true
 
 - name: Clean Restic Installation
   hosts: rdxcluster:gateways
   become: true
   gather_facts: false
-  tags: [restic]
+  tags:
+    - restic
   tasks:
     - name: Stop and disable restic backup service
-      systemd:
+      ansible.builtin.systemd:
         name: "{{ item }}"
         state: stopped
         enabled: false
@@ -74,7 +77,7 @@
         - restic-backup.timer
 
     - name: Stop and disable restic clean service
-      systemd:
+      ansible.builtin.systemd:
         name: "{{ item }}"
         state: stopped
         enabled: false
@@ -85,7 +88,7 @@
 
     - name: Delete directories and files
       become: true
-      file:
+      ansible.builtin.file:
         state: absent
         path: "{{ item }}"
       with_items:
@@ -97,7 +100,7 @@
 
     - name: Delete clean service file
       become: true
-      file:
+      ansible.builtin.file:
         state: absent
         path: "{{ item }}"
       with_items:
@@ -106,5 +109,5 @@
       when: restic_clean_service
 
     - name: Reload systemd daemon
-      systemd:
+      ansible.builtin.systemd:
         daemon_reload: true

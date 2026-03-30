@@ -138,7 +138,7 @@ vault:
   dms-dkim:
     keys:
       private: |
-        {{ dkim_private_key | indent(width=8, first=False) }} 
+        {{ dkim_private_key | indent(width=8, first=False) }}
       public: |
         {{ dkim_public_key | indent(width=8, first=False) }}
       dns: {{ dkim_public_key_dns }}

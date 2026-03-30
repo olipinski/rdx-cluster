@@ -1,16 +1,16 @@
 ---
 # Pi Cluster variables
 
-#######
+# ######
 # K3S #
-#######
+# ######
 
 # k3s version
 # renovate: datasource=github-releases depName=k3s-io/k3s
 k3s_version: v1.35.2+k3s1
 
-# k3s master node VIP (loadbalancer)
-# this is the IP/hostname of the service node/loadbalancer
+# k3s server node VIP (load balancer)
+# this is the IP/hostname of the service node/load balancer
 k3s_api_vip: "service0.maas.{{ vault.general.domains.dns }}"
 
 # k3s shared token
@@ -25,7 +25,6 @@ k3s_kubelet_config: |
   kind: KubeletConfiguration
   shutdownGracePeriod: 30s
   shutdownGracePeriodCriticalPods: 10s
-
 
 # k3s server-config
 # Equivalent to start master installer with the following options
@@ -57,7 +56,7 @@ k3s_server_config:
   embedded-registry: true
   # TLS config
   tls-san:
-    - "{{ k3s_api_vip }}"  # IP to HAProxy
+    - "{{ k3s_api_vip }}" # IP to HAProxy
   # Disable K3s addons: coredns, local path, servicelb, traefik and metric-server
   disable:
     - coredns
@@ -67,17 +66,17 @@ k3s_server_config:
     - metrics-server
   write-kubeconfig-mode: 644
   node-taint:
-    - 'node-role.kubernetes.io/control-plane:NoSchedule'
+    - node-role.kubernetes.io/control-plane:NoSchedule
   etcd-expose-metrics: true
   kubelet-arg:
-    - 'config=/etc/rancher/k3s/kubelet.config'
+    - config=/etc/rancher/k3s/kubelet.config
   # kube-proxy-arg:
   #  - 'metrics-bind-address=0.0.0.0'
   kube-controller-manager-arg:
-    - 'bind-address=0.0.0.0'
-    - 'terminated-pod-gc-threshold=10'
+    - bind-address=0.0.0.0
+    - terminated-pod-gc-threshold=10
   kube-scheduler-arg:
-    - 'bind-address=0.0.0.0'
+    - bind-address=0.0.0.0
 
 # k3s agent-config
 # Equivalent to start agent installer with the following options
@@ -86,20 +85,19 @@ k3s_server_config:
 #  --kube-proxy-arg 'metrics-bind-address=0.0.0.0'
 k3s_agent_config:
   node-label:
-    - 'node_type=worker'
+    - node_type=agent
   kubelet-arg:
-    - 'config=/etc/rancher/k3s/kubelet.config'
+    - config=/etc/rancher/k3s/kubelet.config
+
 #  kube-proxy-arg:
 #    - 'metrics-bind-address=0.0.0.0'
 
 k3s_registries:
   mirrors:
     "*":
-
-
-##########
+# #########
 # FluxCD #
-##########
+# #########
 # renovate: datasource=github-releases depName=fluxcd/flux2
 fluxcd_version: v2.8.1
 
@@ -153,11 +151,11 @@ minio_server_datadirs:
   - /naspool/s3
 
 # Minio admin credentials
-minio_root_user: "root"
+minio_root_user: root
 minio_root_password: "{{ vault.minio.root.key }}"
 
 # Minio site region configuration
-minio_site_region: "eu-east-0"
+minio_site_region: eu-east-0
 
 # Enabling TLS
 minio_enable_tls: true
@@ -253,7 +251,6 @@ minio_users:
       - name: k3s-barman
         policy: read-write
 
-
 ########################
 # Restic configuration #
 ########################
@@ -262,7 +259,7 @@ minio_users:
 restic_version: 0.18.1
 
 # Restic S3 repository configuration
-restic_repository: "s3:{{ minio_url }}/restic"
+restic_repository: s3:{{ minio_url }}/restic
 restic_use_ca_cert: true
 restic_environment:
   - name: AWS_ACCESS_KEY_ID
@@ -363,8 +360,7 @@ minio_loki_key: "{{ vault.minio.loki.key }}"
 ######################
 
 # Grafana admin user password
-prometheus_grafana_password: "{{ vault.grafana.admin.password}}"
-
+prometheus_grafana_password: "{{ vault.grafana.admin.password }}"
 
 #######################
 # Tracing Secrets     #
@@ -374,7 +370,6 @@ prometheus_grafana_password: "{{ vault.grafana.admin.password}}"
 minio_tempo_user: "{{ vault.minio.tempo.user }}"
 minio_tempo_key: "{{ vault.minio.tempo.key }}"
 minio_tempo_bucket: k3s-tempo
-
 
 #######################
 # Gateway configuration

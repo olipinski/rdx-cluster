@@ -1,11 +1,13 @@
 ---
 # DDNS key was created and stored in filesystem
-- name: Load ddns key from file in DNS node
-  ansible.builtin.shell: |
-    cat /etc/bind/keys/ddnskey.key | awk '/secret/ {print $2}' | sed 's/[";]//g'
+- name: Load ddns key from file in DNS node # noqa: no-changed-when
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      cat /etc/bind/keys/ddnskey.key | awk '/secret/ {print $2}' | sed 's/[";]//g'
+    executable: /bin/bas
   register: ddns_key
   become: true
-  changed_when: false
   when: bind9_ddns_key is not defined
   delegate_to: gateway0
 

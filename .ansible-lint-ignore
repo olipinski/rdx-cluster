@@ -1,0 +1,1 @@
+ansible/vars/vault.yml yaml[document-start] skip # This is the encoded vault file. It will not be proper YAML

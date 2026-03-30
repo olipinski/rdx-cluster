@@ -1,6 +1,5 @@
 ---
-
-- name: Vault login
+- name: Vault login # noqa: no-changed-when
   ansible.builtin.shell: bash -ilc 'vault login -format=json $VAULT_TOKEN'
   # Interactive bash so .bashrc is loaded
   # 'source ~/.bashrc && <command>' does not work because
@@ -17,11 +16,10 @@
   # '-i' means interactive shell, so .bashrc won't be ignored '-l' means login shell which sources full user profile
   become: false
   register: vault_login
-  changed_when: false
   delegate_to: service0
 
 - name: Get vault token
-  set_fact:
+  ansible.builtin.set_fact:
     vault_token: "{{ vault_login.stdout | from_json | community.hashi_vault.vault_login_token }}"
 
 - name: Get status of kubernetes auth method
@@ -44,8 +42,8 @@
     headers:
       X-Vault-Token: "{{ vault_token }}"
     body:
-      type: "kubernetes"
-      description: "kubernetes auth"
+      type: kubernetes
+      description: kubernetes auth
     body_format: json
     status_code:
       - 200
@@ -79,7 +77,8 @@
     body:
       bound_service_account_names: external-secrets
       bound_service_account_namespaces: external-secrets
-      policies: ["read"]
+      policies:
+        - read
     body_format: json
     status_code:
       - 200
@@ -112,7 +111,9 @@
     body:
       bound_service_account_names: kube-prometheus-stack-prometheus
       bound_service_account_namespaces: kube-prom-stack
-      policies: ["default", "prometheus-monitoring"]
+      policies:
+        - default
+        - prometheus-monitoring
     body_format: json
     status_code:
       - 200

@@ -1,3 +1,4 @@
+---
 apiVersion: kafka.strimzi.io/v1
 kind: Kafka
 metadata:
@@ -11,5 +12,5 @@ spec:
           name: kafka-metrics
           key: kafka-metrics-config.yml
   kafkaExporter:
-    topicRegex: ".*"
-    groupRegex: ".*"
+    topicRegex: .*
+    groupRegex: .*

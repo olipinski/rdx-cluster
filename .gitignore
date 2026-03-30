@@ -6,3 +6,10 @@
 
 # PyCharm
 .idea
+
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+
+# Ansible lint
+.ansible

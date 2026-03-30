@@ -1,5 +1,4 @@
 ---
-
 - name: Gather facts from the whole cluster
   hosts: k3s_cluster
   gather_facts: true
@@ -7,72 +6,88 @@
 - name: Install load balancer
   hosts: haproxy
   gather_facts: true
-  tags: [haproxy, install]
+  tags:
+    - haproxy
+    - install
   become: true
   pre_tasks:
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/vault.yml
+      tags:
+        - always
     - name: Include picluster variables
-      include_vars: "vars/picluster.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/picluster.yml
+      tags:
+        - always
   roles:
     - role: haproxy
 
 - name: Install K3S prerequisites
   hosts: k3s_cluster
   gather_facts: true
-  tags: [install]
+  tags:
+    - install
   become: true
   pre_tasks:
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/vault.yml
+      tags:
+        - always
     - name: Include picluster variables
-      include_vars: "vars/picluster.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/picluster.yml
+      tags:
+        - always
   roles:
-    - role: k3s/prereq
+    - role: k3s_prereq
 
-- name: Install K3S master node
+- name: Install K3s server node
   hosts: k3s_master
-  tags: [install]
+  tags:
+    - install
   become: true
   pre_tasks:
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/vault.yml
+      tags:
+        - always
     - name: Include picluster variables
-      include_vars: "vars/picluster.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/picluster.yml
+      tags:
+        - always
   roles:
-    - role: k3s/master
+    - role: k3s_server
     - role: ricsanfre.k8s_cli
 
-- name: Install K3S worker nodes
+- name: Install K3s agent nodes
   hosts: k3s_worker
-  tags: [install]
+  tags:
+    - install
   become: true
   pre_tasks:
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/vault.yml
+      tags:
+        - always
     - name: Include picluster variables
-      include_vars: "vars/picluster.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/picluster.yml
+      tags:
+        - always
   roles:
-    - role: k3s/worker
+    - role: k3s_agent
 
 - name: Label K3S worker nodes
   hosts: k3s_master
-  tags: [config]
+  tags:
+    - config
   pre_tasks:
     - name: Include vault variables
-      include_vars: "vars/vault.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/vault.yml
+      tags:
+        - always
     - name: Include picluster variables
-      include_vars: "vars/picluster.yml"
-      tags: ["always"]
+      ansible.builtin.include_vars: vars/picluster.yml
+      tags:
+        - always
   tasks:
     # - name: "Wait for worker nodes to be ready"
     #   command:
@@ -84,14 +99,21 @@
     #   delay: 5
     #   with_items: "{{ groups['k3s_worker'] }}"
 
-    - name: label k3s worker nodes
-      command:
-        cmd: "kubectl label nodes {{ item }} kubernetes.io/role=worker"
+    - name: Label k3s agent nodes
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: Node
+          metadata:
+            name: "{{ item }}"
+            labels:
+              node-role.kubernetes.io/agent:
       with_items: "{{ groups['k3s_worker'] }}"
 
-- name: Get Kubernets config file
+- name: Get Kubernetes config file
   hosts: k3s_master
-  tags: [kube-config]
+  tags:
+    - kube-config
   tasks:
     - name: Get k3s config file
       run_once: true
@@ -101,8 +123,8 @@
 
     - name: Write Kubernetes config file with the correct cluster address
       ansible.builtin.copy:
-        content: "{{ kubeconfig_base64.content | b64decode | replace('127.0.0.1', k3s_api_vip ) }}"
-        dest: "~/.kube/config"
-        mode: 0600
+        content: "{{ kubeconfig_base64.content | b64decode | replace('127.0.0.1', k3s_api_vip) }}"
+        dest: ~/.kube/config
+        mode: "0600"
       delegate_to: localhost
       run_once: true

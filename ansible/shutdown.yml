@@ -1,32 +1,36 @@
 ---
-- hosts: k3s_worker
+- name: Shutdown k3s agents
+  hosts: k3s_worker
   become: true
   gather_facts: false
   tasks:
     - name: Shutdown agents
       community.general.shutdown:
-        delay: 60  # in seconds
+        delay: 60 # in seconds
 
-- hosts: k3s_master
+- name: Shutdown k3s servers
+  hosts: k3s_master
   become: true
   gather_facts: false
   tasks:
     - name: Shutdown servers
       community.general.shutdown:
-        delay: 80  # in seconds
+        delay: 80 # in seconds
 
-- hosts: service0
+- name: Shutdown service node
+  hosts: service0
   become: true
   gather_facts: false
   tasks:
     - name: Shutdown service node
       community.general.shutdown:
-        delay: 80  # in seconds
+        delay: 80 # in seconds
 
-- hosts: gateways
+- name: Shutdown gateways
+  hosts: gateways
   become: true
   gather_facts: false
   tasks:
     - name: Shutdown gateway
       community.general.shutdown:
-        delay: 80  # in seconds
+        delay: 80 # in seconds

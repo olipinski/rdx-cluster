@@ -1,10 +1,9 @@
 ---
-
 - name: Clean Longhorn storage | get content
   become: true
-  find:
+  ansible.builtin.find:
     paths: /storage
-    patterns: '*'
+    patterns: "*"
     file_type: any
     hidden: true
   register: directory_content_result
@@ -12,14 +11,14 @@
 
 - name: Clean Longhorn storage | delete content
   become: true
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: absent
   with_items: "{{ directory_content_result.files }}"
   when: "'k3s_worker' in group_names"
 
-- name: Clean longhorn iscsi targets and nodes
-  shell: |
+- name: Clean longhorn iscsi targets and nodes # noqa: no-changed-when
+  ansible.builtin.shell: |
     set -o pipefail
     for i in `sudo iscsiadm -m discovery -o show | grep -v 10.20.0.1 | awk '{print $1}'`
     do
@@ -29,27 +28,26 @@
   args:
     executable: /bin/bash
   register: output
-  changed_when: true
   when: "'k3s_worker' in group_names"
 
 - name: Clean container/pod logs, cni config, and fluentbit db
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: absent
   with_items:
-    - "/var/log/pods"
-    - "/var/log/containers"
-    - "/var/log/fluentbit"
-    - "/etc/cni/net.d"
+    - /var/log/pods
+    - /var/log/containers
+    - /var/log/fluentbit
+    - /etc/cni/net.d
 
 - name: Clean fluentd pos files | get pos files
-  find:
+  ansible.builtin.find:
     paths: /var/log
-    patterns: '*.pos'
+    patterns: "*.pos"
   register: files_to_delete
 
 - name: Clean fluentd pos files | delete pos files
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: absent
   with_items: "{{ files_to_delete.files }}"

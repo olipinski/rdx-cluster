@@ -4,7 +4,7 @@ all:
     gateway_init:
       hosts:
         gateway0i:
-          ansible_host: 192.168.10.68  # Changeme!
+          ansible_host: 192.168.10.68 # Changeme!
           ansible_port: 22
     control:
       hosts:
