@@ -1,6 +1,6 @@
 ---
 - name: Stop K3s servers
-  hosts: k3s_master
+  hosts: k3s_server
   become: true
   gather_facts: false
   tasks:
@@ -10,7 +10,7 @@
         state: stopped
 
 - name: Stop K3s agents
-  hosts: k3s_worker
+  hosts: k3s_agent
   become: true
   gather_facts: false
   tasks:
@@ -20,7 +20,7 @@
         state: stopped
 
 - name: Stop all K3s server containers
-  hosts: k3s_master
+  hosts: k3s_server
   become: true
   gather_facts: false
   tasks:
@@ -28,7 +28,7 @@
       ansible.builtin.command: /usr/local/bin/k3s-killall.sh
 
 - name: Stop all K3s agent containers
-  hosts: k3s_worker
+  hosts: k3s_agent
   become: true
   gather_facts: false
   tasks:

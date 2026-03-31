@@ -4,7 +4,7 @@
   gather_facts: false
 
   environment:
-    # The location of the kubeconfig file on the master.
+    # The location of the kubeconfig file on the primary server.
     K8S_AUTH_KUBECONFIG: ~/.kube/config
 
   pre_tasks:
@@ -32,8 +32,8 @@
 
     - name: Include vault variables
       ansible.builtin.include_vars: vars/vault.yml
-    - name: Include picluster variables
-      ansible.builtin.include_vars: vars/picluster.yml
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: vars/rdxcluster.yml
   tasks:
     - name: Set overlay to prod in case not defined by an input argument
       ansible.builtin.set_fact:

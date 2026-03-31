@@ -21,7 +21,7 @@ repos:
       - id: codespell
         args:
           - --builtin
-          - clear,rare,informal,usage
+          - clear,rare,informal # Add 'usage' if mixins can be rephrased
   - repo: https://github.com/executablebooks/mdformat
     rev: 1.0.0
     hooks:
@@ -37,7 +37,7 @@ repos:
     hooks:
       - id: ansible-lint
         args:
-          - --strict
+          # - --strict # Re-add strict once https://github.com/ansible/ansible-lint/issues/4997 adressed
           - --fix
           - --format=brief
           - -q

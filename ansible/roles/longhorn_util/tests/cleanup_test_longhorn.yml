@@ -1,6 +1,6 @@
 ---
 - name: Testing longhorn installation.
-  hosts: k3s_master
+  hosts: k3s_server
 
   tasks:
     - name: Create longhorn namespace.

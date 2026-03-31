@@ -10,9 +10,9 @@
       ansible.builtin.include_vars: vars/vault.yml
       tags:
         - always
-    # Include picluster variables
-    - name: Include picluster variables
-      ansible.builtin.include_vars: vars/picluster.yml
+    # Include rdxcluster variables
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: vars/rdxcluster.yml
       tags:
         - always
   roles:
@@ -30,9 +30,9 @@
       ansible.builtin.include_vars: vars/vault.yml
       tags:
         - always
-    # Include picluster variables
-    - name: Include picluster variables
-      ansible.builtin.include_vars: vars/picluster.yml
+    # Include rdxcluster variables
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: vars/rdxcluster.yml
       tags:
         - always
   roles:

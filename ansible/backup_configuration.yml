@@ -8,8 +8,8 @@
   pre_tasks:
     - name: Include vault variables
       ansible.builtin.include_vars: vars/vault.yml
-    - name: Include picluster variables
-      ansible.builtin.include_vars: vars/picluster.yml
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: vars/rdxcluster.yml
     - name: Load CA certificate for restic
       ansible.builtin.set_fact:
         restic_ca_cert: "{{ lookup('file', 'certificates/CA.pem') }}"

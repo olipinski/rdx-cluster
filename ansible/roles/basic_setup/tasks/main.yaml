@@ -23,5 +23,5 @@
 - name: Load required Kernel modules
   ansible.builtin.include_tasks: load_kernel_modules.yml
 
-- name: Blacklist storage devices in multipath configuration
-  ansible.builtin.include_tasks: multipath_blacklist.yml
+- name: Blocklist storage devices in multipath configuration
+  ansible.builtin.include_tasks: multipath_blocklist.yml

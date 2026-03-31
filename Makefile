@@ -37,19 +37,19 @@ gateway-init:
 
 .PHONY: gateway-setup
 gateway-setup:
-	${RUNNER} ansible-playbook setup_picluster.yml --tags "gateway"
+	${RUNNER} ansible-playbook setup_rdxcluster.yml --tags "gateway"
 
 .PHONY: gateways-setup
 gateways-setup:
-	${RUNNER} ansible-playbook setup_picluster.yml --tags "gateways"
+	${RUNNER} ansible-playbook setup_rdxcluster.yml --tags "gateways"
 
 .PHONY: external-setup
 external-setup:
-	${RUNNER} ansible-playbook setup_picluster.yml --tags "external"
+	${RUNNER} ansible-playbook setup_rdxcluster.yml --tags "external"
 
 .PHONY: nodes-setup
 nodes-setup:
-	${RUNNER} ansible-playbook setup_picluster.yml --tags "node"
+	${RUNNER} ansible-playbook setup_rdxcluster.yml --tags "node"
 
 .PHONY: external-services
 external-services:

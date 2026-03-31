@@ -1,6 +1,6 @@
 ---
 - name: Start K3s servers
-  hosts: k3s_master
+  hosts: k3s_server
   become: true
   gather_facts: false
   tasks:
@@ -9,7 +9,7 @@
         name: k3s
         state: started
 - name: Start K3s agents
-  hosts: k3s_worker
+  hosts: k3s_agent
   become: true
   gather_facts: false
   tasks:

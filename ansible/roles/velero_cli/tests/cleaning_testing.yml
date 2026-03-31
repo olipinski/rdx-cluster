@@ -1,6 +1,6 @@
 ---
 - name: Cleaning velero testing pod.
-  hosts: k3s_master
+  hosts: k3s_server
 
   tasks:
     - name: Cleaning testing

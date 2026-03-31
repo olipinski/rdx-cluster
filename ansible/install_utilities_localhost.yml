@@ -23,8 +23,8 @@
   gather_facts: true
   become: true
   pre_tasks:
-    - name: Include picluster variables
-      ansible.builtin.include_vars: vars/picluster.yml
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: vars/rdxcluster.yml
       tags:
         - always
   roles:

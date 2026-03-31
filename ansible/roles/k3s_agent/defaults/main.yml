@@ -1,5 +1,5 @@
 ---
-# k3s master server connection
+# k3s server connection token
 k3s_agent_k3s_token: s1cret0
 
 # Setting K3s version

@@ -5,6 +5,14 @@ rules:
   line-length:
     max: 120
     level: warning
+    ignore:
+      # The below have versioning/fluent strings
+      - .pre-commit-config.yaml
+      - ansible/host_vars/service0.yml
+      - ansible/group_vars/control.yml
+      - ansible/install_utilities_localhost.yml
+      - ansible-runner/build/ansible_runner_setup.yml
+      - ansible/roles/velero_cli/tasks/configure_velero_cli.yml
   braces:
     forbid: false
     min-spaces-inside: 0

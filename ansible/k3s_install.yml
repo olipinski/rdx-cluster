@@ -15,8 +15,8 @@
       ansible.builtin.include_vars: vars/vault.yml
       tags:
         - always
-    - name: Include picluster variables
-      ansible.builtin.include_vars: vars/picluster.yml
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: vars/rdxcluster.yml
       tags:
         - always
   roles:
@@ -33,15 +33,15 @@
       ansible.builtin.include_vars: vars/vault.yml
       tags:
         - always
-    - name: Include picluster variables
-      ansible.builtin.include_vars: vars/picluster.yml
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: vars/rdxcluster.yml
       tags:
         - always
   roles:
     - role: k3s_prereq
 
 - name: Install K3s server node
-  hosts: k3s_master
+  hosts: k3s_server
   tags:
     - install
   become: true
@@ -50,8 +50,8 @@
       ansible.builtin.include_vars: vars/vault.yml
       tags:
         - always
-    - name: Include picluster variables
-      ansible.builtin.include_vars: vars/picluster.yml
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: vars/rdxcluster.yml
       tags:
         - always
   roles:
@@ -59,7 +59,7 @@
     - role: ricsanfre.k8s_cli
 
 - name: Install K3s agent nodes
-  hosts: k3s_worker
+  hosts: k3s_agent
   tags:
     - install
   become: true
@@ -68,15 +68,15 @@
       ansible.builtin.include_vars: vars/vault.yml
       tags:
         - always
-    - name: Include picluster variables
-      ansible.builtin.include_vars: vars/picluster.yml
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: vars/rdxcluster.yml
       tags:
         - always
   roles:
     - role: k3s_agent
 
 - name: Label K3S worker nodes
-  hosts: k3s_master
+  hosts: k3s_server
   tags:
     - config
   pre_tasks:
@@ -84,8 +84,8 @@
       ansible.builtin.include_vars: vars/vault.yml
       tags:
         - always
-    - name: Include picluster variables
-      ansible.builtin.include_vars: vars/picluster.yml
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: vars/rdxcluster.yml
       tags:
         - always
   tasks:
@@ -97,7 +97,7 @@
     #     - '" Ready "  in nodes.stdout'
     #   retries: 10
     #   delay: 5
-    #   with_items: "{{ groups['k3s_worker'] }}"
+    #   with_items: "{{ groups['k3s_agent'] }}"
 
     - name: Label k3s agent nodes
       kubernetes.core.k8s:
@@ -108,10 +108,10 @@
             name: "{{ item }}"
             labels:
               node-role.kubernetes.io/agent:
-      with_items: "{{ groups['k3s_worker'] }}"
+      with_items: "{{ groups['k3s_agent'] }}"
 
 - name: Get Kubernetes config file
-  hosts: k3s_master
+  hosts: k3s_server
   tags:
     - kube-config
   tasks:

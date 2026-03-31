@@ -3,7 +3,8 @@
   block:
     - name: Increment the retry count
       ansible.builtin.set_fact:
-        basic_setup_retry_count: "{{ 0 if basic_setup_retry_count is undefined else basic_setup_retry_count | int + 1 }}"
+        basic_setup_retry_count: >
+          {{ 0 if basic_setup_retry_count is undefined else basic_setup_retry_count | int + 1 }}
     - name: List snap packages # noqa: no-changed-when
       ansible.builtin.shell:
         cmd: |

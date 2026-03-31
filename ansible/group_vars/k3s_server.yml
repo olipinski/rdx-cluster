@@ -1,5 +1,5 @@
 ---
-# k3s_master group variables
+# k3s_server group variables
 
 # #################################
 # ricsanfre.k8s_cli role variables

@@ -7,14 +7,15 @@
     - '" Ready "  in nodes.stdout'
   retries: 10
   delay: 60
-  with_items: "{{ groups['k3s_worker'] }}"
+  with_items: "{{ groups['k3s_agent'] }}"
 
 - name: Wait for Cilium CRDs to be ready # noqa: no-changed-when
   become: false
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
-      while ! kubectl wait --for condition=established --timeout=60s crd/ciliuml2announcementpolicies.cilium.io crd/ciliuml2announcementpolicies.cilium.io
+      while ! kubectl wait --for condition=established --timeout=60s \
+      crd/ciliuml2announcementpolicies.cilium.io crd/ciliuml2announcementpolicies.cilium.io
       do
       sleep 10
       done
