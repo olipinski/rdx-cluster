@@ -16,4 +16,5 @@
     mode: "0644"
     backup: true
   when: basic_setup_multipath_file_exist.stat.exists
-  notify: restart multipath
+  notify: 
+    - Restart multipath

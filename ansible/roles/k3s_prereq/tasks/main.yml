@@ -67,4 +67,5 @@
     regexp: "^((?!.*\\bcgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory\\b).*)$"
     line: "\\1 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory"
   when: "'raspberrypi' in group_names"
-  notify: reboot
+  notify: 
+    - Reboot
