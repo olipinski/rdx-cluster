@@ -1,6 +1,10 @@
 ---
 extends: default
 
+ignore:
+  - kubernetes/fluxcd-app-template
+  - ansible/vars/vault.yml # An encrypted file
+
 rules:
   line-length:
     max: 120

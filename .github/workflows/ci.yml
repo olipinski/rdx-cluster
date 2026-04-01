@@ -24,21 +24,18 @@ jobs:
 
       - name: Check spelling.
         uses: codespell-project/actions-codespell@v2
-
-      - name: Lint all the Ansible YAMLs.
-        run: yamllint .
-        working-directory: ./ansible
-
-      - name: Lint all the Kubernetes YAMLs.
-        run: yamllint .
-        working-directory: ./kubernetes
+        with:
+          skip: docs,design
+          builtin: clear,rare,informal
 
       - name: Ansible-lint the Ansible YAMLs.
         uses: ansible/ansible-lint@v26.3.0
-        with:
-          working-directory: ./ansible
+
+      - name: Lint all the Kubernetes YAMLs.
+        run: yamllint kubernetes/
 
       - name: Kube-lint the Kubernetes YAMLs.
         uses: stackrox/kube-linter-action@v1
         with:
           directory: ./kubernetes
+          config: .kube-linter.yaml

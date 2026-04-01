@@ -37,7 +37,7 @@ repos:
     hooks:
       - id: ansible-lint
         args:
-          # - --strict # Re-add strict once https://github.com/ansible/ansible-lint/issues/4997 adressed
+          - --strict # https://github.com/ansible/ansible-lint/issues/4997
           - --fix
           - --format=brief
           - -q
@@ -56,8 +56,6 @@ repos:
     hooks:
       - id: kube-linter
         files: kubernetes/
-        # Ignore the app template and the dashboard
-        exclude: fluxcd-app-template
 #  - repo: https://github.com/olipinski/kubeconform
 #    rev: ee83d9c3ca41ed11023cb6f9cf47eaabda232b56
 #    hooks:
