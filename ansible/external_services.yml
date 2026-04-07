@@ -249,26 +249,13 @@
   tasks:
     # Vault Login using ansible environment variables for creating the token file used in the next tasks.
     - name: Vault login # noqa: no-changed-when
-      ansible.builtin.shell: bash -ilc 'vault login $VAULT_TOKEN'
-      # Interactive bash so .bashrc is loaded
-      # 'source ~/.bashrc && <command>' does not work because
-      # Ansible shell is not interactive and ~/.bashrc implementation by default ignores non-interactive shell.
-      # See lines at beginning of bashrc:
-      #
-      # If not running interactively, don't do anything
-      # case $- in
-      #     *i*) ;;
-      #       *) return;;
-      # esac
-      # The best solution for executing commands as user after its ssh interactive login:
-      # bash -ilc '<command>'
-      # '-i' means interactive shell, so .bashrc won't be ignored '-l' means login shell which sources full user profile
+      ansible.builtin.shell: bash -ilc 'echo $VAULT_TOKEN'
       become: false
       register: vault_login
 
     - name: Get vault token
       ansible.builtin.set_fact:
-        vault_token: "{{ vault_login.stdout | from_json | community.hashi_vault.vault_login_token }}"
+        vault_token: "{{ vault_login.stdout }}"
 
     # Create write token
     - name: Create KV write token
@@ -282,16 +269,32 @@
       become: false
       vars:
         ansible_python_interpreter: "{{ vault_venv_path }}/bin/python"
-    # Load ansible vault variables into HashiCorp Vault Server
-    - name: Load vault credentials
-      ansible.builtin.include_tasks:
-        file: tasks/load_vault_credentials.yml
-      loop: "{{ vault | dict2items }}"
-      loop_control:
-        loop_var: secret_group
-      when:
-        - vault is defined
+
+    - name: Create/update credentials for all Ansible credentials
+      community.hashi_vault.vault_kv2_write:
+        url: "https://{{ vault_dns }}:8200"
+        auth_method: token
+        token: "{{ token_data | community.hashi_vault.vault_login_token }}"
+        read_before_write: true
+        path: "{{ item.group }}/{{ item.key }}"
+        data: "{{ item.data }}"
       no_log: true
+      vars:
+        ansible_python_interpreter: "{{ vault_venv_path }}/bin/python"
+      loop: >-
+        {%- set results = [] -%}
+        	{%- for secret_group in vault  -%}
+        		{%- for secret in vault[secret_group] -%}
+        			{%- set _ = results.append({
+        			"group": secret_group,
+        			"key": secret,
+        			"data": vault[secret_group][secret]
+        			}) %}
+        		{%- endfor -%}
+        	{%- endfor -%}
+        {{ results }}
+      loop_control:
+        label: "Creating/updating credentials for {{ item.group }}"
 
     - name: Load http auth_basic credentials
       ansible.builtin.include_tasks:

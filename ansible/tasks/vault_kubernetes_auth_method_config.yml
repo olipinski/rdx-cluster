@@ -1,6 +1,6 @@
 ---
 - name: Vault login # noqa: no-changed-when
-  ansible.builtin.shell: bash -ilc 'vault login -format=json $VAULT_TOKEN'
+  ansible.builtin.shell: bash -ilc 'echo $VAULT_TOKEN'
   # Interactive bash so .bashrc is loaded
   # 'source ~/.bashrc && <command>' does not work because
   # Ansible shell is not interactive and ~/.bashrc implementation by default ignores non interactive shell.
@@ -20,7 +20,7 @@
 
 - name: Get vault token
   ansible.builtin.set_fact:
-    vault_token: "{{ vault_login.stdout | from_json | community.hashi_vault.vault_login_token }}"
+    vault_token: "{{ vault_login.stdout }}"
 
 - name: Get status of kubernetes auth method
   ansible.builtin.uri:
