@@ -75,8 +75,27 @@
   roles:
     - role: k3s_agent
 
-- name: Label K3S worker nodes
+- name: Get Kubernetes config file
   hosts: k3s_server
+  tags:
+    - kube-config
+  tasks:
+    - name: Get k3s config file
+      run_once: true
+      ansible.builtin.slurp:
+        src: /etc/rancher/k3s/k3s.yaml
+      register: kubeconfig_base64
+
+    - name: Write Kubernetes config file with the correct cluster address
+      ansible.builtin.copy:
+        content: "{{ kubeconfig_base64.content | b64decode | replace('127.0.0.1', k3s_api_vip) }}"
+        dest: ~/.kube/config
+        mode: "0600"
+      delegate_to: localhost
+      run_once: true
+
+- name: Label K3S worker nodes
+  hosts: localhost
   tags:
     - config
   pre_tasks:
@@ -109,22 +128,3 @@
             labels:
               node-role.kubernetes.io/agent:
       with_items: "{{ groups['k3s_agent'] }}"
-
-- name: Get Kubernetes config file
-  hosts: k3s_server
-  tags:
-    - kube-config
-  tasks:
-    - name: Get k3s config file
-      run_once: true
-      ansible.builtin.slurp:
-        src: /etc/rancher/k3s/k3s.yaml
-      register: kubeconfig_base64
-
-    - name: Write Kubernetes config file with the correct cluster address
-      ansible.builtin.copy:
-        content: "{{ kubeconfig_base64.content | b64decode | replace('127.0.0.1', k3s_api_vip) }}"
-        dest: ~/.kube/config
-        mode: "0600"
-      delegate_to: localhost
-      run_once: true
