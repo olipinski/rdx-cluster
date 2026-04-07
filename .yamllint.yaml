@@ -3,7 +3,7 @@ extends: default
 
 ignore:
   - kubernetes/fluxcd-app-template
-  - ansible/vars/vault.yml # An encrypted file
+  - ansible/vars/vault.yaml # An encrypted file
 
 rules:
   line-length:
@@ -12,11 +12,11 @@ rules:
     ignore:
       # The below have versioning/fluent strings
       - .pre-commit-config.yaml
-      - ansible/host_vars/service0.yml
-      - ansible/group_vars/control.yml
-      - ansible/install_utilities_localhost.yml
-      - ansible-runner/build/ansible_runner_setup.yml
-      - ansible/roles/velero_cli/tasks/configure_velero_cli.yml
+      - ansible/host_vars/service0.yaml
+      - ansible/group_vars/control.yaml
+      - ansible/install_utilities_localhost.yaml
+      - ansible-runner/build/ansible_runner_setup.yaml
+      - ansible/roles/velero_cli/tasks/configure_velero_cli.yaml
   braces:
     forbid: false
     min-spaces-inside: 0

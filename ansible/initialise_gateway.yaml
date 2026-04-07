@@ -12,11 +12,11 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      ansible.builtin.include_vars: vars/vault.yml
+      ansible.builtin.include_vars: vars/vault.yaml
       tags:
         - always
     - name: Include gateway variables
-      ansible.builtin.include_vars: host_vars/gateway0.yml
+      ansible.builtin.include_vars: host_vars/gateway0.yaml
       tags:
         - always
   tasks:
@@ -93,7 +93,7 @@
       register: ntp_result
     # This reboot does not use ansible because we need to ignore the reconnecting to the node.
     # The gateway node will never be back under this IP address.
-    # Now we can continue to setup_rdxcluster.yml
+    # Now we can continue to setup_rdxcluster.yaml
     # We also cannot use handlers, as include_role does not have a notify attribute.
     - name: Reboot if required # noqa: no-handler no-changed-when
       ansible.builtin.command: sleep 5 && reboot

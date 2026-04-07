@@ -39,12 +39,12 @@
 
 - name: Copy k3s configuration file
   ansible.builtin.template:
-    src: templates/config.yml.j2
+    src: templates/config.yaml.j2
     dest: "{{ k3s_server_k3s_config_file }}"
     mode: "0644"
 
 - name: Ensure containerd registries file exists
   ansible.builtin.template:
-    src: templates/registry.yml.j2
+    src: templates/registry.yaml.j2
     dest: "{{ k3s_server_k3s_registries_file }}"
     mode: "0600"

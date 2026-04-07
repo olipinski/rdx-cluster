@@ -58,7 +58,7 @@ netplan_configuration:
     wifis:
       wlExternal:
         access-points:
-          ChangemeSSID:  # Change this to your SSID!
+          ChangemeSSID: # Change this to your SSID!
             password: "{{ vault.wifi.auth.psk }}"
         # match:
         # macaddress: ae:fd:ce:27:21:90
@@ -324,11 +324,14 @@ bind9_zones:
     admin: "admin.{{ dns_domain }}"
     ns_records:
       - "ns.{{ dns_domain }}"
-    # RR values are either relative to the zone, either with a final dot when outside.
+    # RR values are either relative to the zone or with a full stop when absolute.
     rrs:
-      - label: gateway
+      - label: gateway0
         type: A
         rdata: 10.20.0.1
+      - label: gateway
+        type: CNAME
+        rdata: gateway0
       - label: gateway1
         type: A
         rdata: 10.30.2.1

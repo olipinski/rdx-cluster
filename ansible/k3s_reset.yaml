@@ -5,11 +5,11 @@
   gather_facts: false
   tasks:
     - name: Clean the server cilium install
-      ansible.builtin.import_tasks: tasks/clean_cilium.yml
+      ansible.builtin.import_tasks: tasks/clean_cilium.yaml
     - name: Uninstall server k3s # noqa: no-changed-when
       ansible.builtin.command: /usr/local/bin/k3s-uninstall.sh
     - name: Clean server Longhorn and fluentd
-      ansible.builtin.import_tasks: tasks/cleaning.yml
+      ansible.builtin.import_tasks: tasks/cleaning.yaml
       tags:
         - clean
 
@@ -19,10 +19,10 @@
   gather_facts: false
   tasks:
     - name: Clean the agent cilium install
-      ansible.builtin.import_tasks: tasks/clean_cilium.yml
+      ansible.builtin.import_tasks: tasks/clean_cilium.yaml
     - name: Uninstall agent k3s # noqa: no-changed-when
       ansible.builtin.command: /usr/local/bin/k3s-agent-uninstall.sh
     - name: Clean agent Longhorn and fluentd
-      ansible.builtin.import_tasks: tasks/cleaning.yml
+      ansible.builtin.import_tasks: tasks/cleaning.yaml
       tags:
         - clean

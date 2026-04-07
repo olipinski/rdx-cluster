@@ -5,7 +5,7 @@ metadata:
   name: es-prometheus-roles-secret
   namespace: elastic
 stringData:
-  roles.yml: |-
+  roles.yaml: |-
     prometheus_role:
       cluster: [
         'cluster:monitor/health',

@@ -10,7 +10,7 @@ spec:
       valueFrom:
         configMapKeyRef:
           name: kafka-metrics
-          key: kafka-metrics-config.yml
+          key: kafka-metrics-config.yaml
   kafkaExporter:
     topicRegex: .*
     groupRegex: .*

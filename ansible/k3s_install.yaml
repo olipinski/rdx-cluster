@@ -12,11 +12,11 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      ansible.builtin.include_vars: vars/vault.yml
+      ansible.builtin.include_vars: vars/vault.yaml
       tags:
         - always
     - name: Include rdxcluster variables
-      ansible.builtin.include_vars: vars/rdxcluster.yml
+      ansible.builtin.include_vars: vars/rdxcluster.yaml
       tags:
         - always
   roles:
@@ -30,11 +30,11 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      ansible.builtin.include_vars: vars/vault.yml
+      ansible.builtin.include_vars: vars/vault.yaml
       tags:
         - always
     - name: Include rdxcluster variables
-      ansible.builtin.include_vars: vars/rdxcluster.yml
+      ansible.builtin.include_vars: vars/rdxcluster.yaml
       tags:
         - always
   roles:
@@ -47,11 +47,11 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      ansible.builtin.include_vars: vars/vault.yml
+      ansible.builtin.include_vars: vars/vault.yaml
       tags:
         - always
     - name: Include rdxcluster variables
-      ansible.builtin.include_vars: vars/rdxcluster.yml
+      ansible.builtin.include_vars: vars/rdxcluster.yaml
       tags:
         - always
   roles:
@@ -65,11 +65,11 @@
   become: true
   pre_tasks:
     - name: Include vault variables
-      ansible.builtin.include_vars: vars/vault.yml
+      ansible.builtin.include_vars: vars/vault.yaml
       tags:
         - always
     - name: Include rdxcluster variables
-      ansible.builtin.include_vars: vars/rdxcluster.yml
+      ansible.builtin.include_vars: vars/rdxcluster.yaml
       tags:
         - always
   roles:
@@ -100,11 +100,11 @@
     - config
   pre_tasks:
     - name: Include vault variables
-      ansible.builtin.include_vars: vars/vault.yml
+      ansible.builtin.include_vars: vars/vault.yaml
       tags:
         - always
     - name: Include rdxcluster variables
-      ansible.builtin.include_vars: vars/rdxcluster.yml
+      ansible.builtin.include_vars: vars/rdxcluster.yaml
       tags:
         - always
   tasks:

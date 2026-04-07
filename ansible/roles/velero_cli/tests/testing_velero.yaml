@@ -1,11 +1,11 @@
 ---
-- name: Cleaning velero testing pod.
+- name: Testing velero backup.
   hosts: k3s_server
 
   tasks:
-    - name: Cleaning testing
+    - name: Create PVC and testing pod
       kubernetes.core.k8s:
         definition: "{{ lookup('file', 'files/' + item) }}"
-        state: absent
+        state: present
       with_items:
-        - nginx_test_application.yml
+        - nginx_test_application.yaml

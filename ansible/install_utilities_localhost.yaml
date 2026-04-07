@@ -24,7 +24,7 @@
   become: true
   pre_tasks:
     - name: Include rdxcluster variables
-      ansible.builtin.include_vars: vars/rdxcluster.yml
+      ansible.builtin.include_vars: vars/rdxcluster.yaml
       tags:
         - always
   roles:
