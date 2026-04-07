@@ -8,6 +8,8 @@ basic_setup_common_packages:
   - cryptsetup
   - dmsetup
 
-# TODO add RaspberryPi packages
 basic_setup_radxa_packages:
+  - fake-hwclock
+
+basic_setup_raspberrypi_packages:
   - fake-hwclock

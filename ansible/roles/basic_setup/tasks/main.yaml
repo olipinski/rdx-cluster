@@ -20,6 +20,10 @@
   ansible.builtin.include_tasks: radxa_tasks.yml
   when: "'radxa' in group_names"
 
+- name: Execute RaspberryPi 5 specific setup tasks
+  ansible.builtin.include_tasks: raspberrypi_tasks.yml
+  when: "'raspberrypi' in group_names"
+
 - name: Load required Kernel modules
   ansible.builtin.include_tasks: load_kernel_modules.yml
 

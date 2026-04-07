@@ -5,7 +5,7 @@
     cmd: |
       set -o pipefail
       cat /etc/bind/keys/ddnskey.key | awk '/secret/ {print $2}' | sed 's/[";]//g'
-    executable: /bin/bas
+    executable: /bin/bash
   register: ddns_key
   become: true
   when: bind9_ddns_key is not defined
