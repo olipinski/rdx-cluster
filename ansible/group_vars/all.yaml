@@ -1,7 +1,7 @@
 ---
 # Group all variables.
 
-# Remote user name
+# Remote username
 ansible_user: ubuntu
 
 # Ansible ssh private key
