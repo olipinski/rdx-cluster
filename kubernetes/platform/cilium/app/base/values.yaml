@@ -13,7 +13,7 @@ operator:
 
   # Install operator on control-plane node
   nodeSelector:
-    node-role.kubernetes.io/control-plane: true
+    node-role.kubernetes.io/control-plane: "true"
 
 rollOutCiliumPods: true
 

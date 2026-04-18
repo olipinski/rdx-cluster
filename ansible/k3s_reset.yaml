@@ -1,28 +1,91 @@
 ---
-- name: Reset K3s servers
-  hosts: k3s_server
+- name: Uninstall K3s
+  hosts: k3s_cluster
+  gather_facts: true
   become: true
-  gather_facts: false
-  tasks:
-    - name: Clean the server cilium install
-      ansible.builtin.import_tasks: tasks/clean_cilium.yaml
-    - name: Uninstall server k3s # noqa: no-changed-when
-      ansible.builtin.command: /usr/local/bin/k3s-uninstall.sh
-    - name: Clean server Longhorn and fluentd
-      ansible.builtin.import_tasks: tasks/cleaning.yaml
-      tags:
-        - clean
+  vars:
+    k3s_state: uninstalled
+    k3s_become: true
+  pre_tasks:
+    - name: Include vault variables
+      ansible.builtin.include_vars: vars/vault.yaml
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: vars/rdxcluster.yaml
+    - name: Clean Cilium installation # noqa: no-changed-when
+      become: true
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          ip link delete cilium_host
+          ip link delete cilium_net
+          ip link delete cilium_vxlan
+          iptables-save | grep -iv cilium | iptables-restore
+          ip6tables-save | grep -iv cilium | ip6tables-restore
+        executable: /bin/bash
+      register: output
+      failed_when: false
+  roles:
+    - role: xanmanning.k3s
 
-- name: Reset k3s agents
-  hosts: k3s_agent
+- name: Clean up K3s remnants
+  hosts: k3s_cluster
   become: true
-  gather_facts: false
+  gather_facts: true
+  pre_tasks:
+    - name: Include vault variables
+      ansible.builtin.include_vars: vars/vault.yaml
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: vars/rdxcluster.yaml
   tasks:
-    - name: Clean the agent cilium install
-      ansible.builtin.import_tasks: tasks/clean_cilium.yaml
-    - name: Uninstall agent k3s # noqa: no-changed-when
-      ansible.builtin.command: /usr/local/bin/k3s-agent-uninstall.sh
-    - name: Clean agent Longhorn and fluentd
-      ansible.builtin.import_tasks: tasks/cleaning.yaml
-      tags:
-        - clean
+    - name: Clean Longhorn storage | get content
+      become: true
+      ansible.builtin.find:
+        paths: /storage
+        patterns: "*"
+        file_type: any
+        hidden: true
+      register: directory_content_result
+      when: "'k3s_agent' in group_names"
+
+    - name: Clean Longhorn storage | delete content
+      become: true
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: absent
+      with_items: "{{ directory_content_result.files }}"
+      when: "'k3s_agent' in group_names"
+
+    - name: Clean longhorn iscsi targets and nodes # noqa: no-changed-when
+      ansible.builtin.shell: |
+        set -o pipefail
+        for i in `sudo iscsiadm -m discovery -o show | grep -v 10.20.0.1 | awk '{print $1}'`
+        do
+        echo "Deleting target $i"
+        sudo iscsiadm -m discovery -p $i -o delete
+        done
+      args:
+        executable: /bin/bash
+      register: output
+      when: "'k3s_agent' in group_names"
+
+    - name: Clean container/pod logs, cni config, and fluentbit db
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - /var/log/pods
+        - /var/log/containers
+        - /var/log/fluentbit
+        - /etc/cni/net.d
+
+    - name: Clean fluentd pos files | get pos files
+      ansible.builtin.find:
+        paths: /var/log
+        patterns: "*.pos"
+      register: files_to_delete
+
+    - name: Clean fluentd pos files | delete pos files
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: absent
+      with_items: "{{ files_to_delete.files }}"

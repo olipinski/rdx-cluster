@@ -2,51 +2,30 @@
 # Pi Cluster variables
 
 # ######
-# K3S #
+# K3S  #
 # ######
 
-# k3s version
 # renovate: datasource=github-releases depName=k3s-io/k3s
-k3s_version: v1.35.3+k3s1
+k3s_release_version: v1.35.3+k3s1
+# renovate: datasource=github-releases depName=helm/helm
+helm_version: v4.1.1
+helm_arch: >-
+     {{
+        'amd64' if ansible_facts['architecture'] in ['x86_64', 'amd64'] else
+        'arm64' if ansible_facts['architecture'] in ['aarch64', 'arm64'] else
+        ansible_facts['architecture']
+      }}
 
-# k3s server node VIP (load balancer)
-# this is the IP/hostname of the service node/load balancer
-k3s_api_vip: "service0.maas.{{ vault.general.domains.dns }}"
+k3s_registration_address: "k8s-api.{{ vault.general.domains.dns }}"
+k3s_become: true
 
-# k3s shared token
-k3s_token: "{{ vault.cluster.k3s.token }}"
-
-# k3s config directory
-k3s_config_directory: /etc/rancher/k3s
-
-# kubelet configuration
-k3s_kubelet_config: |
-  apiVersion: kubelet.config.k8s.io/v1beta1
-  kind: KubeletConfiguration
-  shutdownGracePeriod: 30s
-  shutdownGracePeriodCriticalPods: 10s
+# for system-upgrade-controller compatibility
+k3s_install_hard_links: true
 
 # k3s server-config
-# Equivalent to start server installer with the following options
-# --write-kubeconfig-mode '0644'
-# --flannel-backend=none
-# --disable-kube-proxy
-# --disable-network-policy
-# --disable-helm-controller
-# --disable 'servicelb'
-# --disable 'traefik'
-# --disable 'local-storage'
-# --disable 'coredns'
-# --node-taint 'node-role.kubernetes.io/control-plane:NoSchedule'
-# --kube-controller-manager-arg 'bind-address=0.0.0.0'
-# --kube-proxy-arg 'metrics-bind-address=0.0.0.0'
-# --kube-scheduler-arg 'bind-address=0.0.0.0'
-# --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config'
-# --kube-controller-manager-arg 'terminated-pod-gc-threshold=10'
-
-k3s_server_config:
+k3s_server:
   # Disable Flannel CNI
-  flannel-backend: none
+  flannel-backend: 'none'
   disable-network-policy: true
   # Disable Helm Controller
   disable-helm-controller: true
@@ -56,7 +35,7 @@ k3s_server_config:
   embedded-registry: true
   # TLS config
   tls-san:
-    - "{{ k3s_api_vip }}" # IP to HAProxy
+    - "{{ k3s_registration_address }}" # IP to kube-vip
   # Disable K3s addons: coredns, local path, servicelb, traefik and metric-server
   disable:
     - coredns
@@ -64,37 +43,63 @@ k3s_server_config:
     - servicelb
     - traefik
     - metrics-server
-  write-kubeconfig-mode: 644
+  write-kubeconfig-mode: '0644'
   node-taint:
     - node-role.kubernetes.io/control-plane:NoSchedule
   etcd-expose-metrics: true
-  kubelet-arg:
-    - config=/etc/rancher/k3s/kubelet.config
-  # kube-proxy-arg:
-  #  - 'metrics-bind-address=0.0.0.0'
   kube-controller-manager-arg:
-    - bind-address=0.0.0.0
     - terminated-pod-gc-threshold=10
-  kube-scheduler-arg:
-    - bind-address=0.0.0.0
 
 # k3s agent-config
-# Equivalent to start agent installer with the following options
-#  --node-label 'node_type=worker'
-#  --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config'
-#  --kube-proxy-arg 'metrics-bind-address=0.0.0.0'
-k3s_agent_config:
+k3s_agent:
   node-label:
     - node_type=agent
-  kubelet-arg:
-    - config=/etc/rancher/k3s/kubelet.config
 
-#  kube-proxy-arg:
-#    - 'metrics-bind-address=0.0.0.0'
+# #######################
+# K3s install manifests #
+# #######################
 
-k3s_registries:
-  mirrors:
-    "*":
+# These are the manifests needed to get k3s off the ground
+# and able to run FluxCD.
+
+install_manifests_dir: "/tmp/k3s-manifests-install"
+
+install_manifests: []
+
+install_charts:
+  prometheus-crds:
+    chart_ref: oci://ghcr.io/prometheus-community/charts/prometheus-operator-crds
+    version: 27.0.1
+    namespace: kube-system
+    create_namespace: true
+    value_files: []
+
+  cilium:
+    chart_ref: oci://quay.io/cilium/charts/cilium
+    version: 1.19.2
+    namespace: kube-system
+    value_files:
+      - ../../../../kubernetes/platform/cilium/app/base/values.yaml
+      - ../../../../kubernetes/platform/cilium/app/components/istio-config/values.yaml
+      - "../../../../kubernetes/platform/cilium/app/overlays/{{ overlay }}/values.yaml"
+
+  coredns:
+    chart_ref: oci://ghcr.io/coredns/charts/coredns
+    version: 1.45.2
+    namespace: kube-system
+    value_files:
+      - ../../../../kubernetes/platform/coredns/app/base/values.yaml
+      - "../../../../kubernetes/platform/coredns/app/overlays/{{ overlay }}/values.yaml"
+
+  kube-vip:
+    chart_ref: kube-vip
+    repo_url: https://kube-vip.github.io/helm-charts
+    version: 0.9.8
+    namespace: kube-system
+    value_files:
+      - "../../../../kubernetes/platform/kube-vip/base/values.yaml"
+      - "../../../../kubernetes/platform/kube-vip/overlays/{{ overlay }}/values.yaml"
+
 # #########
 # FluxCD #
 # #########

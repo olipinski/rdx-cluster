@@ -43,6 +43,6 @@ USER $USER
 RUN echo "export GPG_TTY=\$(tty)" >> /home/runner/.bashrc
 
 # Install helm required plugins
-RUN helm plugin install https://github.com/databus23/helm-diff
+RUN helm plugin install https://github.com/databus23/helm-diff --verify=false
 
 WORKDIR /runner

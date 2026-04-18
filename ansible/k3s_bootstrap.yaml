@@ -1,66 +1,104 @@
 ---
-- name: Bootstrap Cluster
+- name: Configure Cilium CNI
   hosts: localhost
+  tags:
+    - install
+    - cni
   gather_facts: false
   become: false
-
-  environment:
-    # The location of the kubeconfig file on the primary server.
-    K8S_AUTH_KUBECONFIG: ~/.kube/config
-
   pre_tasks:
-    # Install Python PIP and jq utility packages
-    - name: Ensure required packages are installed.
-      ansible.builtin.package:
-        name:
-          - python3-pip
-          - python3-setuptools
-          - jq
-        state: present
-      become: true
-    # Install kubernetes python packages (Ansible kubernetes collection dependency)
-    - name: Ensure kubernetes Python library is installed.
-      ansible.builtin.pip:
-        name: kubernetes
-        state: present
-      become: true
-    # Install HashiCorp python packages (Ansible vault module dependency)
-    - name: Ensure HashiCorp vault python library is installed.
-      ansible.builtin.pip:
-        name: hvac
-        state: present
-      become: true
-
-    - name: Include vault variables
-      ansible.builtin.include_vars: vars/vault.yaml
-
+    - name: Set overlay
+      ansible.builtin.set_fact:
+        overlay: "{{ overlay | default('prod') }}"
     - name: Include rdxcluster variables
       ansible.builtin.include_vars: vars/rdxcluster.yaml
-
   tasks:
-    - name: Set overlay to prod in case not defined by an input argument
-      ansible.builtin.set_fact:
-        overlay: prod
-      when: overlay is undefined
-
-    - name: Install cilium and coreDNS # noqa: no-changed-when
+    - name: Wait for Cilium CRDs to be ready # noqa: no-changed-when
       become: false
-      ansible.builtin.shell: |
-        set -o pipefail
-        helmfile --quiet --file ../kubernetes/clusters/bootstrap/helmfile.yaml apply \
-        --skip-diff-on-install --suppress-diff --concurrency 1
-      args:
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          while ! kubectl wait --for condition=established --timeout=60s \
+          crd/ciliuml2announcementpolicies.cilium.io crd/ciliuml2announcementpolicies.cilium.io
+          do
+          sleep 10
+          done
+        executable: /bin/bash
+    - name: Cilium configuration # noqa: no-changed-when
+      become: false
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          kubectl kustomize --enable-helm --load-restrictor=LoadRestrictionsNone \
+          ../kubernetes/platform/cilium/config/overlays/{{ overlay }} | kubectl apply -f -
         executable: /bin/bash
       register: output
 
-    - name: Config Cilium CNI
-      ansible.builtin.include_tasks: tasks/cilium_config.yaml
+- name: Bootstrap FluxCD
+  hosts: localhost
+  gather_facts: false
+  pre_tasks:
+    - name: Include vault variables
+      ansible.builtin.include_vars: vars/vault.yaml
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: vars/rdxcluster.yaml
+  tags:
+    - bootstrap
+    - gitops
+  tasks:
+    - name: Ensure FluxCD namespace exists
+      kubernetes.core.k8s:
+        name: flux-system
+        api_version: v1
+        kind: Namespace
+        state: present
+    - name: Add cluster settings
+      kubernetes.core.k8s:
+        definition: |
+          {{ lookup('kubernetes.core.kustomize', dir='../kubernetes/clusters/' + overlay + '/config') }}
+        state: present
+    - name: Set the domain names in a ConfigMap
+      kubernetes.core.k8s:
+        state: present
+        template: templates/domain-config.yaml.j2
+    - name: Deploy Flux CD Operator
+      kubernetes.core.helm:
+        name: flux-operator
+        chart_ref: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator
+        # renovate: datasource=docker depName=fluxcd ociRepository=oci://ghcr.io/controlplaneio-fluxcd/charts
+        chart_version: 0.43.0
+        release_namespace: flux-system
+        create_namespace: true
+        values_files:
+          - ../kubernetes/platform/flux-operator/operator/base/values.yaml
+          - ../kubernetes/platform/flux-operator/operator/components/monitoring/values.yaml
+          - ../kubernetes/platform/flux-operator/operator/overlays/prod/values.yaml
+    - name: Bootstrap Flux
+      kubernetes.core.helm:
+        name: flux-instance
+        chart_ref: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-instance
+        # renovate: datasource=helm depName=fluxcd ociRepository=oci://ghcr.io/controlplaneio-fluxcd/charts
+        chart_version: 0.43.0
+        release_namespace: flux-system
+        create_namespace: true
+        values_files:
+          - ../kubernetes/platform/flux-operator/instance/base/values.yaml
+          - ../kubernetes/platform/flux-operator/instance/overlays/prod/values.yaml
 
-    - name: Configure Vault integration
-      ansible.builtin.include_tasks: tasks/configure_vault_integration.yaml
-
-    - name: Flux bootstrap
-      ansible.builtin.include_tasks: tasks/fluxcd_bootstrap.yaml
-
-    - name: Install cli utils.
-      ansible.builtin.include_tasks: tasks/install_cli_utils.yaml
+# Now that FluxCD is taking over, clean up the installation manifests
+- name: Clean ansible-created manifests
+  hosts: k3s_server
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Find ansible managed manifests
+      ansible.builtin.find:
+        path: /var/lib/rancher/k3s/server/manifests/
+        patterns: "*-ansible.yaml"
+      register: ansible_manifests
+      
+    - name: Delete ansible-managed manifests
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: absent
+      loop: "{{ ansible_manifests.files }}"
