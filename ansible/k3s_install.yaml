@@ -1,84 +1,83 @@
 ---
-- name: Gather facts from the whole cluster
-  hosts: k3s_cluster
-  gather_facts: true
-
-- name: Install load balancer
-  hosts: haproxy
-  gather_facts: true
+- name: Prepare Helm templates
+  hosts: localhost
+  gather_facts: false
   tags:
-    - haproxy
-    - install
-  become: true
+    - helm
   pre_tasks:
+    - name: Set overlay
+      ansible.builtin.set_fact:
+        overlay: "{{ overlay | default('prod') }}"
     - name: Include vault variables
       ansible.builtin.include_vars: vars/vault.yaml
-      tags:
-        - always
     - name: Include rdxcluster variables
       ansible.builtin.include_vars: vars/rdxcluster.yaml
-      tags:
-        - always
-  roles:
-    - role: haproxy
+    - name: Ensure install templates dir exist
+      ansible.builtin.file:
+        path: "{{ install_manifests_dir }}"
+        state: "directory"
+        mode: "755"
+  tasks:
+    - name: Template the installation charts
+      vars:
+        manifests_dir: "{{ install_manifests_dir }}"
+      ansible.builtin.include_tasks:
+        file: tasks/template_helm_ns.yaml
+      loop: "{{ install_charts | dict2items }}"
 
-- name: Install K3S prerequisites
-  hosts: k3s_cluster
+- name: Copy manifests to server nodes
   gather_facts: true
   tags:
-    - install
+    - helm
+    - helm_copy
   become: true
-  pre_tasks:
-    - name: Include vault variables
-      ansible.builtin.include_vars: vars/vault.yaml
-      tags:
-        - always
-    - name: Include rdxcluster variables
-      ansible.builtin.include_vars: vars/rdxcluster.yaml
-      tags:
-        - always
-  roles:
-    - role: k3s_prereq
-
-- name: Install K3s server node
   hosts: k3s_server
-  tags:
-    - install
-  become: true
   pre_tasks:
     - name: Include vault variables
       ansible.builtin.include_vars: vars/vault.yaml
-      tags:
-        - always
     - name: Include rdxcluster variables
       ansible.builtin.include_vars: vars/rdxcluster.yaml
-      tags:
-        - always
-  roles:
-    - role: k3s_server
-    - role: ricsanfre.k8s_cli
+  tasks:
+    - name: Copy installation charts to temporary directory
+      ansible.builtin.copy:
+        src: "{{ install_manifests_dir }}/"
+        dest: "{{ install_manifests_dir }}"
+        mode: "755"
+      vars:
+        # Do not need root for this
+        ansible_become: false
 
-- name: Install K3s agent nodes
-  hosts: k3s_agent
+- name: Install K3S
+  hosts: k3s_cluster
+  gather_facts: true
   tags:
     - install
   become: true
+  vars:
+    k3s_become: true
+    k3s_server_manifests_templates: "{{ [install_manifests_dir, '*.yaml'] | path_join | fileglob }}"
   pre_tasks:
     - name: Include vault variables
       ansible.builtin.include_vars: vars/vault.yaml
-      tags:
-        - always
     - name: Include rdxcluster variables
       ansible.builtin.include_vars: vars/rdxcluster.yaml
-      tags:
-        - always
   roles:
-    - role: k3s_agent
+    - role: xanmanning.k3s
+  post_tasks:
+    - name: Clean temporary files
+      ansible.builtin.file:
+        path: "{{ install_manifests_dir }}"
+        state: "absent"
 
 - name: Get Kubernetes config file
   hosts: k3s_server
   tags:
     - kube-config
+  pre_tasks:
+    - name: Include vault variables
+      ansible.builtin.include_vars: vars/vault.yaml
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: vars/rdxcluster.yaml
   tasks:
     - name: Get k3s config file
       run_once: true
@@ -86,45 +85,14 @@
         src: /etc/rancher/k3s/k3s.yaml
       register: kubeconfig_base64
 
-    - name: Write Kubernetes config file with the correct cluster address
+    - name: Write kubeconfig locally
       ansible.builtin.copy:
-        content: "{{ kubeconfig_base64.content | b64decode | replace('127.0.0.1', k3s_api_vip) }}"
+        content: >-
+          {{
+            kubeconfig_base64.content
+            | b64decode
+            | replace('127.0.0.1', k3s_registration_address)
+          }}
         dest: ~/.kube/config
         mode: "0600"
       delegate_to: localhost
-      run_once: true
-
-- name: Label K3S worker nodes
-  hosts: localhost
-  tags:
-    - config
-  pre_tasks:
-    - name: Include vault variables
-      ansible.builtin.include_vars: vars/vault.yaml
-      tags:
-        - always
-    - name: Include rdxcluster variables
-      ansible.builtin.include_vars: vars/rdxcluster.yaml
-      tags:
-        - always
-  tasks:
-    # - name: "Wait for worker nodes to be ready"
-    #   command:
-    #     cmd: "kubectl get nodes {{ item }}"
-    #   register: nodes
-    #   until:
-    #     - '" Ready "  in nodes.stdout'
-    #   retries: 10
-    #   delay: 5
-    #   with_items: "{{ groups['k3s_agent'] }}"
-
-    - name: Label k3s agent nodes
-      kubernetes.core.k8s:
-        definition:
-          apiVersion: v1
-          kind: Node
-          metadata:
-            name: "{{ item }}"
-            labels:
-              node-role.kubernetes.io/agent:
-      with_items: "{{ groups['k3s_agent'] }}"

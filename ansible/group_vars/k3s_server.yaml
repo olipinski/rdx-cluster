@@ -1,15 +1,14 @@
 ---
-# k3s_server group variables
+# ###################
+# xanmanning.k3s role variables
+# ###################
 
-# #################################
-# ricsanfre.k8s_cli role variables
-# #################################
+k3s_control_node: true
 
-install_helm: true
-# renovate: datasource=github-releases depName=helm/helm
-helm_version: v4.1.4
-install_kubectl: false
-
-# OS and hardware architecture
-k8s_platform: linux
-k8s_arch: arm64
+# If multiple hosts have k3s_control_node set to true, you must also set datastore-endpoint in k3s_server
+# as the connection string to a MySQL or PostgreSQL database, or external Etcd cluster else the play will fail.
+# See https://github.com/PyratLabs/ansible-role-k3s/blob/main/README.md
+# An example to address the above comment is this setting. Requires at least 3 server nodes, or
+# also setting k3s_use_unsupported_config: true
+k3s_etcd_datastore: "{{ true if groups['k3s_server'] | length >= 1 else false }}"
+k3s_use_unsupported_config: "{{ false if groups['k3s_server'] | length % 3 == 0 else true }}"

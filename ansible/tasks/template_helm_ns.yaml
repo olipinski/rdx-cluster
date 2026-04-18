@@ -1,0 +1,45 @@
+---
+- name: "Read the values file {{ item.key }}"
+  ansible.builtin.set_fact:
+    combined_values: >-
+      {{  (combined_values | default({}))
+          | combine(
+              lookup('ansible.builtin.file', path) | from_yaml,
+              recursive=True
+          )
+      }}
+  loop: "{{ item.value.value_files }}"
+  loop_control:
+    loop_var: path
+
+- name: "Template Helm chart: {{ item.key }}"
+  kubernetes.core.helm_template:
+    name: "{{ item.key }}"
+    chart_ref: "{{ item.value.chart_ref }}"
+    chart_version: "{{ item.value.version }}"
+    chart_repo_url: "{{ item.value.repo_url | default('') }}"
+    release_namespace: "{{ item.value.namespace }}"
+    release_values: "{{ combined_values | default({}) }}"
+  register: templated_chart
+
+- name: "Create namespace for {{ item.key }}"
+  ansible.builtin.copy:
+    dest: "{{ manifests_dir }}/{{ item.value.namespace }}-ns-ansible.yaml"
+    content: |
+      ---
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: {{ item.value.namespace }}
+    mode: "0644"
+  when:
+    - item.value.create_namespace is defined
+    - item.value.create_namespace
+  register: ns_result
+
+- name: "Write chart to temporary directory: {{ item.key }}"
+  ansible.builtin.copy:
+    dest: "{{ manifests_dir }}/{{ item.key }}-ansible.yaml"
+    content: "{{ templated_chart.stdout }}"
+    mode: "0644"
+  register: manifest_result

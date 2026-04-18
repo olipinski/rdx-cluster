@@ -6,12 +6,6 @@ all:
         gateway0i:
           ansible_host: 192.168.10.68 # Changeme!
           ansible_port: 22
-    control:
-      hosts:
-        prime:
-          hostname: prime
-          ansible_host: localhost
-          ansible_connection: local
     gateways:
       hosts:
         gateway0:
@@ -22,8 +16,7 @@ all:
       hosts:
         service0:
           ansible_host: 10.20.0.8
-        rock000:
-        rock001:
+        rock00[0:1]:
         red000:
         silver000:
     radxa:
@@ -47,9 +40,6 @@ all:
             red000:
             rock001:
     vault:
-      hosts:
-        service0:
-    haproxy:
       hosts:
         service0:
     maas:
