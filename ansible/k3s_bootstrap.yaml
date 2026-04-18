@@ -96,7 +96,7 @@
         path: /var/lib/rancher/k3s/server/manifests/
         patterns: "*-ansible.yaml"
       register: ansible_manifests
-      
+
     - name: Delete ansible-managed manifests
       ansible.builtin.file:
         path: "{{ item.path }}"
