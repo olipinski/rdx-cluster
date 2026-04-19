@@ -1,5 +1,5 @@
 FROM alpine/kubectl:1.35.3 AS kubectl
-FROM alpine/helm:4.1.1 AS helm
+FROM alpine/helm:4.1.4@sha256:4b0bdd2cf18ff6bca12aba0b2c5671384dab5035c19c57f0c58b854a0baf65be AS helm
 FROM ghcr.io/astral-sh/uv:0.11.6 AS uv
 FROM python:3.14-slim
 
