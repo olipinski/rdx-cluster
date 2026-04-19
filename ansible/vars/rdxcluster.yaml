@@ -8,7 +8,7 @@
 # renovate: datasource=github-releases depName=k3s-io/k3s
 k3s_release_version: v1.35.3+k3s1
 # renovate: datasource=github-releases depName=helm/helm
-helm_version: v4.1.1
+helm_version: v4.1.4
 helm_arch: >-
      {{
         'amd64' if ansible_facts['architecture'] in ['x86_64', 'amd64'] else
