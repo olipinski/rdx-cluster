@@ -104,7 +104,7 @@ install_charts:
 # FluxCD #
 # #########
 # renovate: datasource=github-releases depName=fluxcd/flux2
-fluxcd_version: v2.8.5
+fluxcd_version: v2.8.6
 
 ###########
 # Ingress #
