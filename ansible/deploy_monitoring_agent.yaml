@@ -5,12 +5,10 @@
   gather_facts: true
   become: true
   pre_tasks:
-    # Include vault variables
     - name: Include vault variables
       ansible.builtin.include_vars: vars/vault.yaml
       tags:
         - always
-    # Include rdxcluster variables
     - name: Include rdxcluster variables
       ansible.builtin.include_vars: vars/rdxcluster.yaml
       tags:
@@ -25,12 +23,10 @@
   gather_facts: true
   become: true
   pre_tasks:
-    # Include vault variables
     - name: Include vault variables
       ansible.builtin.include_vars: vars/vault.yaml
       tags:
         - always
-    # Include rdxcluster variables
     - name: Include rdxcluster variables
       ansible.builtin.include_vars: vars/rdxcluster.yaml
       tags:
