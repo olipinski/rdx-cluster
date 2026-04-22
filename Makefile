@@ -1,27 +1,31 @@
 .EXPORT_ALL_VARIABLES:
 
 RUNNER=ansible-runner/ansible-runner.sh
-KUBECONFIG = $(shell pwd)/ansible-runner/runner/.kube/config
+KUBECONFIG=$(shell pwd)/ansible-runner/runner/.kube/config
 
 .PHONY: default
 default: clean
 
 .PHONY: prepare-ansible
-prepare-ansible: ansible-runner-setup ansible-credentials
-
-.PHONY: clean
-clean: k3s-reset external-services-reset
+prepare-ansible: ansible-runner-setup ansible-credentials install_cli_utils
 
 .PHONY: ansible-runner-setup
 ansible-runner-setup:
 	make -C ansible-runner
 
-.PHONY: init
-init: gateway-init os-upgrade gateway-setup external-setup nodes-setup external-services configure-os-backup k3s-install k3s-bootstrap
-
 .PHONY: ansible-credentials
 ansible-credentials:
 	${RUNNER} ansible-playbook create_vault_credentials.yaml
+
+.PHONY: install_cli_utils
+install_cli_utils:
+	${RUNNER} ansible-playbook install_cli_utils.yaml
+
+.PHONY: clean
+clean: k3s-reset external-services-reset
+
+.PHONY: init
+init: gateway-init os-upgrade gateway-setup external-setup nodes-setup external-services configure-os-backup k3s-install k3s-bootstrap
 
 .PHONY: view-vault-credentials
 view-vault-credentials:
@@ -94,13 +98,3 @@ shutdown:
 .PHONY: reboot
 reboot:
 	${RUNNER} ansible-playbook reboot.yaml
-
-.PHONY: kubernetes-vault-config
-kubernetes-vault-config:
-	${RUNNER} ansible-playbook kubernetes_vault_config.yaml
-
-.PHONY: install-local-utils
-install-local-utils:
-	echo "dummy" > ansible/vault-pass-dummy
-	cd ansible; ANSIBLE_VAULT_PASSWORD_FILE=vault-pass-dummy ansible-playbook install_utilities_localhost.yaml --ask-become-pass
-	rm ansible/vault-pass-dummy

@@ -1,0 +1,15 @@
+---
+- name: Install CLI utilities
+  hosts: localhost
+  gather_facts: false
+  become: true
+  pre_tasks:
+    - name: Include rdxcluster variables
+      ansible.builtin.include_vars: "vars/rdxcluster.yaml"
+  roles:
+    - role: fluxcd_cli
+    - role: longhorn_cli
+    - role: velero_cli
+      vars:
+        velero_cli_velero_arch: arm64
+    - role: istio_cli
