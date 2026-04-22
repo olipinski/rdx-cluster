@@ -4,7 +4,7 @@
     {
       customType: "regex",
       description: ["Process custom dependencies"],
-      fileMatch: [
+      managerFilePatterns: [
         "(^|/).+\\.env(?:\\.j2)?$",
         "(^|/).+\\.sh(?:\\.j2)?$",
         "(^|/).+\\.ya?ml(?:\\.j2)?$",
@@ -29,7 +29,7 @@
     {
       customType: "regex",
       description: ["Process CloudnativePG Postgresql version"],
-      fileMatch: ["(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"],
+      managerFilePatterns: ["(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"],
       matchStrings: ["image(Name)?: (?<depName>\\S+):(?<currentValue>.*)"],
       datasourceTemplate: "docker",
       versioningTemplate: "redhat",
@@ -37,7 +37,7 @@
     {
       customType: "regex",
       description: ["Process ansible kubernetes helm chart repo"],
-      fileMatch: ["(^|/)ansible/.+\\.ya?ml(?:\\.j2)?$"],
+      managerFilePatterns: ["(^|/)ansible/.+\\.ya?ml(?:\\.j2)?$"],
       matchStrings: [
         "chart_ref:\\s+(?<depName>.*?)\\s+chart_repo_url:\\s+(?<registryUrl>.*?)\\s+chart_version:\\s+\(?<currentValue>.*)",
       ],
@@ -47,7 +47,7 @@
       // OCI Helm Chart configuration following instructions of https://github.com/renovatebot/renovate/discussions/25056
       customType: "regex",
       description: ["Process ansible kubernetes oci chart repo"],
-      fileMatch: ["(^|/)ansible/.+\\.ya?ml(?:\\.j2)?$"],
+      managerFilePatterns: ["(^|/)ansible/.+\\.ya?ml(?:\\.j2)?$"],
       matchStrings: [
         "name:\\s+(?<product>.*?)\\s+chart_ref: oci:\/\/(?<package>.*?)\\s+chart_version:\\s+\(?<currentValue>.*)",
       ],
@@ -56,10 +56,27 @@
       packageNameTemplate: "{{package}}",
     },
     {
+      "customType": "regex",
+      "description": "Process rdxcluster K3s OCI install charts",
+      "managerFilePatterns": ["(^|/)ansible/vars/rdxcluster\\.ya?ml$"],
+      "matchStrings": [
+        "chart_ref:\\s+oci:\\/\\/(?<packageName>\\S+)\\s+version:\\s+(?<currentValue>[^\\s]+)"
+      ]
+    },
+    {
+      "customType": "regex",
+      "description": "Process rdxcluster K3s Helm install charts",
+      "managerFilePatterns": ["(^|/)ansible/vars/rdxcluster\\.ya?ml$"],
+      "matchStrings": [
+        "chart_ref:\\s+(?<depName>\\S+)\\s+repo_url:\\s+(?<registryUrl>\\S+)\\s+version:\\s+(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "helm"
+    },
+    {
       // https://github.com/ThomasSteinbach/deleteme-renovate-test/blob/main/renovate.json
       customType: 'regex',
       description: ["Process GitHub Ansible collections."],
-      fileMatch: ["(^|/)ansible/.+\\.ya?ml(?:\\.j2)?$"],
+      managerFilePatterns: ["(^|/)ansible/.+\\.ya?ml(?:\\.j2)?$"],
       matchStrings: [
         'name:\\s*(?<depName>https://github.com/(?<packageName>[a-zA-Z][\\w\\-/]+))\\n.*?type:\\s*git\\n.*?version:\\s*(?<currentValue>v?[0-9]+\\.[0-9]+\\.[0-9]+)',
       ],

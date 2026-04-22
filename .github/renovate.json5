@@ -19,7 +19,7 @@
       '/(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$/',
     ],
   },
-  'helm-values': {
+  "helm-values": {
     managerFilePatterns: [
       '/(^|/)kubernetes/.+\\.ya?ml$/',
     ],
@@ -49,7 +49,7 @@
       '/(^|/)ansible/.+\\.ya?ml(?:\\.j2)?$/',
     ],
   },
-  'ansible-galaxy': {
+  "ansible-galaxy": {
     managerFilePatterns: [
       '/(^|/)ansible/.+\\.ya?ml(?:\\.j2)?$/',
     ],
