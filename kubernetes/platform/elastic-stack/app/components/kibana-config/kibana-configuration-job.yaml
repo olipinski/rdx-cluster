@@ -12,8 +12,7 @@ spec:
       restartPolicy: Never
       initContainers:
         - name: wait-for-kibana
-          # renovate: datasource=github-releases depName=curl/curl-container
-          image: alpine/curl:8.17.0
+          image: curlimages/curl:8.19.0
           imagePullPolicy: IfNotPresent
           env:
             - name: KIBANA_URL
@@ -29,8 +28,8 @@ spec:
           securityContext:
             readOnlyRootFilesystem: true
             runAsNonRoot: true
-            runAsUser: 1000
-            runAsGroup: 1000
+            runAsUser: 100
+            runAsGroup: 101
           resources:
             requests:
               cpu: 1m
@@ -39,8 +38,7 @@ spec:
               memory: 128Mi
       containers:
         - name: kibana-config-job
-         # renovate: datasource=github-releases depName=curl/curl-container
-          image: alpine/curl:8.17.0
+          image: curlimages/curl:8.19.0
           env:
             - name: ELASTICSEARCH_PASSWORD
               valueFrom:
@@ -60,8 +58,8 @@ spec:
           securityContext:
             readOnlyRootFilesystem: true
             runAsNonRoot: true
-            runAsUser: 1000
-            runAsGroup: 1000
+            runAsUser: 100
+            runAsGroup: 101
           resources:
             requests:
               cpu: 1m
