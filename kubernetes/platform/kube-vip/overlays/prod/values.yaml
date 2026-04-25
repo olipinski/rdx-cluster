@@ -8,8 +8,6 @@ env:
   # Enable only kube-vip control plane functionality
   cp_enable: "true"
   svc_enable: "false"
-  # VIP configuration
-  vip_interface: "eno1"
   vip_arp: "true"
   vip_leaderelection: "true"
   vip_leaseduration: "15"
