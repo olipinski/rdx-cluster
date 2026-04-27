@@ -62,14 +62,13 @@
             value_type: string
 
     - name: Get reviewer token # noqa: no-changed-when
-      ansible.builtin.shell: |
-        set -o pipefail
-        KUBERNETES_SA_SECRET_NAME=$(kubectl get secrets --output=json -n vault \
-        | jq -r '.items[].metadata \
-        | select(.name|startswith("vault-auth")).name')
-        TOKEN_REVIEW_JWT=$(kubectl get secret $KUBERNETES_SA_SECRET_NAME -n vault -o jsonpath='{.data.token}' \
-        | base64 --decode)
-        echo $TOKEN_REVIEW_JWT
+      ansible.builtin.shell: >
+        set -o pipefail;
+        KUBERNETES_SA_SECRET_NAME=$(kubectl get secrets --output=json -n vault
+        | jq -r '.items[].metadata | select(.name|startswith("vault-auth")).name');
+        TOKEN_REVIEW_JWT=$(kubectl get secret $KUBERNETES_SA_SECRET_NAME -n vault -o jsonpath='{.data.token}' |
+        base64 --decode);
+        echo $TOKEN_REVIEW_JWT;
       register: get_reviewer_token
 
     - name: Set reviewer token
@@ -77,12 +76,12 @@
         vault_reviewer_token: "{{ get_reviewer_token.stdout }}"
 
     - name: Get Kubernetes CA cert # noqa: no-changed-when
-      ansible.builtin.shell: |
-        set -o pipefail
-        KUBERNETES_CA_CERT=$(kubectl config view --raw --minify --flatten \
-          --output='jsonpath={.clusters[].cluster.certificate-authority-data}' \
-          | base64 --decode | awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}')
-        echo $KUBERNETES_CA_CERT
+      ansible.builtin.shell: >
+        set -o pipefail;
+        KUBERNETES_CA_CERT=$(kubectl config view
+        --raw --minify --flatten --output='jsonpath={.clusters[].cluster.certificate-authority-data}'
+        | base64 --decode | awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}');
+        echo $KUBERNETES_CA_CERT;
       register: get_kubernetes_ca
 
     - name: Set CA cert
