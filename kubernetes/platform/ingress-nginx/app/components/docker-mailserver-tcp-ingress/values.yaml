@@ -1,5 +1,7 @@
 ---
 # ingress-nginx TCP overlay
+config:
+  use-proxy-protocol: true
 
 tcp:
   25: "docker-mailserver/docker-mailserver:12525::PROXY"
