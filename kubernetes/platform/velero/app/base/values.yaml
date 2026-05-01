@@ -4,7 +4,7 @@
 # AWS backend and CSI plugins configuration
 initContainers:
   - name: velero-plugin-for-aws
-    image: velero/velero-plugin-for-aws:v1.14.0
+    image: velero/velero-plugin-for-aws:v1.14.0@sha256:7e82f717f44e89671212e0dfce7e061321c386ea84a33bca64a671670ca6c278
     imagePullPolicy: IfNotPresent
     volumeMounts:
       - mountPath: /target
@@ -34,4 +34,4 @@ snapshotsEnabled: false
 kubectl:
   image:
     repository: docker.io/bitnamilegacy/kubectl
-    tag: 1.33.4
+    tag: 1.33.4@sha256:ed0b31a0508da84ee655c5c6e01bd3897fc56ad6cf69debb27fa1893a06d2246

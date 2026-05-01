@@ -5,7 +5,7 @@
 image:
   repository: ricsanfre/fluentd-aggregator
   pullPolicy: IfNotPresent
-  tag: v1.17.1-debian-1.0
+  tag: v1.17.1-debian-1.0@sha256:c533d8dd8b27a7bd48b0e50cf983b915b7ec539172d28be2bc38faf24aef7c8a
 
 # Deploy fluentd as deployment
 kind: Deployment
