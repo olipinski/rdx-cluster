@@ -12,6 +12,7 @@ spec:
     name: flux-system
   dependsOn:
     - name: external-secrets-config
+    - name: istio-gateway-app
   path: ./kubernetes/platform/external-dns/app/overlays/prod
   prune: true
   wait: true

@@ -32,7 +32,7 @@ service:
   # externalTrafficPolicy: "Local"
   annotations:
     external-dns.alpha.kubernetes.io/hostname: mail.${CLUSTER_DOMAIN}
-    external-dns.alpha.kubernetes.io/ttl: 120
+    external-dns.alpha.kubernetes.io/ttl: "120"
     external-dns.alpha.kubernetes.io/target: ${NGINX_LOAD_BALANCER_IP} # Uses nginx for now
 
 monitoring:
@@ -128,6 +128,7 @@ configMaps:
     data: |
       ${DMS_ADMIN_USER}@${CLUSTER_DOMAIN}|{SHA512-CRYPT}${DMS_ADMIN_HASHED_PASSWORD}
 
+
   postfix-virtual.cf:
     create: true
     path: postfix-virtual.cf
@@ -135,11 +136,13 @@ configMaps:
       abuse@${CLUSTER_DOMAIN} {DMS_ADMIN_USER}@${CLUSTER_DOMAIN}
       postmaster@${CLUSTER_DOMAIN} {DMS_ADMIN_USER}@${CLUSTER_DOMAIN}
 
+
   dovecot-quotas.cf:
     create: true
     path: dovecot-quotas.cf
     data: |
       ${DMS_ADMIN_USER}@${CLUSTER_DOMAIN}:10G
+
 
   # documentation: https://rspamd.com/doc/modules/dkim_signing.html
   dkim-signing.conf:

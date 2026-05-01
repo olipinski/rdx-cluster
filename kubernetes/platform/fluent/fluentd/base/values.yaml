@@ -100,7 +100,7 @@ volumes:
   - name: etcfluentd-template
     configMap:
       name: fluentd-template
-      defaultMode: "0777"
+      defaultMode: 0777 # yamllint disable-line rule:octal-values
 
 volumeMounts:
   - name: etcfluentd-template

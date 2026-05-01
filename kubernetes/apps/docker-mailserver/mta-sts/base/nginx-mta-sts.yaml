@@ -18,6 +18,9 @@ spec:
         app.kubernetes.io/instance: nginx-mta-sts
         app.kubernetes.io/name: nginx-mta-sts
     spec:
+      securityContext:
+        runAsUser: 101
+        runAsGroup: 102
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -30,15 +33,17 @@ spec:
               weight: 100
       containers:
         - name: nginx-mta-sts
-          image: nginx:alpine
+          image: nginxinc/nginx-unprivileged:1.29.8-alpine
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               name: http
               protocol: TCP
           volumeMounts:
             - mountPath: /usr/share/nginx/html/.well-known
               name: mta-sts-file
+            - mountPath: /tmp
+              name: tmp
           readinessProbe:
             failureThreshold: 3
             httpGet:
@@ -60,8 +65,12 @@ spec:
             successThreshold: 1
             timeoutSeconds: 10
           securityContext:
+            capabilities:
+              drop:
+                - NET_RAW
             readOnlyRootFilesystem: true
             runAsNonRoot: true
+            allowPrivilegeEscalation: false
           resources:
             requests:
               cpu: 1m
@@ -72,3 +81,5 @@ spec:
         - name: mta-sts-file
           configMap:
             name: mta-sts-file
+        - emptyDir: {}
+          name: tmp

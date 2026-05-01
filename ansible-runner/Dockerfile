@@ -10,9 +10,9 @@ COPY --from=uv /uv /uvx /usr/local/bin/
 COPY --from=kubectl /usr/local/bin/kubectl /usr/local/bin/kubectl
 COPY --from=helm /usr/bin/helm /usr/local/bin/helm
 
-RUN apt-get update -qq && \
-    apt-get install sudo git apt-utils pwgen gnupg curl wireguard-tools vim whois -y && \
-    apt-get clean && \
+RUN apt update -qq && \
+    apt install sudo git apt-utils pwgen gnupg curl wireguard-tools vim whois wget jq -y && \
+    apt clean && \
     rm -rf /usr/share/doc/* /usr/share/man/* /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ADD build /build
