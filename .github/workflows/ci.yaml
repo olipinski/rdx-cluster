@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the codebase.
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Set up Python 3.
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
           python-version: "3.14"
 
@@ -23,19 +23,19 @@ jobs:
         run: pip3 install yamllint hvac
 
       - name: Check spelling.
-        uses: codespell-project/actions-codespell@v2
+        uses: codespell-project/actions-codespell@406322ec52dd7b488e48c1c4b82e2a8b3a1bf630 # v2
         with:
           skip: docs,design
           builtin: clear,rare,informal
 
       - name: Ansible-lint the Ansible YAMLs.
-        uses: ansible/ansible-lint@v26.4.0
+        uses: ansible/ansible-lint@5fac056c45595896c973fbde871f01f6cb14d74c # v26.4.0
 
       - name: Lint all the Kubernetes YAMLs.
         run: yamllint kubernetes/
 
       - name: Kube-lint the Kubernetes YAMLs.
-        uses: stackrox/kube-linter-action@v1
+        uses: stackrox/kube-linter-action@87802a2f4e01abebb3ee3c67a3002fea71f6eae5 # v1
         with:
           directory: ./kubernetes
           config: .kube-linter.yaml
