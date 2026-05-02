@@ -64,10 +64,16 @@
   roles:
     - role: xanmanning.k3s
   post_tasks:
-    - name: Clean temporary files
+    - name: Clean remote temporary files
       ansible.builtin.file:
         path: "{{ install_manifests_dir }}"
         state: "absent"
+    - name: Clean local temporary files
+      ansible.builtin.file:
+        path: "{{ install_manifests_dir }}"
+        state: "absent"
+      delegate_to: localhost
+      run_once: true
 
 - name: Get Kubernetes config file
   hosts: k3s_server
