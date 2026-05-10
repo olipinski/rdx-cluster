@@ -54,20 +54,45 @@ spec:
         - basicauth
       pipelines:
         logs/loki:
-          receivers: [ otlp ]
-          processors: [ memory_limiter, resource, batch, transform/loki ]
-          exporters: [ otlphttp/loki ]
+          receivers:
+            - otlp
+          processors:
+            - memory_limiter
+            - resource
+            - batch
+            - transform/loki
+          exporters:
+            - otlphttp/loki
         metrics:
-          receivers: [ otlp ]
-          processors: [ memory_limiter, resource, batch ]
-          exporters: [ otlphttp/prometheus ]
+          receivers:
+            - otlp
+          processors:
+            - memory_limiter
+            - resource
+            - batch
+          exporters:
+            - otlphttp/prometheus
         logs/elasticsearch:
-          receivers: [ otlp ]
-          processors: [ memory_limiter, k8sattributes, resource/elasticsearch, resource, batch ]
-          exporters: [ elasticsearch ]
+          receivers:
+            - otlp
+          processors:
+            - memory_limiter
+            - resource
+            - batch
+            - k8sattributes
+            - resource/elasticsearch
+          exporters:
+            - elasticsearch
         traces:
-          processors: [ memory_limiter, resource, batch ]
-          exporters: [ spanmetrics, otlp ]
+          receivers:
+            - otlp
+          processors:
+            - memory_limiter
+            - resource
+            - batch
+          exporters:
+           - spanmetrics
+           - otlp
 
     extensions:
       basicauth:
