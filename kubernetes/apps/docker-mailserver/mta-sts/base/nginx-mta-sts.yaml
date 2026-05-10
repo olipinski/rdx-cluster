@@ -17,6 +17,8 @@ spec:
       labels:
         app.kubernetes.io/instance: nginx-mta-sts
         app.kubernetes.io/name: nginx-mta-sts
+      annotations:
+        instrumentation.opentelemetry.io/inject-nginx: "opentelemetry-operator-system/default-instrumentation"
     spec:
       securityContext:
         runAsUser: 101
