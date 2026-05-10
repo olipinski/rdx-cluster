@@ -1,5 +1,11 @@
 # Radxa Kubernetes Cluster
 
+> [!IMPORTANT]
+> The documentation has not yet been updated to match the current state. Below is the documentation of the original
+> pi-cluster project.
+
+# Original documentation
+
 <img src="docs/assets/img/picluster-logo.png" width="200" />
 
 <table>
