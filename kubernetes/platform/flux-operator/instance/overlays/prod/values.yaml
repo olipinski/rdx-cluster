@@ -5,7 +5,7 @@ instance:
     kind: GitRepository
     # Changeme!
     url: https://github.com/olipinski/rdx-cluster
-    ref: refs/heads/main
+    ref: refs/heads/migrate-fluent-to-tel
     path: kubernetes/clusters/prod
     interval: 1h
   kustomize:

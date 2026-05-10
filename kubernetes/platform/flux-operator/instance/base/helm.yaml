@@ -10,7 +10,7 @@ spec:
       chart: flux-instance
       version: 0.48.0
       sourceRef:
-        kind: HelmRepository
+        kind: OCIRepository
         name: controlplane
         namespace: flux-system
   releaseName: flux-instance
