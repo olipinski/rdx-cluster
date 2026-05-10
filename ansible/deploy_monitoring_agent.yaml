@@ -1,6 +1,6 @@
 ---
 # Deploy fluentbit to get logs and prometheus metrics
-- name: Deploy fluentbit and node exporter agents on external nodes (service0)
+- name: Deploy node exporter agent on external node
   hosts: service0
   gather_facts: true
   become: true
@@ -14,11 +14,10 @@
       tags:
         - always
   roles:
-    - role: ricsanfre.fluentbit
     - role: prometheus.prometheus.node_exporter
 
 # Deploy bind exporter to get bind9 metrics
-- name: Deploy bind exporter agents on dns server (gateway0)
+- name: Deploy bind exporter agent on the DNS server
   hosts: gateway0
   gather_facts: true
   become: true
