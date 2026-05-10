@@ -29,6 +29,7 @@ repos:
         additional_dependencies:
           - mdformat-gfm
           - mdformat-black
+          - mdformat-gfm-alerts
         args:
           - --wrap=120
         types: [markdown]
