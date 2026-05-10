@@ -24,7 +24,7 @@ resources:
   - metrics-server-app.yaml
   - minio-app.yaml
   - oauth2-proxy-app.yaml
-  - otel-app.yaml
+  - opentelemetry-app.yaml
   - system-upgrade-app.yaml
   - tempo-app.yaml
   - vault-app.yaml

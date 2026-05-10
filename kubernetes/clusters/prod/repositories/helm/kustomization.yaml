@@ -20,7 +20,7 @@ resources:
   - metrics-server-helmrepo.yaml
   - minio-helmrepo.yaml
   - oauth2-proxy-helmrepo.yaml
-  - otel-helmrepo.yaml
+  - opentelemetry-helmrepo.yaml
   - prometheus-community-helmrepo.yaml
   - strimzi-helmrepo.yaml
   - vmware-tanzu-helmrepo.yaml

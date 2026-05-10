@@ -12,10 +12,10 @@ spec:
       version: 0.112.1
       sourceRef:
         kind: HelmRepository
-        name: otel
+        name: opentelemetry
         namespace: flux-system
   releaseName: opentelemetry-operator
-  targetNamespace: otel
+  targetNamespace: opentelemetry
   install:
     remediation:
       retries: 3

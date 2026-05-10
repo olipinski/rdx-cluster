@@ -6,4 +6,4 @@ metadata:
   namespace: opentelemetry-operator-system
 spec:
   exporter:
-    endpoint: "https://otel-backend.example.com:4318"
+    endpoint: "https://opentelemetry-backend.example.com:4318"
