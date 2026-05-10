@@ -10,7 +10,6 @@ resources:
   - elastic-stack-app.yaml
   - external-dns-app.yaml
   - external-secrets-app.yaml
-  - fluent-app.yaml
   - flux-app.yaml
   - grafana-app.yaml
   - ingress-nginx-app.yaml
@@ -25,6 +24,7 @@ resources:
   - metrics-server-app.yaml
   - minio-app.yaml
   - oauth2-proxy-app.yaml
+  - otel-app.yaml
   - system-upgrade-app.yaml
   - tempo-app.yaml
   - vault-app.yaml
