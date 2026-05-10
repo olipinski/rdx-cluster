@@ -1,9 +1,9 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
+kind: OCIRepository
 metadata:
-  name: fluent
+  name: fluent-operator
   namespace: flux-system
 spec:
-  url: https://fluent.github.io/helm-charts
+  url: oci://ghcr.io/fluent/helm-charts/fluent-operator
   interval: 1h
