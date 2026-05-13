@@ -2,7 +2,7 @@
 manager:
   collectorImage:
     repository: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib
-    tag: 0.153.0
+    tag: 0.152.0
   featureGatesMap: 
     operator.clusterobservability: true
 
