@@ -3,7 +3,8 @@ manager:
   collectorImage:
     repository: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib
     tag: 0.153.0
-  featureGates: "+operator.clusterobservability"
+  featureGatesMap: 
+    operator.clusterobservability: true
 
 admissionWebhooks:
   ## https://github.com/open-telemetry/opentelemetry-helm-charts/blob/main/charts/opentelemetry-operator/README.md#tls-certificate-requirement
