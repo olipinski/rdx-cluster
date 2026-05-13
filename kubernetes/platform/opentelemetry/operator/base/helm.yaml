@@ -8,11 +8,11 @@ spec:
   timeout: 15m
   chart:
     spec:
-      chart: opentelemetry-operator
-      version: 0.112.1
+      chart: charts/opentelemetry-operator
+      version: 0.112.3
       sourceRef:
-        kind: HelmRepository
-        name: opentelemetry
+        kind: GitRepository
+        name: opentelemetry-git
         namespace: flux-system
   releaseName: opentelemetry-operator
   targetNamespace: opentelemetry
