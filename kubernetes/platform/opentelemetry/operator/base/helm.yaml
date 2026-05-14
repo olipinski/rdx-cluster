@@ -1,0 +1,30 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: opentelemetry-operator
+spec:
+  interval: 30m
+  timeout: 15m
+  chart:
+    spec:
+      chart: charts/opentelemetry-operator
+      version: 0.112.3
+      sourceRef:
+        kind: GitRepository
+        name: opentelemetry-git
+        namespace: flux-system
+  releaseName: opentelemetry-operator
+  targetNamespace: opentelemetry
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  valuesFrom:
+    - kind: ConfigMap
+      name: opentelemetry-operator-helm-values
+      valuesKey: base-values.yaml

@@ -1,0 +1,9 @@
+---
+apiVersion: opentelemetry.io/v1alpha1
+kind: ClusterObservability
+metadata:
+  name: cluster-observability
+  namespace: opentelemetry-operator-system
+spec:
+  exporter:
+    endpoint: "https://opentelemetry-backend.example.com:4318"

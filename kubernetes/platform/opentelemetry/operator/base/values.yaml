@@ -1,0 +1,19 @@
+---
+manager:
+  collectorImage:
+    repository: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib
+    tag: 0.152.0
+  featureGatesMap: 
+    operator.clusterobservability: true
+
+admissionWebhooks:
+  ## https://github.com/open-telemetry/opentelemetry-helm-charts/blob/main/charts/opentelemetry-operator/README.md#tls-certificate-requirement
+  ## TLS Certificate Option 1: Use certManager to generate self-signed certificate.
+  ## certManager must be enabled. If enabled, always takes precedence over options 2 and 3.
+  certManager:
+    enabled: true
+    ## Provide the issuer kind and name to do the cert auth job.
+    ## By default, OpenTelemetry Operator will use self-signer issuer.
+    issuerRef: {}
+    # kind:
+    # name:

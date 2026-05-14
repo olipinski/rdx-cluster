@@ -1,0 +1,26 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: opentelemetry
+  namespace: flux-system
+spec:
+  url: https://open-telemetry.github.io/opentelemetry-helm-charts
+  interval: 1h
+
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: opentelemetry-git
+  namespace: flux-system
+spec:
+  interval: 5m
+  url: https://github.com/olipinski/opentelemetry-helm-charts
+  ref:
+    branch: operator-cluster-observability
+  ignore: |-
+    # exclude all
+    /*
+    # include charts directory
+    !/charts/
