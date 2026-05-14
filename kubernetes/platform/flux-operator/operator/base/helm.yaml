@@ -10,7 +10,7 @@ spec:
       chart: flux-operator
       version: 0.48.0
       sourceRef:
-        kind: OCIRepository
+        kind: HelmRepository
         name: controlplane
         namespace: flux-system
   releaseName: flux-operator
