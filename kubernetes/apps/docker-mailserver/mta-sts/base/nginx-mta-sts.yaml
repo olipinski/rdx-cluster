@@ -18,7 +18,7 @@ spec:
         app.kubernetes.io/instance: nginx-mta-sts
         app.kubernetes.io/name: nginx-mta-sts
       annotations:
-        instrumentation.opentelemetry.io/inject-nginx: "opentelemetry/cluster-observability
+        instrumentation.opentelemetry.io/inject-nginx: "opentelemetry/cluster-observability"
     spec:
       securityContext:
         runAsUser: 101
