@@ -35,7 +35,7 @@ roles:
 
 collections:
   - name: community.general
-    version: 12.6.1
+    version: 13.0.1
   - name: https://github.com/ansible-collections/kubernetes.core
     type: git
     version: main
