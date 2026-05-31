@@ -114,7 +114,6 @@ spec:
             - memory_limiter
             - batch
           exporters:
-            - spanmetrics
             - otlp
     extensions:
       basicauth:
