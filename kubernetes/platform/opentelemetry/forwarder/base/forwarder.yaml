@@ -24,9 +24,9 @@ spec:
       cert-manager.io/cluster-issuer: letsencrypt-issuer
       cert-manager.io/common-name: "opentelemetry-forwarder.${CLUSTER_DOMAIN}"
     tls:
-      hosts:
-        - "opentelemetry-forwarder.${CLUSTER_DOMAIN}"
-      secretName: opentelemetry-forwarder-tls
+      - hosts:
+          - "opentelemetry-forwarder.${CLUSTER_DOMAIN}"
+        secretName: opentelemetry-forwarder-tls
   config:
     receivers:
       otlp:
