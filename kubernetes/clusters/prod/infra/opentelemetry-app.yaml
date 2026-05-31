@@ -28,7 +28,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: opentelemetry-collector
+  name: opentelemetry-forwarder
   namespace: flux-system
 spec:
   interval: 30m
@@ -38,7 +38,31 @@ spec:
     name: flux-system
   dependsOn:
     - name: opentelemetry-operator
-  path: ./kubernetes/platform/opentelemetry/collector/overlays/prod
+  path: ./kubernetes/platform/opentelemetry/forwarder/overlays/prod
+  prune: true
+  wait: true
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-settings
+      - kind: ConfigMap
+        name: domain-settings
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: opentelemetry-clusterobservability
+  namespace: flux-system
+spec:
+  interval: 30m
+  targetNamespace: opentelemetry
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  dependsOn:
+    - name: opentelemetry-operator
+    - name: opentelemetry-forwarder
+  path: ./kubernetes/platform/opentelemetry/clusterobservability/overlays/prod
   prune: true
   wait: true
   postBuild:
