@@ -53,7 +53,6 @@ spec:
         endpoint: "tempo-distributor-discovery.tempo.svc.cluster.local:4317"
         tls:
           insecure: true
-
     processors:
       # loki create index for resource attributes, so need to move k8s attributes from log to resource
       transform/loki:
@@ -75,6 +74,7 @@ spec:
         check_interval: 5s
         limit_percentage: 80
         spike_limit_percentage: 25
+      k8s_attributes: {}
     service:
       extensions:
         - health_check
@@ -85,7 +85,6 @@ spec:
             - otlp
           processors:
             - memory_limiter
-            - resource
             - batch
             - transform/loki
           exporters:
@@ -95,7 +94,6 @@ spec:
             - otlp
           processors:
             - memory_limiter
-            - resource
             - batch
           exporters:
             - otlphttp/prometheus
@@ -104,9 +102,8 @@ spec:
             - otlp
           processors:
             - memory_limiter
-            - resource
             - batch
-            - k8sattributes
+            - k8s_attributes
             - resource/elasticsearch
           exporters:
             - elasticsearch
@@ -115,12 +112,10 @@ spec:
             - otlp
           processors:
             - memory_limiter
-            - resource
             - batch
           exporters:
             - spanmetrics
             - otlp
-
     extensions:
       basicauth:
         client_auth:
