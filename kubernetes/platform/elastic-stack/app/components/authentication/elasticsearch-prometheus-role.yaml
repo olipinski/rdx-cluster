@@ -3,7 +3,6 @@ kind: Secret
 apiVersion: v1
 metadata:
   name: es-prometheus-roles-secret
-  namespace: elastic
 stringData:
   roles.yaml: |-
     prometheus_role:

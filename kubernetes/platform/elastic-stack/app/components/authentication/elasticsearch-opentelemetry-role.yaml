@@ -3,7 +3,6 @@ kind: Secret
 apiVersion: v1
 metadata:
   name: es-opentelemetry-roles-secret
-  namespace: elastic
 stringData:
   roles.yaml: |-
     opentelemetry_role:
