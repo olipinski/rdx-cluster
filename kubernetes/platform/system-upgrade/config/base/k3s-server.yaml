@@ -21,6 +21,6 @@ spec:
   # Cordon node before upgrading it
   cordon: true
   upgrade:
-    image: rancher/k3s-upgrade@sha256:e54a34f08be4acd0a77db2c173fe6768b62eff8656a6f2e839495602424d4ec4
+    image: rancher/k3s-upgrade:v1.36.1-k3s1
   # renovate: datasource=github-releases depName=k3s-io/k3s
   version: v1.36.1+k3s1
