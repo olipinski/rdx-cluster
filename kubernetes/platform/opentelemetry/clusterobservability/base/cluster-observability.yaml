@@ -3,7 +3,7 @@ apiVersion: opentelemetry.io/v1alpha1
 kind: ClusterObservability
 metadata:
   name: cluster-observability
-  namespace: opentelemetry-operator-system
+  namespace: opentelemetry
 spec:
   exporter:
-    endpoint: "https://opentelemetry-backend.example.com:4318"
+    endpoint: "https://opentelemetry-forwarder.${CLUSTER_DOMAIN}:4318"

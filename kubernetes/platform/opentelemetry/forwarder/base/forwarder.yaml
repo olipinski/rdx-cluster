@@ -3,7 +3,30 @@ apiVersion: opentelemetry.io/v1beta1
 kind: OpenTelemetryCollector
 metadata:
   name: forwarder
+  namespace: opentelemetry
 spec:
+  env:
+    - name: ELASTIC_USER
+      valueFrom:
+        secretKeyRef:
+          name: opentelemetry-elasticsearch-exporter-secret
+          key: es-username
+    - name: ELASTIC_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: opentelemetry-elasticsearch-exporter-secret
+          key: es-password
+  ingress:
+    type: ingress
+    hostname: "opentelemetry-forwarder.${CLUSTER_DOMAIN}"
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-issuer
+      cert-manager.io/common-name: "opentelemetry-forwarder.${CLUSTER_DOMAIN}"
+    tls:
+      hosts:
+        - "opentelemetry-forwarder.${CLUSTER_DOMAIN}"
+      secretName: opentelemetry-forwarder-tls
   config:
     receivers:
       otlp:
@@ -47,7 +70,6 @@ spec:
           - key: service.namespace
             from_attribute: k8s.namespace.name
             action: upsert
-
     service:
       extensions:
         - health_check
