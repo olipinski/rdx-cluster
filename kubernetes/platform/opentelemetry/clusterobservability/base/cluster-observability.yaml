@@ -6,4 +6,4 @@ metadata:
   namespace: opentelemetry
 spec:
   exporter:
-    endpoint: "https://opentelemetry-forwarder.${CLUSTER_DOMAIN}:4318"
+    endpoint: "http://forwarder-collector.opentelemetry:4318"
