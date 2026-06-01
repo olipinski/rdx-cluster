@@ -1,0 +1,113 @@
+---
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: forwarder
+  namespace: opentelemetry
+spec:
+  env:
+    - name: ELASTIC_USER
+      valueFrom:
+        secretKeyRef:
+          name: opentelemetry-elasticsearch-exporter-secret
+          key: es-username
+    - name: ELASTIC_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: opentelemetry-elasticsearch-exporter-secret
+          key: es-password
+  config:
+    receivers:
+      otlp:
+        protocols:
+          http:
+            endpoint: 0.0.0.0:4318
+    exporters:
+      debug: {}
+      otlphttp/loki:
+        endpoint: "http://loki-gateway.loki/otlp"
+      # Create an exporter to Prometheus (metrics)
+      # It uses Prometheus OLTP endpoint: https://prometheus.io/blog/2024/03/14/commitment-to-opentelemetry/
+      # See details on how to configure Prometheus with OTEL collector here:
+      # https://github.com/prometheus-community/helm-charts/issues/5080
+      otlphttp/prometheus:
+        endpoint: "http://kube-prometheus-stack-prometheus.kube-prom-stack.svc:9090/prometheus/api/v1/otlp"
+        tls:
+          insecure: true
+      elasticsearch:
+        endpoint: "http://efk-es-http.elastic:9200"
+        auth:
+          authenticator: basicauth
+      otlp:
+        endpoint: "tempo-distributor-discovery.tempo.svc.cluster.local:4317"
+        tls:
+          insecure: true
+    processors:
+      # loki create index for resource attributes, so need to move k8s attributes from log to resource
+      transform/loki:
+        log_statements:
+          - context: log
+            statements:
+              - set(resource.attributes["exporter"], "OTLP")
+              - set(resource.attributes["k8s.namespace.name"], log.attributes["k8s.namespace.name"])
+              - delete_key(log.attributes, "k8s.namespace.name")
+      # Custom logs/elasticsearch does not get the preset k8sattributes injection,
+      # so derive service.namespace after explicit Kubernetes enrichment.
+      resource/elasticsearch:
+        attributes:
+          - key: service.namespace
+            from_attribute: k8s.namespace.name
+            action: upsert
+      batch: {}
+      memory_limiter:
+        check_interval: 5s
+        limit_percentage: 80
+        spike_limit_percentage: 25
+      k8s_attributes: {}
+    service:
+      extensions:
+        - health_check
+        - basicauth
+      pipelines:
+        logs/loki:
+          receivers:
+            - otlp
+          processors:
+            - memory_limiter
+            - batch
+            - transform/loki
+          exporters:
+            - otlphttp/loki
+        metrics:
+          receivers:
+            - otlp
+          processors:
+            - memory_limiter
+            - batch
+          exporters:
+            - otlphttp/prometheus
+        logs/elasticsearch:
+          receivers:
+            - otlp
+          processors:
+            - memory_limiter
+            - batch
+            - k8s_attributes
+            - resource/elasticsearch
+          exporters:
+            - elasticsearch
+        traces:
+          receivers:
+            - otlp
+          processors:
+            - memory_limiter
+            - batch
+          exporters:
+            - otlp
+    extensions:
+      basicauth:
+        client_auth:
+          # elastic user and password from environment variable
+          # escaped with $$ to avoid to be interpreted by FluxCD var substitution
+          username: "$${env:ELASTIC_USER}"
+          password: "$${env:ELASTIC_PASSWORD}"

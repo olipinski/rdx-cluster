@@ -75,19 +75,17 @@ vault:
     barman:
       user: barman
       key: {{ minio_barman_password }}
-  # elasticsearch and fluentd
-  logging:
-    es-admin:
+  # elasticsearch
+  elastic:
+    admin:
       user: admin
       password: {{ elasticsearch_admin_password }}
-    es-fluentd:
-      user: fluentd
-      password: {{ elasticsearch_fluentd_password }}
-    es-prometheus:
+    opentelemetry:
+      user: opentelemetry
+      password: {{ elasticsearch_opentelemetry_password }}
+    prometheus:
       user: prometheus
       password: {{ elasticsearch_prometheus_password }}
-    fluentd:
-      shared_key: {{ fluentd_shared_key }}
   # Grafana
   grafana:
     admin:

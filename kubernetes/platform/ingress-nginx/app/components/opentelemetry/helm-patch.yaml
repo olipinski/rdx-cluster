@@ -4,4 +4,4 @@
   value:
     kind: ConfigMap
     name: ingress-nginx-helm-values
-    valuesKey: otel-values.yaml
+    valuesKey: opentelemetry-values.yaml

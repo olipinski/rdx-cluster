@@ -1,0 +1,9 @@
+---
+apiVersion: opentelemetry.io/v1alpha1
+kind: ClusterObservability
+metadata:
+  name: cluster-observability
+  namespace: opentelemetry
+spec:
+  exporter:
+    endpoint: "http://forwarder-collector.opentelemetry:4318"

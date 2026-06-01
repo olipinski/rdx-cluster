@@ -7,7 +7,7 @@ configMapGenerator:
   - name: ingress-nginx-helm-values
     behavior: merge
     files:
-      - otel-values.yaml=values.yaml
+      - opentelemetry-values.yaml=values.yaml
 
 patches:
   - target:

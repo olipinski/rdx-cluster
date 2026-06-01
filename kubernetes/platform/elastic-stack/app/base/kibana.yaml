@@ -4,10 +4,6 @@ kind: Kibana
 
 metadata:
   name: efk
-  namespace: elastic
-  # annotations:
-  #   "helm.sh/hook": post-install,post-upgrade
-
 spec:
   # renovate: datasource=github-releases depName=elastic/elasticsearch
   version: 9.3.3
