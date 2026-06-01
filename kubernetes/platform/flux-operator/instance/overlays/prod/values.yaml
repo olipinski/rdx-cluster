@@ -5,7 +5,7 @@ instance:
     kind: GitRepository
     # Changeme!
     url: https://github.com/olipinski/rdx-cluster
-    ref: refs/heads/migrate-fluent-to-otel
+    ref: refs/heads/main
     path: kubernetes/clusters/prod
     interval: 1h
   kustomize:
