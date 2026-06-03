@@ -1,0 +1,6 @@
+---
+- name: Setup sysctl Hugepages for Longhorn
+  ansible.posix.sysctl:
+    name: vm.nr_hugepages
+    state: present
+    value: 1024

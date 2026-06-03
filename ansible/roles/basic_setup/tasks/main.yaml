@@ -27,5 +27,8 @@
 - name: Load required Kernel modules
   ansible.builtin.include_tasks: load_kernel_modules.yaml
 
+- name: Set sysctl options for LongHorn
+  ansible.builtin.include_tasks: set_sysctl_options.yaml
+
 - name: Blocklist storage devices in multipath configuration
   ansible.builtin.include_tasks: multipath_blocklist.yaml

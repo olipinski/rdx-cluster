@@ -2,8 +2,13 @@
 # This play is for loading required kernel modules
 # Longhorn requires dm_crypt module to be loaded
 # https://longhorn.io/docs/latest/deploy/install/#installing-cryptsetup-and-luks
-- name: Load dm_crypt module
+- name: Load Longhorn kernel modules
   community.general.modprobe:
-    name: dm_crypt
+    name: "{{ item }}"
     state: present
     persistent: present
+  with_items:
+    - dm_crypt # General Longhorn
+    - nvme-tcp # V2 Engine
+    - vfio_pci # V2 Engine
+    - uio_pci_generic # V2 Engine
