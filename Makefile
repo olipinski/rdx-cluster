@@ -3,8 +3,7 @@
 RUNNER=ansible-runner/ansible-runner.sh
 KUBECONFIG=$(shell pwd)/ansible-runner/runner/.kube/config
 
-.PHONY: default
-default: clean
+# Docker configuration and operations
 
 .PHONY: prepare-ansible
 prepare-ansible: ansible-runner-setup ansible-credentials install_cli_utils
@@ -21,19 +20,17 @@ ansible-credentials:
 install_cli_utils:
 	${RUNNER} ansible-playbook install_cli_utils.yaml
 
+.PHONY: view-vault-credentials
+view-vault-credentials:
+	${RUNNER} ansible-vault view vars/vault.yaml
+
+# Operating system-level configuration and setup
+
 .PHONY: clean
 clean: k3s-reset external-services-reset
 
 .PHONY: init
 init: gateway-init os-upgrade gateway-setup external-setup nodes-setup external-services configure-os-backup k3s-install k3s-bootstrap
-
-.PHONY: view-vault-credentials
-view-vault-credentials:
-	${RUNNER} ansible-vault view vars/vault.yaml
-
-.PHONY: os-upgrade
-os-upgrade:
-	${RUNNER} ansible-playbook update.yaml
 
 .PHONY: gateway-init
 gateway-init:
@@ -59,13 +56,19 @@ nodes-setup:
 external-services:
 	${RUNNER} ansible-playbook external_services.yaml
 
+.PHONY: external-services-reset
+external-services-reset:
+	${RUNNER} ansible-playbook reset_external_services.yaml
+
 .PHONY: configure-os-backup
 configure-os-backup:
 	${RUNNER} ansible-playbook backup_configuration.yaml
 
-.PHONY: os-backup
-os-backup:
-	${RUNNER} ansible -b -m shell -a 'systemctl start restic-backup' rdxcluster
+.PHONY: deploy-monitoring-agent
+deploy-monitoring-agent:
+	${RUNNER} ansible-playbook deploy_monitoring_agent.yaml
+
+# Kubernetes operations
 
 .PHONY: k3s-install
 k3s-install:
@@ -83,18 +86,25 @@ k3s-bootstrap-dev:
 k3s-reset:
 	${RUNNER} ansible-playbook k3s_reset.yaml
 
-.PHONY: external-services-reset
-external-services-reset:
-	${RUNNER} ansible-playbook reset_external_services.yaml
+# Operating system-level operations
 
-.PHONY: deploy-monitoring-agent
-deploy-monitoring-agent:
-	${RUNNER} ansible-playbook deploy_monitoring_agent.yaml
-
-.PHONY: shutdown
-shutdown:
+.PHONY: os-shutdown
+os-shutdown:
 	${RUNNER} ansible-playbook shutdown.yaml
 
-.PHONY: reboot
-reboot:
+.PHONY: os-reboot
+os-reboot:
 	${RUNNER} ansible-playbook reboot.yaml
+
+.PHONY: os-upgrade
+os-upgrade:
+	${RUNNER} ansible-playbook update.yaml
+
+.PHONY: os-upgrade-reboot
+os-upgrade-reboot:
+	${RUNNER} ansible-playbook update.yaml
+	${RUNNER} ansible-playbook reboot.yaml
+
+.PHONY: os-backup
+os-backup:
+	${RUNNER} ansible -b -m shell -a 'systemctl start restic-backup' rdxcluster

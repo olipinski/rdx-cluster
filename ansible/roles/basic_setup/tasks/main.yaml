@@ -24,7 +24,7 @@
   ansible.builtin.include_tasks: raspberrypi_tasks.yaml
   when: "'raspberrypi' in group_names"
 
-- name: Load required Kernel modules
+- name: Load required kernel modules
   ansible.builtin.include_tasks: load_kernel_modules.yaml
 
 - name: Blocklist storage devices in multipath configuration

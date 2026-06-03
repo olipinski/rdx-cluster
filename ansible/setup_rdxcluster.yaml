@@ -1,7 +1,6 @@
 ---
 - name: Get host vars for the firewall DNAT setup
   hosts:
-    - haproxy
     - s3
   gather_facts: false
   tasks: []
