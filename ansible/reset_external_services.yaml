@@ -28,34 +28,34 @@
       ansible.builtin.systemd:
         daemon_reload: true
 
-- name: Clean Vault Installation
-  hosts: vault
+- name: Clean OpenBao Installation
+  hosts: bao
   become: true
   gather_facts: false
   tags:
-    - vault
+    - openbao
   tasks:
-    - name: Stop and disable Vault Server
+    - name: Stop and disable OpenBao server
       ansible.builtin.systemd:
         name: "{{ item }}"
         state: stopped
         enabled: false
       become: true
       with_items:
-        - vault
-        - vault-unseal
+        - openbao
+        - openbao-unseal
     - name: Delete directories and files
       become: true
       ansible.builtin.file:
         state: absent
         path: "{{ item }}"
       with_items:
-        - /var/lib/vault/
-        - /etc/vault/
-        - /var/log/vault/
-        - /usr/local/bin/vault
-        - /etc/systemd/system/vault.service
-        - /etc/systemd/system/vault-unseal.service
+        - /var/lib/openbao/
+        - /etc/openbao/
+        - /var/log/openbao/
+        - /usr/local/bin/openbao
+        - /etc/systemd/system/openbao.service
+        - /etc/systemd/system/openbao-unseal.service
     - name: Reload systemd daemon
       ansible.builtin.systemd:
         daemon_reload: true

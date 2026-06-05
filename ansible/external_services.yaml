@@ -43,7 +43,7 @@
         - '"Certificate not yet due for renewal; no action taken." not in certbot_create.stdout'
       with_items:
         - "{{ minio_hostname }}"
-        - "{{ vault_hostname }}"
+        - "{{ openbao_hostname }}"
 
 ## Install Minio S3 Storage Server
 
@@ -91,16 +91,15 @@
   roles:
     - role: ricsanfre.minio
 
-## Install HashiCorp Vault Server
-
-- name: Install Vault Server
-  hosts: vault
+## Install OpenBao Server
+- name: Install OpenBao Server
+  hosts: bao
   gather_facts: true
   tags:
-    - vault
+    - openbao
   become: true
   vars:
-    server_hostname: "{{ vault_hostname }}"
+    server_hostname: "{{ openbao_hostname }}"
     selfsigned_certificates_path: ../certificates
 
   pre_tasks:
@@ -113,13 +112,13 @@
     - name: Get letsencrypt TLS certificate for vault
       block:
         - name: Check TLS certificate for vault exits
-          ansible.builtin.command: "certbot certificates -d {{ vault_hostname }}"
+          ansible.builtin.command: "certbot certificates -d {{ openbao_hostname }}"
           register: certbot_certificates
           delegate_to: localhost
           become: false
           changed_when: false
           failed_when:
-            - '"Certificate Name: " + vault_hostname not in certbot_certificates.stdout'
+            - '"Certificate Name: " + openbao_hostname not in certbot_certificates.stdout'
         - name: Get certificate and key paths for minio
           ansible.builtin.set_fact:
             cert_path: "{{ certbot_certificates.stdout | regex_search(regexp1, '\\1') }}"
@@ -129,13 +128,13 @@
             regexp2: "Private Key Path: (\\S+)"
           when:
             - certbot_certificates.rc==0
-            - '"Certificate Name: " + vault_hostname in certbot_certificates.stdout'
+            - '"Certificate Name: " + openbao_hostname in certbot_certificates.stdout'
         - name: Load tls key and cert
           ansible.builtin.set_fact:
-            vault_key: "{{ lookup('file', cert_key_path[0]) }}"
-            vault_cert: "{{ lookup('file', cert_path[0]) }}"
+            openbao_key: "{{ lookup('file', cert_key_path[0]) }}"
+            openbao_cert: "{{ lookup('file', cert_path[0]) }}"
   roles:
-    - role: ricsanfre.vault
+    - role: olipinski.openbao
 
   tasks:
     # Configure ansible user profile with VAULT environment variables
@@ -144,7 +143,7 @@
       ansible.builtin.lineinfile:
         path: ~{{ ansible_user }}/.bashrc
         regexp: ^export VAULT_ADDR=
-        line: export VAULT_ADDR='https://{{ vault_hostname }}:8200'
+        line: export VAULT_ADDR='https://{{ openbao_hostname }}:8200'
         owner: "{{ ansible_user }}"
         create: true
         mode: "0644"
@@ -163,17 +162,17 @@
       ansible.builtin.lineinfile:
         path: ~{{ ansible_user }}/.bashrc
         regexp: ^export VAULT_TOKEN=
-        line: export VAULT_TOKEN=$(sudo jq -r '.root_token' /etc/vault/unseal.json)
+        line: export VAULT_TOKEN=$(sudo jq -r '.root_token' /etc/openbao/unseal.json)
         owner: "{{ ansible_user }}"
         create: true
         mode: "0644"
 
-## Load all credentials into HashiCorp Vault Server
-- name: Load Vault Credentials
-  hosts: vault
+## Load all credentials into OpenBao server
+- name: Load OpenBao Credentials
+  hosts: bao
   gather_facts: true
   tags:
-    - vault
+    - openbao
     - credentials
   become: false
   pre_tasks:
@@ -196,36 +195,36 @@
       ansible.builtin.pip:
         name: hvac
         state: present
-        virtualenv: "{{ vault_venv_path }}"
+        virtualenv: "{{ openbao_venv_path }}"
       become: true
 
   tasks:
-    # Vault Login using ansible environment variables for creating the token file used in the next tasks.
-    - name: Vault login # noqa: no-changed-when
+    # Login to OpenBao using ansible environment variables for creating the token file used in the next tasks.
+    - name: OpenBao login # noqa: no-changed-when
       ansible.builtin.shell: bash -ilc 'echo $VAULT_TOKEN'
       become: false
-      register: vault_login
+      register: openbao_login
 
-    - name: Get vault token
+    - name: Get OpenBao token
       ansible.builtin.set_fact:
-        vault_token: "{{ vault_login.stdout }}"
+        openbao_token: "{{ openbao_login.stdout }}"
 
     # Create write token
     - name: Create KV write token
       community.hashi_vault.vault_token_create:
-        url: https://{{ vault_dns }}:8200
+        url: https://{{ openbao_dns }}:8200
         policies:
           - write
         auth_method: token
-        token: "{{ vault_token }}"
+        token: "{{ openbao_token }}"
       register: token_data
       become: false
       vars:
-        ansible_python_interpreter: "{{ vault_venv_path }}/bin/python"
+        ansible_python_interpreter: "{{ openbao_venv_path }}/bin/python"
 
     - name: Create/update credentials for all Ansible credentials
       community.hashi_vault.vault_kv2_write:
-        url: "https://{{ vault_dns }}:8200"
+        url: "https://{{ openbao_dns }}:8200"
         auth_method: token
         token: "{{ token_data | community.hashi_vault.vault_login_token }}"
         read_before_write: true
@@ -233,7 +232,7 @@
         data: "{{ item.data }}"
       no_log: true
       vars:
-        ansible_python_interpreter: "{{ vault_venv_path }}/bin/python"
+        ansible_python_interpreter: "{{ openbao_venv_path }}/bin/python"
       loop: >-
         {%- set results = [] -%}
         	{%- for secret_group in vault  -%}

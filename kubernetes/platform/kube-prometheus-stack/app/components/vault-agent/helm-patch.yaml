@@ -4,4 +4,4 @@
   value:
     kind: ConfigMap
     name: kube-prometheus-stack-helm-values
-    valuesKey: vault-agent-values.yaml
+    valuesKey: openbao-agent-values.yaml

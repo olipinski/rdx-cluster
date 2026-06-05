@@ -7,7 +7,7 @@ configMapGenerator:
   - name: kube-prometheus-stack-helm-values
     behavior: merge
     files:
-      - vault-agent-values.yaml=values.yaml
+      - openbao-agent-values.yaml=values.yaml
 
 patches:
   - target:

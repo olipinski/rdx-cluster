@@ -262,45 +262,54 @@ restic_environment:
   - name: AWS_SECRET_ACCESS_KEY
     value: "{{ vault.minio.restic.key }}"
 
-#######################
-# Vault configuration #
-#######################
+#########################
+# OpenBao configuration #
+#########################
 
-vault_hostname: "vault.{{ dns_domain }}"
-# renovate: datasource=github-releases depName=hashicorp/vault
-vault_version: 1.21.4
+openbao_hostname: "bao.{{ dns_domain }}"
+# renovate: datasource=github-releases depName=openbao/openbao
+openbao_version: 2.5.4
 
-vault_dns: "{{ vault_hostname }}"
-vault_enable_tls: true
-custom_ca: false
-vault_init: true
-vault_unseal: true
-vault_unseal_service: true
-tls_skip_verify: "{{ not enable_letsencrypt }}"
+openbao_dns: "{{ openbao_hostname }}"
+openbao_enable_tls: true
+openbao_init: true
+openbao_save_keys_to_file: true
+openbao_unseal: true
+openbao_unseal_service: true
 
-# Configure KV
-vault_kv_secrets:
+ # Configure KV
+openbao_kv_secrets:
   path: secret
 
-# Policies
+ # Policies
 policies:
   - name: write
-    hcl: |
-      path "secret/*" {
-        capabilities = [ "create", "read", "update", "delete", "list", "patch" ]
+    json: |
+      {
+        "path":{
+          "secret/*":{
+            "capabilities":[
+              "create",
+              "read",
+              "update",
+              "delete",
+              "list",
+              "patch"
+            ]
+          }
+        }
       }
   - name: read
-    hcl: |
-      path "secret/*" {
-        capabilities = [ "read" ]
+    json: |
+      {
+        "path":{
+          "secret/*":{
+            "capabilities":[
+              "read"
+            ]
+          }
+        }
       }
-
-# Enable Prometheus integration
-vault_custom_configuration: |
-  telemetry {
-    disable_hostname = true
-    prometheus_retention_time = "12h"
-  }
 
 #########################
 # Velero  Configuration #

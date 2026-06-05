@@ -39,7 +39,7 @@ all:
             rock000:
             red000:
             rock001:
-    vault:
+    bao:
       hosts:
         service0:
     maas:

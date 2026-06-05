@@ -150,7 +150,7 @@ dashboards:
     spegel:
       url: https://raw.githubusercontent.com/spegel-org/spegel/refs/heads/main/charts/spegel/monitoring/grafana-dashboard.json
       datasource: Prometheus
-    vault:
+    openbao:
       url: https://raw.githubusercontent.com/grafana/jsonnet-libs/refs/heads/master/vault-mixin/dashboards/vault.json
       datasource: Prometheus
     bind-exporter:

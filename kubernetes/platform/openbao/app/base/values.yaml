@@ -3,7 +3,7 @@
 global:
   # External vault server address for the injector and CSI provider to use.
   # Setting this will disable deployment of a vault server.
-  externalVaultAddr: https://vault.${CLUSTER_DOMAIN}:8200
+  externalBaoAddr: https://bao.${CLUSTER_DOMAIN}:8200
 
 # Create Service Account an long-lived token for enabling Kubernetes Auth Method
 server:
@@ -17,7 +17,7 @@ server:
     create: true
     # The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
-    name: vault-auth
+    name: openbao-auth
     # Create a Secret API object to store a non-expiring token for the service account.
     # Prior to v1.24.0, Kubernetes used to generate this secret for each service account by default.
     # Kubernetes now recommends using short-lived tokens from the TokenRequest API or projected volumes instead if possible.
