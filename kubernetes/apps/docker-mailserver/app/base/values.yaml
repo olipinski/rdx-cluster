@@ -20,11 +20,11 @@ deployment:
   resources:
     requests:
       cpu: 1
-      memory: 1536Mi
+      memory: 2048Mi
       ephemeral-storage: 100Mi
     limits:
       cpu: 2
-      memory: 2048Mi
+      memory: 2536Mi
       ephemeral-storage: 500Mi
 
 service:
