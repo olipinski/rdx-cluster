@@ -2,19 +2,19 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: vault
+  name: openbao
 spec:
   interval: 30m
   chart:
     spec:
-      chart: vault
-      version: 0.32.0
+      chart: openbao
+      version: 0.28.3
       sourceRef:
         kind: HelmRepository
-        name: hashicorp
+        name: openbao
         namespace: flux-system
-  releaseName: vault
-  targetNamespace: vault
+  releaseName: openbao
+  targetNamespace: openbao
   install:
     remediation:
       retries: 3
@@ -25,5 +25,5 @@ spec:
       retries: 3
   valuesFrom:
     - kind: ConfigMap
-      name: vault-helm-values
+      name: openbao-helm-values
       valuesKey: base-values.yaml

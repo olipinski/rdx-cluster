@@ -7,9 +7,9 @@
 restic_clean_service: true
 
 ############################
-# vault role variables
+# OpenBao role variables
 ############################
-vault_venv_path: /opt/vault-venv
+openbao_venv_path: /opt/openbao-venv
 
 # ###############################
 # Node-exporter Agent configuration

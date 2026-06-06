@@ -338,7 +338,7 @@ bind9_zones:
       - label: ns
         type: A
         rdata: 10.20.0.1
-      - label: vault
+      - label: bao
         type: A
         rdata: 10.20.0.8
       - label: service0

@@ -3,5 +3,5 @@
   path: /spec/valuesFrom/-
   value:
     kind: ConfigMap
-    name: vault-helm-values
+    name: openbao-helm-values
     valuesKey: overlay-values.yaml
