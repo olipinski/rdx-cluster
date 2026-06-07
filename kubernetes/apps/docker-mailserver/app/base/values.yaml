@@ -105,7 +105,7 @@ persistent_volume_claims:
   mail-state:
     enabled: true
     existingClaim: ""
-    size: 2Gi
+    size: 5Gi
     annotations: {}
     accessModes:
       - ReadWriteOnce
@@ -115,7 +115,7 @@ persistent_volume_claims:
   mail-log:
     enabled: true
     existingClaim: ""
-    size: 2Gi
+    size: 5Gi
     annotations: {}
     accessModes:
       - ReadWriteOnce
