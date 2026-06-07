@@ -17,7 +17,7 @@ configuration:
     - provider: aws
       bucket: k3s-velero
       config:
-        region: eu-west-1
+        region: eu-east-0
         s3ForcePathStyle: true
         s3Url: https://${S3_BACKUP_SERVER}:9091
   # Enable CSI snapshot support
