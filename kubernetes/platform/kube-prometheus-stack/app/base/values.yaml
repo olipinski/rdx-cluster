@@ -63,7 +63,7 @@ prometheus:
     walCompression: true
     # Retention data configuration
     retention: 14d
-    retentionSize: 50GB
+    retentionSize: 30GB
     ## Enable Experimental Features
     # ref: https://prometheus.io/docs/prometheus/latest/feature_flags/
     enableFeatures:
@@ -86,7 +86,7 @@ prometheus:
             - ReadWriteOnce
           resources:
             requests:
-              storage: 10Gi
+              storage: 30Gi
 ##
 # Prometheus Node Exporter Configuration
 nodeExporter:
