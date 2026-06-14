@@ -1,7 +1,7 @@
 FROM alpine/kubectl:1.36.1@sha256:c5b35e51aadf9eacc43cd301f519ae862a7f480a5b46d1b36b423d93c3b20abe AS kubectl
 FROM alpine/helm:4.2.0@sha256:af08f75a3130d666a50b9fc150f40987ef20b885cf67659aabf4b83a5f2c5501 AS helm
 FROM ghcr.io/astral-sh/uv:0.11.19@sha256:b46b03ddfcfbf8f547af7e9eaefdf8a39c8cebcba7c98858d3162bd28cf536f6 AS uv
-FROM python:3.14-slim@sha256:c845af9399020c7e562969a13689e929074a10fd057acd1b1fad06a2fb068e97
+FROM python:3.14-slim@sha256:44dd04494ee8f3b538294360e7c4b3acb87c8268e4d0a4828a6500b1eff50061
 
 ENV UV_LINK_MODE=copy
 ENV UV_PROJECT_ENVIRONMENT=/home/runner/.venv
