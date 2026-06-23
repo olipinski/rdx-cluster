@@ -14,5 +14,4 @@ openbao_venv_path: /opt/openbao-venv
 # ###############################
 # Node-exporter Agent configuration
 ################################
-
 node_exporter_arch: "{{ 'arm64' if ansible_facts.architecture == 'aarch64' else 'amd64' }}"

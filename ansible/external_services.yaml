@@ -8,7 +8,6 @@
     - certificates
   vars:
     certbot_propagation_seconds: 300
-    selfsigned_certificates_path: ../certificates
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
@@ -42,20 +41,16 @@
         - certbot_create.rc==0
         - '"Certificate not yet due for renewal; no action taken." not in certbot_create.stdout'
       with_items:
-        - "{{ minio_hostname }}"
+        - "{{ seaweedfs_hostname }}"
         - "{{ openbao_hostname }}"
 
-## Install Minio S3 Storage Server
-
-- name: Install Minio S3 Storage Server
+## Install SeaweedFS S3 Storage Server
+- name: Install SeaweedFS S3 Storage Server
   hosts: s3
   gather_facts: true
   tags:
     - s3
   become: true
-  vars:
-    server_hostname: "{{ minio_hostname }}"
-    selfsigned_certificates_path: ../certificates
   pre_tasks:
     # Include vault variables
     - name: Include vault variables
@@ -63,33 +58,50 @@
     - name: Include rdxcluster variables
       ansible.builtin.include_vars: vars/rdxcluster.yaml
 
-    - name: Get letsencrypt TLS certificate for minio
+    - name: Ensure SeaweedFS data directories exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      with_items:
+        - "{{ seaweedfs_master_dir }}"
+        - "{{ seaweedfs_volume_dir }}"
+
+    - name: Get LetsEncrypt TLS certificate for SeaweedFS
       block:
-        - name: Check TLS certificate for minio exits
-          ansible.builtin.command: "certbot certificates -d {{ minio_hostname }}"
+        - name: Check TLS certificate for SeaweedFS exits
+          ansible.builtin.command: "certbot certificates -d {{ seaweedfs_hostname }}"
           register: certbot_certificates
           delegate_to: localhost
           become: false
           changed_when: false
           failed_when:
-            - '"Certificate Name: " + minio_hostname not in certbot_certificates.stdout'
-        - name: Get certificate and key paths for minio
+            - '"Certificate Name: " + seaweedfs_hostname not in certbot_certificates.stdout'
+        - name: Get certificate and key paths for SeaweedFS
           ansible.builtin.set_fact:
-            cert_path: "{{ certbot_certificates.stdout | regex_search(regexp1, '\\1') }}"
-            cert_key_path: "{{ certbot_certificates.stdout | regex_search(regexp2, '\\1') }}"
+            seaweedfs_cert_path: "{{ certbot_certificates.stdout | regex_search(regexp1, '\\1') }}"
+            seaweedfs_cert_key_path: "{{ certbot_certificates.stdout | regex_search(regexp2, '\\1') }}"
           vars:
             regexp1: "Certificate Path: (\\S+)"
             regexp2: "Private Key Path: (\\S+)"
           when:
             - certbot_certificates.rc==0
-            - '"Certificate Name: " + minio_hostname in certbot_certificates.stdout'
+            - '"Certificate Name: " + seaweedfs_hostname in certbot_certificates.stdout'
 
-        - name: Load tls key and cert
-          ansible.builtin.set_fact:
-            minio_key: "{{ lookup('file', cert_key_path[0]) }}"
-            minio_cert: "{{ lookup('file', cert_path[0]) }}"
+    - name: Move SeaweedFS TLS certificate to target node
+      ansible.builtin.copy:
+        dest: "{{ seaweedfs_config_dir }}/fullchain.pem"
+        mode: '0700'
+        src: "{{ seaweedfs_cert_path[0] }}"
+
+    - name: Move SeaweedFS TLS key to target node
+      ansible.builtin.copy:
+        dest: "{{ seaweedfs_config_dir }}/privkey.pem"
+        mode: '0700'
+        src: "{{ seaweedfs_cert_key_path[0] }}"
+
   roles:
-    - role: ricsanfre.minio
+    - role: hostinger.common.seaweedfs
 
 ## Install OpenBao Server
 - name: Install OpenBao Server
@@ -251,11 +263,6 @@
     - name: Load http auth_basic credentials
       ansible.builtin.include_tasks:
         file: tasks/create_basic_auth_credentials.yaml
-      no_log: true
-
-    - name: Load minio prometheus bearer credentials
-      ansible.builtin.include_tasks:
-        file: tasks/create_minio_bearer_token.yaml
       no_log: true
 
     - name: Load bind9 DDNS key

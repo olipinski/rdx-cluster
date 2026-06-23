@@ -52,29 +52,29 @@ vault:
       cookie-secret: {{ oauth2_proxy_cookie }}
     redis:
       redis-password: {{ oauth2_proxy_redis_password }}
-  # Minio S3 secrets
-  minio:
+  # SeaweedFS S3 secrets
+  seaweedfs:
     root:
       user: root
-      key: {{ minio_root_password }}
+      key: {{ seaweedfs_root_password }}
     restic:
       user: restic
-      key: {{ minio_restic_password }}
+      key: {{ seaweedfs_restic_password }}
     longhorn:
       user: longhorn
-      key: {{ minio_longhorn_password }}
+      key: {{ seaweedfs_longhorn_password }}
     velero:
       user: velero
-      key: {{ minio_velero_password }}
+      key: {{ seaweedfs_velero_password }}
     loki:
       user: loki
-      key: {{ minio_loki_password }}
+      key: {{ seaweedfs_loki_password }}
     tempo:
       user: tempo
-      key: {{ minio_tempo_password }}
+      key: {{ seaweedfs_tempo_password }}
     barman:
       user: barman
-      key: {{ minio_barman_password }}
+      key: {{ seaweedfs_barman_password }}
   # elasticsearch
   elastic:
     admin:

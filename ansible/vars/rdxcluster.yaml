@@ -128,123 +128,134 @@ certmanager_cloudflare_token: "{{ vault.certmanager.cloudflare.token }}"
 # issuer email
 acme_issuer_email: "admin@{{ vault.general.domains.dns }}"
 
-##########################
-# Minio S3 configuration #
-##########################
+###############################
+# Seaweed FS S3 configuration #
+###############################
 
-# Minio S3 Server
-minio_hostname: "s3.{{ vault.general.domains.dns }}"
-minio_endpoint: "{{ minio_hostname }}:9091"
-minio_url: "https://{{ minio_hostname }}:9091"
+# Seaweed variables for reuse
+seaweedfs_hostname: "s3.{{ vault.general.domains.dns }}"
+seaweedfs_endpoint: "{{ seaweedfs_hostname }}:9091"
+seaweedfs_master_dir: "/naspool/s3/master"
+seaweedfs_volume_dir: "/naspool/s3/volume"
 
-minio_server_version: RELEASE.2025-09-07T16-13-09Z
-minio_mc_version: RELEASE.2025-08-13T08-35-41Z
+# Role config
+# renovate: datasource=github-releases depName=seaweedfs/seaweedfs
+seaweedfs_version: 4.35
+seaweedfs_arch: arm64
+seaweedfs_os: linux
+seaweedfs_owner: root
+seaweedfs_group: root
+seaweedfs_config_dir: /etc/seaweedfs
+seaweedfs_service_state: started
+seaweedfs_command: server
+seaweedfs_args:
+  # General options
+  - -dataCenter=EU_WAW
+  - -rack=R0
+  - -dir={{ seaweedfs_volume_dir }}
+  - -ip={{ seaweedfs_hostname }}
+  - -ip.bind=localhost
+  # Filer options
+  - -filer
+  - -filer.disk=ssd
+  - -filer.port=8888
+  # S3 Options
+  - -s3
+  - -s3.ip.bind=0.0.0.0
+  - -s3.port=8333
+  - -s3.port.https=8443
+  - -s3.cert.file={{ seaweedfs_config_dir }}/fullchain.pem
+  - -s3.key.file={{ seaweedfs_config_dir }}/privkey.pem
+  - -s3.iam=false # Disable IAM, we will only use simple auth
+  - -s3.port.iceberg=0 # Disable Iceberg
+  # Master options
+  - -master.port=9333
+  - -master.dir={{ seaweedfs_master_dir }}
+  - -metricsIp=0.0.0.0
+  - -metricsPort=9091
+  # Volume options
+  - -volume
+  - -volume.id=main
+  - -volume.port=8080
+  - -volume.max=0
+  - -volume.fileSizeLimitMB=1024
+  # SFTP options
+  - -sftp=false
+  # WebDAV options
+  - -webdav=false
 
-# Minio data dirs
-minio_server_make_datadirs: true
-minio_server_datadirs:
-  - /naspool/s3
-
-# Minio admin credentials
-minio_root_user: root
-minio_root_password: "{{ vault.minio.root.key }}"
-
-# Minio site region configuration
-minio_site_region: eu-east-0
-
-# Enabling TLS
-minio_enable_tls: true
-minio_validate_certificate: false
-
-# Create Prometheus bearer token
-minio_prometheus_bearer_token: true
-
-# Minio Buckets
-minio_buckets:
-  - name: restic
-    policy: read-write
-  - name: k3s-longhorn
-    policy: read-write
-  - name: k3s-velero
-    policy: read-write
-  - name: k3s-loki
-    policy: read-write
-  - name: k3s-tempo
-    policy: read-write
-  - name: k3s-barman
-    policy: read-write
-
-# Minio users and ACLs
-minio_users:
-  - name: "{{ vault.minio.restic.user }}"
-    password: "{{ vault.minio.restic.key }}"
-    buckets_acl:
-      - name: restic
-        policy: read-write
-  - name: "{{ vault.minio.longhorn.user }}"
-    password: "{{ vault.minio.longhorn.key }}"
-    buckets_acl:
-      - name: k3s-longhorn
-        policy: read-write
-  - name: "{{ vault.minio.velero.user }}"
-    password: "{{ vault.minio.velero.key }}"
-    buckets_acl:
-      - name: k3s-velero
-        policy: custom
-        custom:
-          - rule: |
-              "Effect": "Allow",
-              "Action": [
-                  "s3:GetObject",
-                  "s3:DeleteObject",
-                  "s3:PutObject",
-                  "s3:AbortMultipartUpload",
-                  "s3:ListMultipartUploadParts"
-              ],
-              "Resource": [
-                  "arn:aws:s3:::k3s-velero/*"
-              ]
-          - rule: |
-              "Effect": "Allow",
-              "Action": [
-                  "s3:ListBucket"
-              ],
-              "Resource": [
-                  "arn:aws:s3:::k3s-velero"
-              ]
-
-  - name: "{{ vault.minio.loki.user }}"
-    password: "{{ vault.minio.loki.key }}"
-    buckets_acl:
-      - name: k3s-loki
-        policy: read-write
-
-  - name: "{{ vault.minio.tempo.user }}"
-    password: "{{ vault.minio.tempo.key }}"
-    buckets_acl:
-      - name: k3s-tempo
-        policy: custom
-        custom:
-          - rule: |
-              "Effect": "Allow",
-              "Action": [
-                  "s3:PutObject",
-                  "s3:GetObject",
-                  "s3:ListBucket",
-                  "s3:DeleteObject",
-                  "s3:GetObjectTagging",
-                  "s3:PutObjectTagging"
-              ],
-              "Resource": [
-                  "arn:aws:s3:::k3s-tempo/*",
-                  "arn:aws:s3:::k3s-tempo"
-              ]
-
-  - name: "{{ vault.minio.barman.user }}"
-    password: "{{ vault.minio.barman.key }}"
-    buckets_acl:
-      - name: k3s-barman
-        policy: read-write
+seaweedfs_s3_config:
+  identities:
+    - name: "{{ vault.seaweedfs.root.user }}"
+      actions:
+        - "Read"
+        - "Write"
+        - "List"
+        - "Tagging"
+        - "Admin"
+      credentials:
+        - accessKey: "{{ vault.seaweedfs.root.user }}"
+          secretKey: "{{ vault.seaweedfs.root.key }}"
+    - name: "{{ vault.seaweedfs.restic.user }}"
+      actions:
+        - "Read:restic"
+        - "Write:restic"
+        - "List:restic"
+        - "Tagging:restic"
+        - "Admin:restic"
+      credentials:
+        - accessKey: "{{ vault.seaweedfs.restic.user }}"
+          secretKey: "{{ vault.seaweedfs.restic.key }}"
+    - name: "{{ vault.seaweedfs.longhorn.user }}"
+      actions:
+        - "Read:k3s-longhorn"
+        - "Write:k3s-longhorn"
+        - "List:k3s-longhorn"
+        - "Tagging:k3s-longhorn"
+        - "Admin:k3s-longhorn"
+      credentials:
+        - accessKey: "{{ vault.seaweedfs.longhorn.user }}"
+          secretKey: "{{ vault.seaweedfs.longhorn.key }}"
+    - name: "{{ vault.seaweedfs.velero.user }}"
+      actions:
+        - "Read:k3s-velero"
+        - "Write:k3s-velero"
+        - "List:k3s-velero"
+        - "Tagging:k3s-velero"
+        - "Admin:k3s-velero"
+      credentials:
+        - accessKey: "{{ vault.seaweedfs.velero.user }}"
+          secretKey: "{{ vault.seaweedfs.velero.key }}"
+    - name: "{{ vault.seaweedfs.loki.user }}"
+      actions:
+        - "Read:k3s-loki"
+        - "Write:k3s-loki"
+        - "List:k3s-loki"
+        - "Tagging:k3s-loki"
+        - "Admin:k3s-loki"
+      credentials:
+        - accessKey: "{{ vault.seaweedfs.loki.user }}"
+          secretKey: "{{ vault.seaweedfs.loki.key }}"
+    - name: "{{ vault.seaweedfs.tempo.user }}"
+      actions:
+        - "Read:k3s-tempo"
+        - "Write:k3s-tempo"
+        - "List:k3s-tempo"
+        - "Tagging:k3s-tempo"
+        - "Admin:k3s-tempo"
+      credentials:
+        - accessKey: "{{ vault.seaweedfs.tempo.user }}"
+          secretKey: "{{ vault.seaweedfs.tempo.key }}"
+    - name: "{{ vault.seaweedfs.barman.user }}"
+      actions:
+        - "Read:k3s-barman"
+        - "Write:k3s-barman"
+        - "List:k3s-barman"
+        - "Tagging:k3s-barman"
+        - "Admin:k3s-barman"
+      credentials:
+        - accessKey: "{{ vault.seaweedfs.barman.user }}"
+          secretKey: "{{ vault.seaweedfs.barman.key }}"
 
 ########################
 # Restic configuration #
@@ -254,13 +265,13 @@ minio_users:
 restic_version: 0.18.1
 
 # Restic S3 repository configuration
-restic_repository: s3:{{ minio_url }}/restic
+restic_repository: s3:https://{{ seaweedfs_hostname }}/restic
 restic_use_ca_cert: true
 restic_environment:
   - name: AWS_ACCESS_KEY_ID
-    value: "{{ vault.minio.restic.user }}"
+    value: "{{ vault.seaweedfs.restic.user }}"
   - name: AWS_SECRET_ACCESS_KEY
-    value: "{{ vault.minio.restic.key }}"
+    value: "{{ vault.seaweedfs.restic.key }}"
 
 #########################
 # OpenBao configuration #
@@ -318,14 +329,14 @@ policies:
 # renovate: datasource=github-releases depName=vmware-tanzu/velero
 velero_version: v1.18.0
 
-# Minio user, key and bucket
-minio_velero_user: "{{ vault.minio.velero.user }}"
-minio_velero_key: "{{ vault.minio.velero.key }}"
+# SeaweedFS user, key and bucket
+seaweedfs_velero_user: "{{ vault.seaweedfs.velero.user }}"
+seaweedfs_velero_key: "{{ vault.seaweedfs.velero.key }}"
 
 velero_secret_content: |
   [default]
-  aws_access_key_id: "{{ minio_velero_user }}"
-  aws_secret_access_key: "{{ minio_velero_key }}"
+  aws_access_key_id: "{{ seaweedfs_velero_user }}"
+  aws_secret_access_key: "{{ seaweedfs_velero_key }}"
 
 ##########################
 # Longhorn Configuration #
@@ -334,9 +345,9 @@ velero_secret_content: |
 # renovate: datasource=github-releases depName=longhorn/longhorn
 longhorn_version: v1.11.1
 
-# Minio user, key and bucket
-minio_longhorn_user: "{{ vault.minio.longhorn.user }}"
-minio_longhorn_key: "{{ vault.minio.longhorn.key }}"
+# SeaweedFS user, key and bucket
+seaweedfs_longhorn_user: "{{ vault.seaweedfs.longhorn.user }}"
+seaweedfs_longhorn_key: "{{ vault.seaweedfs.longhorn.key }}"
 
 #######################
 # Istio Configuration #
@@ -355,9 +366,9 @@ fluentd_shared_key: "{{ vault.logging.fluentd.shared_key }}"
 # Elasticsearch 'elastic' user password
 efk_elasticsearch_passwd: "{{ vault.logging.elasticsearch.password }}"
 
-# Loki minio user, key and bucket
-minio_loki_user: "{{ vault.minio.loki.user }}"
-minio_loki_key: "{{ vault.minio.loki.key }}"
+# Loki SeaweedFS user, key and bucket
+seaweedfs_loki_user: "{{ vault.seaweedfs.loki.user }}"
+seaweedfs_loki_key: "{{ vault.seaweedfs.loki.key }}"
 
 ######################
 # Monitoring Secrets #
@@ -370,13 +381,12 @@ prometheus_grafana_password: "{{ vault.grafana.admin.password }}"
 # Tracing Secrets     #
 #######################
 
-# Tempo minio user, key and bucket
-minio_tempo_user: "{{ vault.minio.tempo.user }}"
-minio_tempo_key: "{{ vault.minio.tempo.key }}"
-minio_tempo_bucket: k3s-tempo
+# Tempo SeaweedFS user, key and bucket
+seaweedfs_tempo_user: "{{ vault.seaweedfs.tempo.user }}"
+seaweedfs_tempo_key: "{{ vault.seaweedfs.tempo.key }}"
+seaweedfs_tempo_bucket: k3s-tempo
 
 #######################
 # Gateway configuration
 #######################
-
 gateway_hostname: "gateway.{{ dns_domain }}"

@@ -1,14 +1,14 @@
 ---
-- name: Clean Minio Installation
+- name: Clean SeaweedFS Installation
   hosts: s3
   become: true
   gather_facts: false
   tags:
     - s3
   tasks:
-    - name: Stop and disable Minio Server
+    - name: Stop and disable SeaweedFS Server
       ansible.builtin.systemd:
-        name: minio
+        name: seaweedfs
         state: stopped
         enabled: false
       become: true
@@ -18,12 +18,11 @@
         state: absent
         path: "{{ item }}"
       with_items:
-        - /storage/minio/
-        - /etc/minio/
-        - /usr/local/bin/minio
-        - /usr/local/bin/mc
-        - /etc/systemd/system/minio.service
-        - ~/.mc
+        - /naspool/s3/volume
+        - /naspool/s3/master
+        - /etc/seaweedfs
+        - /opt/seaweedfs
+        - /etc/systemd/system/seaweedfs.service
     - name: Reload systemd daemon
       ansible.builtin.systemd:
         daemon_reload: true
