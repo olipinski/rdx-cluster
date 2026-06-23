@@ -5,5 +5,5 @@ namespace: keycloak
 
 resources:
   - keycloak-db-external-secret.yaml
-  - keycloak-db-minio-external-secret.yaml
+  - keycloak-db-s3-external-secret.yaml
   - keycloak-db.yaml

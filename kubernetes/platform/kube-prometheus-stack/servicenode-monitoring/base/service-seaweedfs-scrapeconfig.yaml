@@ -1,0 +1,12 @@
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: seaweedfs-exporter
+spec:
+  jobName: seaweedfs
+  metricsPath: /metrics
+  scheme: HTTPS
+  staticConfigs:
+    - targets:
+        - ${S3_SERVER}:9091

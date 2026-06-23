@@ -24,6 +24,10 @@ install_cli_utils:
 view-vault-credentials:
 	${RUNNER} ansible-vault view vars/vault.yaml
 
+.PHONY: edit-vault-credentials
+edit-vault-credentials:
+	${RUNNER} ansible-vault edit vars/vault.yaml
+
 # Operating system-level configuration and setup
 
 .PHONY: clean

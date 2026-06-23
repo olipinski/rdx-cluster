@@ -3,5 +3,5 @@
 
 defaultSettings:
   # Backup S3 configuration
-  backupTarget: "s3://k3s-longhorn@eu-west-1/"
-  backupTargetCredentialSecret: longhorn-minio-secret
+  backupTarget: "s3://k3s-longhorn@eu-east-0/"
+  backupTargetCredentialSecret: longhorn-s3-secret

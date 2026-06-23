@@ -131,7 +131,7 @@
           changed_when: false
           failed_when:
             - '"Certificate Name: " + openbao_hostname not in certbot_certificates.stdout'
-        - name: Get certificate and key paths for minio
+        - name: Get certificate and key paths for OpenBao
           ansible.builtin.set_fact:
             cert_path: "{{ certbot_certificates.stdout | regex_search(regexp1, '\\1') }}"
             cert_key_path: "{{ certbot_certificates.stdout | regex_search(regexp2, '\\1') }}"

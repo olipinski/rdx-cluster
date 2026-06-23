@@ -170,20 +170,17 @@ netplan_configuration:
 nft_input_default_rules: {}
 nft_forward_default_rules: {}
 nft_output_default_rules: {}
-# TCP 9100 Prometheus (fluent-bit)
 # TCP 24 SSH (re-routed for GitLab)
 # TCP/UDP 53 DNS
 # UDP 123 NTP
 # UDP 51820 wireguard
-in_tcp_port: "{ 24, 53, 9100 }"
+in_tcp_port: "{ 24, 53 }"
 in_udp_port: "{ 161, 53, 123, 51820 }"
-# TCP 9091 minio server
 # TCP/UDP 3478, 5349 coturn
 # TCP 25/465 SMTP/S
 # TCP 143/993 IMAP/S
 # TCP 1883/8883 MQTT/S
-# TCP 8123 HAM
-forward_tcp_port: "{ 25, 465, 143, 993, 80, 443, 22, 3478, 5349, 1883, 8123, 8883, 9091 }"
+forward_tcp_port: "{ 25, 465, 143, 993, 80, 443, 22, 3478, 5349, 1883, 8883, 9091 }"
 forward_udp_port: "{ 123, 3478, 5349 }"
 # Enabling forwarding and NAT
 firewall_forward_enabled: true

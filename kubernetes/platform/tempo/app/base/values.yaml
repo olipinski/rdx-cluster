@@ -24,9 +24,9 @@ storage:
     backend: s3
     s3:
       bucket: k3s-tempo
-      endpoint: minio.minio:9000
-      access_key: ${MINIO_ACCESS_KEY_ID}
-      secret_key: ${MINIO_SECRET_ACCESS_KEY}
+      endpoint: "https://${S3_SERVER}:8443"
+      access_key: ${S3_ACCESS_KEY_ID}
+      secret_key: ${S3_SECRET_ACCESS_KEY}
       insecure: true
 
 # Configure distributor
@@ -39,16 +39,16 @@ distributor:
   extraArgs:
     - -config.expand-env=true
   extraEnv:
-    - name: MINIO_ACCESS_KEY_ID
+    - name: S3_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
-          name: tempo-minio-secret
-          key: MINIO_ACCESS_KEY_ID
-    - name: MINIO_SECRET_ACCESS_KEY
+          name: tempo-s3-secret
+          key: S3_ACCESS_KEY_ID
+    - name: S3_SECRET_ACCESS_KEY
       valueFrom:
         secretKeyRef:
-          name: tempo-minio-secret
-          key: MINIO_SECRET_ACCESS_KEY
+          name: tempo-s3-secret
+          key: S3_SECRET_ACCESS_KEY
 # Configure ingester
 ingester:
   # Enable environment variables in config file
@@ -56,16 +56,16 @@ ingester:
   extraArgs:
     - -config.expand-env=true
   extraEnv:
-    - name: MINIO_ACCESS_KEY_ID
+    - name: S3_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
-          name: tempo-minio-secret
-          key: MINIO_ACCESS_KEY_ID
-    - name: MINIO_SECRET_ACCESS_KEY
+          name: tempo-s3-secret
+          key: S3_ACCESS_KEY_ID
+    - name: S3_SECRET_ACCESS_KEY
       valueFrom:
         secretKeyRef:
-          name: tempo-minio-secret
-          key: MINIO_SECRET_ACCESS_KEY
+          name: tempo-s3-secret
+          key: S3_SECRET_ACCESS_KEY
 # Configure compactor
 compactor:
   # Enable environment variables in config file
@@ -73,16 +73,16 @@ compactor:
   extraArgs:
     - -config.expand-env=true
   extraEnv:
-    - name: MINIO_ACCESS_KEY_ID
+    - name: S3_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
-          name: tempo-minio-secret
-          key: MINIO_ACCESS_KEY_ID
-    - name: MINIO_SECRET_ACCESS_KEY
+          name: tempo-s3-secret
+          key: S3_ACCESS_KEY_ID
+    - name: S3_SECRET_ACCESS_KEY
       valueFrom:
         secretKeyRef:
-          name: tempo-minio-secret
-          key: MINIO_SECRET_ACCESS_KEY
+          name: tempo-s3-secret
+          key: S3_SECRET_ACCESS_KEY
 # Configure querier
 querier:
   # Enable environment variables in config file
@@ -90,16 +90,16 @@ querier:
   extraArgs:
     - -config.expand-env=true
   extraEnv:
-    - name: MINIO_ACCESS_KEY_ID
+    - name: S3_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
-          name: tempo-minio-secret
-          key: MINIO_ACCESS_KEY_ID
-    - name: MINIO_SECRET_ACCESS_KEY
+          name: tempo-s3-secret
+          key: S3_ACCESS_KEY_ID
+    - name: S3_SECRET_ACCESS_KEY
       valueFrom:
         secretKeyRef:
-          name: tempo-minio-secret
-          key: MINIO_SECRET_ACCESS_KEY
+          name: tempo-s3-secret
+          key: S3_SECRET_ACCESS_KEY
 # Configure query-frontend
 queryFrontend:
   # Enable environment variables in config file
@@ -107,16 +107,13 @@ queryFrontend:
   extraArgs:
     - -config.expand-env=true
   extraEnv:
-    - name: MINIO_ACCESS_KEY_ID
+    - name: S3_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
-          name: tempo-minio-secret
-          key: MINIO_ACCESS_KEY_ID
-    - name: MINIO_SECRET_ACCESS_KEY
+          name: tempo-s3-secret
+          key: S3_ACCESS_KEY_ID
+    - name: S3_SECRET_ACCESS_KEY
       valueFrom:
         secretKeyRef:
-          name: tempo-minio-secret
-          key: MINIO_SECRET_ACCESS_KEY
-# Disable Minio server installation
-minio:
-  enabled: false
+          name: tempo-s3-secret
+          key: S3_SECRET_ACCESS_KEY
