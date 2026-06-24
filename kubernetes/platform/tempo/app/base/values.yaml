@@ -24,7 +24,6 @@ storage:
     backend: s3
     s3:
       bucket: k3s-tempo
-      region: eu-east-0
       endpoint: "${S3_SERVER}:8443"
       access_key: "${S3_ACCESS_KEY_ID}"
       secret_key: "${S3_SECRET_ACCESS_KEY}"
