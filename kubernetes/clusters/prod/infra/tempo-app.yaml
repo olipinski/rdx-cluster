@@ -15,3 +15,9 @@ spec:
   path: ./kubernetes/platform/tempo/app/overlays/prod
   prune: true
   wait: true
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-settings
+      - kind: ConfigMap
+        name: domain-settings
