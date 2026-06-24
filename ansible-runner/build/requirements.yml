@@ -45,3 +45,5 @@ collections:
   - name: https://github.com/olipinski/ansible-collection-common
     type: git
     version: main
+  - name: amazon.aws
+    version: 11.3.0

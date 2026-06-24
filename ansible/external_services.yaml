@@ -99,9 +99,23 @@
         dest: "{{ seaweedfs_config_dir }}/privkey.pem"
         mode: '0700'
         src: "{{ seaweedfs_cert_key_path[0] }}"
-
   roles:
     - role: hostinger.common.seaweedfs
+  # Tasks run after roles
+  tasks:
+    - name: Ensure needed buckets exist on S3
+      amazon.aws.s3_bucket:
+        name: "{{ item }}"
+        endpoint_url: '{{ "https://" + seaweedfs_hostname + ":8443" }}'
+        access_key: "{{ vault.seaweedfs.root.user }}"
+        secret_key: "{{ vault.seaweedfs.root.key }}"
+      with_items:
+        - "restic"
+        - "k3s-longhorn"
+        - "k3s-velero"
+        - "k3s-loki"
+        - "k3s-tempo"
+        - "k3s-barman"
 
 ## Install OpenBao Server
 - name: Install OpenBao Server
