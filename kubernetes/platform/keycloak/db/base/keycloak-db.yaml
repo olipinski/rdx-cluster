@@ -25,12 +25,12 @@ spec:
         compression: bzip2
         maxParallel: 8
       destinationPath: s3://k3s-barman/keycloak-db
-      endpointURL: https://${S3_BACKUP_SERVER}:9091
+      endpointURL: https://${S3_SERVER}:8443
       s3Credentials:
         accessKeyId:
-          name: keycloak-db-minio-secret
+          name: keycloak-db-s3-secret
           key: AWS_ACCESS_KEY_ID
         secretAccessKey:
-          name: keycloak-db-minio-secret
+          name: keycloak-db-s3-secret
           key: AWS_SECRET_ACCESS_KEY
     retentionPolicy: 30d

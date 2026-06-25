@@ -22,7 +22,6 @@ resources:
   - loki-app.yaml
   - longhorn-app.yaml
   - metrics-server-app.yaml
-  - minio-app.yaml
   - oauth2-proxy-app.yaml
   - opentelemetry-app.yaml
   - system-upgrade-app.yaml

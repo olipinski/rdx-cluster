@@ -11,7 +11,7 @@ COPY --from=kubectl /usr/local/bin/kubectl /usr/local/bin/kubectl
 COPY --from=helm /usr/bin/helm /usr/local/bin/helm
 
 RUN apt update -qq && \
-    apt install sudo git apt-utils pwgen gnupg curl wireguard-tools vim whois wget jq -y && \
+    apt install sudo git apt-utils pwgen gnupg curl wireguard-tools vim whois wget jq awscli -y && \
     apt clean && \
     rm -rf /usr/share/doc/* /usr/share/man/* /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

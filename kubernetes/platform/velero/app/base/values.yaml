@@ -12,26 +12,18 @@ initContainers:
 
 # Velero Configuration
 configuration:
-  # Configure Minio as backup backend
+  # Configure SeaweedFS S3 as backup backend
   backupStorageLocation:
     - provider: aws
       bucket: k3s-velero
       config:
         region: eu-east-0
         s3ForcePathStyle: true
-        s3Url: https://${S3_BACKUP_SERVER}:9091
+        s3Url: https://${S3_SERVER}:8443
   # Enable CSI snapshot support
   features: EnableCSI
 credentials:
-  existingSecret: velero-secret
+  existingSecret: velero-s3-secret
 
 # Disable VolumeSnapshotLocation CRD. It is not needed for CSI integration
 snapshotsEnabled: false
-
-# Override kubectl image to avoid bitnami dependency
-# This should be updated when velero has a final solution to depending on bitnami images
-# https://github.com/vmware-tanzu/helm-charts/issues/698
-kubectl:
-  image:
-    repository: docker.io/bitnamilegacy/kubectl
-    tag: 1.33.4@sha256:ed0b31a0508da84ee655c5c6e01bd3897fc56ad6cf69debb27fa1893a06d2246
