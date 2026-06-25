@@ -285,6 +285,7 @@ openbao_init: true
 openbao_save_keys_to_file: true
 openbao_unseal: true
 openbao_unseal_service: true
+openbao_enable_telemetry: true
 
  # Configure KV
 openbao_kv_secrets:
