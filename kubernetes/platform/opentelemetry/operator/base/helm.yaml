@@ -8,7 +8,7 @@ spec:
   timeout: 15m
   chart:
     spec:
-      chart: charts/opentelemetry-operator
+      chart: opentelemetry-operator
       version: 0.112.3
       sourceRef:
         kind: HelmRepository
