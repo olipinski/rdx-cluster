@@ -6,7 +6,7 @@ metadata:
 spec:
   jobName: seaweedfs
   metricsPath: /metrics
-  scheme: HTTPS
+  scheme: HTTP
   staticConfigs:
     - targets:
         - ${S3_SERVER}:9091
