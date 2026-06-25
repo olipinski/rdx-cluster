@@ -152,11 +152,10 @@ seaweedfs_args:
   - -dataCenter=EU_WAW
   - -rack=R0
   - -dir={{ seaweedfs_volume_dir }}
-  - -ip={{ seaweedfs_hostname }}
+  - -ip=localhost
   - -ip.bind=localhost
   # Filer options
   - -filer
-  - -filer.disk=ssd
   - -filer.port=8888
   # S3 Options
   - -s3
