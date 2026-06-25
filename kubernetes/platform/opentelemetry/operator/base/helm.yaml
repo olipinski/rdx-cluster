@@ -11,8 +11,8 @@ spec:
       chart: charts/opentelemetry-operator
       version: 0.112.3
       sourceRef:
-        kind: GitRepository
-        name: opentelemetry-git
+        kind: HelmRepository
+        name: opentelemetry
         namespace: flux-system
   releaseName: opentelemetry-operator
   targetNamespace: opentelemetry
