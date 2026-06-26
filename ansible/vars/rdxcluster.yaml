@@ -169,7 +169,7 @@ seaweedfs_args:
   # Master options
   - -master.port=9333
   - -master.dir={{ seaweedfs_master_dir }}
-  - master.volumeSizeLimitMB=4096
+  - -master.volumeSizeLimitMB=4096
   - -metricsIp=0.0.0.0
   - -metricsPort=9091
   # Volume options
