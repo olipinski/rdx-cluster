@@ -5,7 +5,7 @@ resources:
   - cilium-helmrepo.yaml
   - cloudnative-pg-helmrepo.yaml
   - coredns-helmrepo.yaml
-  - csi-drver-nfs-helmrepo.yaml
+  - csi-driver-nfs-helmrepo.yaml
   - docker-mailserver-helmrepo.yaml
   - elastic-helmrepo.yaml
   - external-dns-helmrepo.yaml
