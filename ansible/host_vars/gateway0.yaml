@@ -359,6 +359,12 @@ bind9_zones:
       - label: maas
         type: NS
         rdata: ns.maas
+      - label: superis.eu.
+        type: A
+        rdata: 10.128.0.100
+      - label: superis.eu.
+        type: MX
+        rdata: 10 mail.superis.eu
   - name: 10.in-addr.arpa
     type: primary
     default_ttl: 600
@@ -376,7 +382,7 @@ bind9_zones:
         rdata: "gateway.{{ dns_domain }}."
       - label: 20
         type: NS
-        rdata: "prime.{{ dns_domain }}."
+        rdata: "maas.{{ dns_domain }}."
 
 ############################
 # NTP role variables
