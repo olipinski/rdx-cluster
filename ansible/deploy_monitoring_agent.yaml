@@ -1,5 +1,5 @@
 ---
-# Deploy fluentbit to get logs and prometheus metrics
+# Deploy Node Exporter to get logs and prometheus metrics
 - name: Deploy node exporter agent on external node
   hosts: service0
   gather_facts: true
