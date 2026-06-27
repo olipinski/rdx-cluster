@@ -46,4 +46,4 @@ collections:
     type: git
     version: main
   - name: amazon.aws
-    version: 11.3.0
+    version: 11.4.0
