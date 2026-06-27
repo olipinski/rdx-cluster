@@ -1,6 +1,6 @@
 ---
 controller:
-  replicas: 2
+  replicas: 1
   runOnControlPlane: true
   enableSnapshotter: true
 
