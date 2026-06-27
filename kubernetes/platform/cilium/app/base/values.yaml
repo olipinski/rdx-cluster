@@ -38,6 +38,7 @@ externalIPs:
   enabled: true
 
 # Hybrid DSR and Geneve to alawys preserve source IP
-tunnelProtocol: "geneve"
+tunnelProtocol: geneve
 loadBalancer:
   mode: hybrid
+  dsrDispatch: geneve
