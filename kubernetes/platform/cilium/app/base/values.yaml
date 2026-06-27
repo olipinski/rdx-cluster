@@ -36,3 +36,6 @@ l2announcements:
 
 externalIPs:
   enabled: true
+
+loadBalancer:
+  mode: hybrid
