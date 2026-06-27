@@ -6,6 +6,7 @@ resources:
   - cilium-app.yaml
   - cloudnative-pg-app.yaml
   - coredns-app.yaml
+  - csi-driver-nfs-app.yaml
   - csi-external-snapshotter-app.yaml
   - elastic-stack-app.yaml
   - external-dns-app.yaml
@@ -23,8 +24,8 @@ resources:
   - longhorn-app.yaml
   - metrics-server-app.yaml
   - oauth2-proxy-app.yaml
+  - openbao-app.yaml
   - opentelemetry-app.yaml
   - system-upgrade-app.yaml
   - tempo-app.yaml
-  - openbao-app.yaml
   - velero-app.yaml

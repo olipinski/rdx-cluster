@@ -1,0 +1,38 @@
+---
+controller:
+  replicas: 2
+  runOnControlPlane: true
+  enableSnapshotter: true
+
+externalSnapshotter:
+  enabled: false
+
+volumeSnapshotClass:
+  create: true
+  name: csi-nfs-vsc
+  deletionPolicy: Delete
+
+storageClasses:
+  - name: nfs-csi-delete
+    annotations:
+      storageclass.kubernetes.io/is-default-class: "false"
+    parameters:
+      server: nas.${CLUSTER_DOMAIN}
+      share: /naspool/nfs
+      subDir: "$delete-{pv.metadata.name}-${pvc.metadata.namespace}-${pvc.metadata.name}"
+      # mountPermissions: "0"
+    reclaimPolicy: Delete
+    volumeBindingMode: Immediate
+    mountOptions:
+      - nfsvers=4.1
+  - name: nfs-csi-retain
+    annotations:
+      storageclass.kubernetes.io/is-default-class: "false"
+    parameters:
+      server: nas.${CLUSTER_DOMAIN}
+      share: /naspool/nfs
+      subDir: "$retain-{pv.metadata.name}-${pvc.metadata.namespace}-${pvc.metadata.name}"
+    reclaimPolicy: Retain
+    volumeBindingMode: Immediate
+    mountOptions:
+      - nfsvers=4.1
