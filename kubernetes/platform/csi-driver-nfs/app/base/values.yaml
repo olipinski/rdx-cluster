@@ -24,7 +24,7 @@ storageClasses:
     reclaimPolicy: Delete
     volumeBindingMode: Immediate
     mountOptions:
-      - nfsvers=4.1
+      - nfsvers=4.2
   - name: nfs-csi-retain
     annotations:
       storageclass.kubernetes.io/is-default-class: "false"
@@ -35,4 +35,4 @@ storageClasses:
     reclaimPolicy: Retain
     volumeBindingMode: Immediate
     mountOptions:
-      - nfsvers=4.1
+      - nfsvers=4.2
