@@ -1,0 +1,61 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: nextcloud-config
+  namespace: flux-system
+spec:
+  interval: 30m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./kubernetes/apps/nextcloud/config/overlays/prod
+  prune: true
+  dependsOn:
+    - name: external-secrets-app
+  wait: true
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: nextcloud
+      namespace: nextcloud
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-settings
+      - kind: ConfigMap
+        name: domain-settings
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: nextcloud-app
+  namespace: flux-system
+spec:
+  interval: 30m
+  targetNamespace: nextcloud
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./kubernetes/apps/nextcloud/app/overlays/prod
+  prune: true
+  dependsOn:
+    - name: cert-manager-app
+    - name: cilium-app
+    - name: external-dns-app
+    - name: nextcloud-config
+  wait: true
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: nextcloud
+      namespace: nextcloud
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-settings
+      - kind: ConfigMap
+        name: domain-settings
+      - kind: Secret
+        name: nextcloud-app-secret
