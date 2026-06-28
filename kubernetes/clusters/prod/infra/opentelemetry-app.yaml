@@ -38,6 +38,7 @@ spec:
     name: flux-system
   dependsOn:
     - name: opentelemetry-operator
+    - name: external-secrets-app
   path: ./kubernetes/platform/opentelemetry/forwarder/overlays/prod
   prune: true
   wait: true
