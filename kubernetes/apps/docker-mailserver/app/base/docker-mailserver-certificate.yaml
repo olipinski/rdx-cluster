@@ -19,6 +19,7 @@ spec:
   # At least one of a DNS Name, URI, or IP address is required.
   dnsNames:
     - mail.${CLUSTER_DOMAIN}
+    - ${CLUSTER_DOMAIN} # Allow for connection for ${CLUSTER_DOMAIN} to also work
   issuerRef:
     name: letsencrypt-issuer
     kind: ClusterIssuer

@@ -1,0 +1,16 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: nextcloud-git
+  namespace: flux-system
+spec:
+  interval: 5m
+  url: https://github.com/olipinski/nextcloud-all-in-one
+  ref:
+    branch: ingress-compatibility
+  ignore: |-
+    # exclude all
+    /*
+    # include charts directory
+    !/nextcloud-aio-helm-chart/

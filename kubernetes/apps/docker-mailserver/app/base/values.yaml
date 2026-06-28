@@ -77,7 +77,7 @@ rspamd:
       secret:
 proxyProtocol:
   enabled: true
-  trustedNetworks: 10.128.0.0/16
+  trustedNetworks: 10.42.0.0/16
 
 # Note this is a dictionary and not a list so individual keys can be overridden by --set or --value helm parameters
 persistent_volume_claims:
@@ -127,6 +127,7 @@ configMaps:
     path: postfix-accounts.cf
     data: |
       ${DMS_ADMIN_USER}@${CLUSTER_DOMAIN}|{SHA512-CRYPT}${DMS_ADMIN_HASHED_PASSWORD}
+      ${NEXTCLOUD_SMTP_USER}@${CLUSTER_DOMAIN}|{SHA512-CRYPT}${NEXTCLOUD_SMTP_HASHED_PASSWORD}
 
 
   postfix-virtual.cf:

@@ -5,6 +5,7 @@ resources:
   - cilium-helmrepo.yaml
   - cloudnative-pg-helmrepo.yaml
   - coredns-helmrepo.yaml
+  - csi-driver-nfs-helmrepo.yaml
   - docker-mailserver-helmrepo.yaml
   - elastic-helmrepo.yaml
   - external-dns-helmrepo.yaml
@@ -18,6 +19,7 @@ resources:
   - kube-vip-helmrepo.yaml
   - longhorn-helmrepo.yaml
   - metrics-server-helmrepo.yaml
+  - nextcloud-helmrepo.yaml
   - oauth2-proxy-helmrepo.yaml
   - openbao-helmrepo.yaml
   - opentelemetry-helmrepo.yaml

@@ -1,0 +1,10 @@
+---
+# ingress-nginx TCP/UDP overlay
+config:
+  use-proxy-protocol: true
+
+tcp:
+  3478: "nextcloud-aio-talk/nextcloud-aio-talk:3478::PROXY"
+
+udp:
+  3478: "nextcloud-aio-talk/nextcloud-aio-talk:3478::PROXY"

@@ -61,14 +61,14 @@ install_manifests: []
 install_charts:
   prometheus-crds:
     chart_ref: oci://ghcr.io/prometheus-community/charts/prometheus-operator-crds
-    version: 27.0.1
+    version: 30.0.0
     namespace: kube-system
     create_namespace: true
     value_files: []
 
   cilium:
     chart_ref: oci://quay.io/cilium/charts/cilium
-    version: 1.19.2
+    version: 1.19.5
     namespace: kube-system
     value_files:
       - ../../../../kubernetes/platform/cilium/app/base/values.yaml
@@ -77,7 +77,7 @@ install_charts:
 
   coredns:
     chart_ref: oci://ghcr.io/coredns/charts/coredns
-    version: 1.45.2
+    version: 1.46.0
     namespace: kube-system
     value_files:
       - ../../../../kubernetes/platform/coredns/app/base/values.yaml
@@ -86,7 +86,7 @@ install_charts:
   kube-vip:
     chart_ref: kube-vip
     repo_url: https://kube-vip.github.io/helm-charts
-    version: 0.9.8
+    version: 0.9.9
     namespace: kube-system
     value_files:
       - "../../../../kubernetes/platform/kube-vip/base/values.yaml"

@@ -36,3 +36,9 @@ l2announcements:
 
 externalIPs:
   enabled: true
+
+# Hybrid DSR and Geneve to alawys preserve source IP
+tunnelProtocol: geneve
+loadBalancer:
+  mode: hybrid
+  dsrDispatch: geneve
