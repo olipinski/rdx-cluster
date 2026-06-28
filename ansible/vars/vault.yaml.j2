@@ -137,3 +137,29 @@ vault:
       public: |
         {{ dkim_public_key | indent(width=8, first=False) }}
       dns: {{ dkim_public_key_dns }}
+  # Nextcloud
+  nextcloud:
+    admin:
+      password: {{ nextcloud_admin_password }}
+    db:
+      password: {{ nextcloud_db_password }}
+    fulltext-search:
+      password: {{ nextcloud_fulltext_search_password }}
+    imaginary:
+      secret: {{ nextcloud_imaginary_secret }}
+    recording:
+      secret: {{ nextcloud_recording_secret }}
+    redis:
+      password: {{ nextcloud_redis_password }}
+    signaling:
+      secret: {{ nextcloud_signaling_secret }}
+    talk:
+      secret: {{ nextcloud_talk_secret }}
+    turn:
+      secret: {{ nextcloud_turn_secret }}
+    whiteboard:
+      secret: {{ nextcloud_whiteboard_secret }}
+    smtp:
+      user: nc-noreply
+      password: {{ nextcloud_smtp_password }}
+      hashed_password: {{ nextcloud_hashed_smtp_password }}

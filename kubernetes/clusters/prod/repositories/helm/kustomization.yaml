@@ -19,6 +19,7 @@ resources:
   - kube-vip-helmrepo.yaml
   - longhorn-helmrepo.yaml
   - metrics-server-helmrepo.yaml
+  - nextcloud-helmrepo.yaml
   - oauth2-proxy-helmrepo.yaml
   - openbao-helmrepo.yaml
   - opentelemetry-helmrepo.yaml

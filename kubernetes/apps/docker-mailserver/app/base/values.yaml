@@ -127,6 +127,7 @@ configMaps:
     path: postfix-accounts.cf
     data: |
       ${DMS_ADMIN_USER}@${CLUSTER_DOMAIN}|{SHA512-CRYPT}${DMS_ADMIN_HASHED_PASSWORD}
+      ${NEXTCLOUD_SMTP_USER}@${CLUSTER_DOMAIN}|{SHA512-CRYPT}${NEXTCLOUD_SMTP_HASHED_PASSWORD}
 
 
   postfix-virtual.cf:
