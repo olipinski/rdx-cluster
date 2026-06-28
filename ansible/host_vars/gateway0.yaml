@@ -364,7 +364,7 @@ bind9_zones:
         rdata: 10.128.0.100
       - label: superis.eu.
         type: MX
-        rdata: 10 mail.superis.eu
+        rdata: 10 mail.superis.eu.
   - name: 10.in-addr.arpa
     type: primary
     default_ttl: 600
