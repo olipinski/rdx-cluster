@@ -4,7 +4,6 @@ kind: Kustomization
 
 resources:
   - helm.yaml
-  - nextcloud-app-externalsecret.yaml
   - ingress.yaml
 
 configMapGenerator:
