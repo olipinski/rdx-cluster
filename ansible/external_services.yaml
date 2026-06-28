@@ -58,7 +58,7 @@
     - name: Include rdxcluster variables
       ansible.builtin.include_vars: vars/rdxcluster.yaml
 
-    - name: Ensure SeaweedFS data directories exist
+    - name: Ensure SeaweedFS data and config directories exist
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -66,6 +66,7 @@
       with_items:
         - "{{ seaweedfs_master_dir }}"
         - "{{ seaweedfs_volume_dir }}"
+        - "{{ seaweedfs_config_dir }}"
 
     - name: Get LetsEncrypt TLS certificate for SeaweedFS
       block:
