@@ -7,7 +7,7 @@ spec:
   interval: 30m
   chart:
     spec:
-      chart: nextcloud-aio-helm-chart/nextcloud-aio-helm-chart
+      chart: nextcloud-aio-helm-chart
       version: 13.2.1
       sourceRef:
         kind: GitRepository
