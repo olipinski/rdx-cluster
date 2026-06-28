@@ -12,3 +12,9 @@ spec:
     name: flux-system
   path: ./kubernetes/platform/csi-driver-nfs/app/overlays/prod
   prune: true
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-settings
+      - kind: ConfigMap
+        name: domain-settings
