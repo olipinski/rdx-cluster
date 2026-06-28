@@ -77,7 +77,7 @@ install_charts:
 
   coredns:
     chart_ref: oci://ghcr.io/coredns/charts/coredns
-    version: 1.46.20
+    version: 1.46.0
     namespace: kube-system
     value_files:
       - ../../../../kubernetes/platform/coredns/app/base/values.yaml
