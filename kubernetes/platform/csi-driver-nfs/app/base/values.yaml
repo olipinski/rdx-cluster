@@ -19,7 +19,7 @@ storageClasses:
     parameters:
       server: nas.${CLUSTER_DOMAIN}
       share: /naspool/nfs
-      subDir: "$delete-{pv.metadata.name}-${pvc.metadata.namespace}-${pvc.metadata.name}"
+      subDir: "delete-$${pv.metadata.name}-$${pvc.metadata.namespace}-$${pvc.metadata.name}"
       # mountPermissions: "0"
     reclaimPolicy: Delete
     volumeBindingMode: Immediate
@@ -31,7 +31,7 @@ storageClasses:
     parameters:
       server: nas.${CLUSTER_DOMAIN}
       share: /naspool/nfs
-      subDir: "$retain-{pv.metadata.name}-${pvc.metadata.namespace}-${pvc.metadata.name}"
+      subDir: "retain-$${pv.metadata.name}-$${pvc.metadata.namespace}-$${pvc.metadata.name}"
     reclaimPolicy: Retain
     volumeBindingMode: Immediate
     mountOptions:
