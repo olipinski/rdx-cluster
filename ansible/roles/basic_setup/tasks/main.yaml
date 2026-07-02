@@ -29,3 +29,24 @@
 
 - name: Blocklist storage devices in multipath configuration
   ansible.builtin.include_tasks: multipath_blocklist.yaml
+
+- name: Increase max_user_watches for k3s
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_watches
+    value: '2796202'
+    state: present
+  when: "'k3s' in group_names"
+
+- name: Increase max_user_instances for k3s
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_instances
+    value: '43690'
+    state: present
+  when: "'k3s' in group_names"
+
+- name: Increase max_queued_events for k3s
+  ansible.posix.sysctl:
+    name: fs.inotify.max_queued_events
+    value: '5592405'
+    state: present
+  when: "'k3s' in group_names"
