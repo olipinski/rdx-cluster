@@ -4,6 +4,9 @@ controller:
   runOnControlPlane: true
   enableSnapshotter: true
 
+driver:
+  mountPermissions: '0777'
+
 externalSnapshotter:
   enabled: false
 
@@ -36,3 +39,7 @@ storageClasses:
     volumeBindingMode: Immediate
     mountOptions:
       - nfsvers=4.2
+      - noatime
+      - nodiratime
+      - rsize=262144
+      - wsize=262144
