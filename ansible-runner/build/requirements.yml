@@ -35,7 +35,7 @@ collections:
   - name: community.hashi_vault
     version: 7.1.0
   - name: ansible.posix
-    version: 2.2.0
+    version: 2.2.1
   - name: community.crypto
     version: 3.2.2
   - name: kpfleming.systemd_networkd
