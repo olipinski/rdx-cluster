@@ -264,8 +264,7 @@ seaweedfs_s3_config:
 restic_version: 0.18.1
 
 # Restic S3 repository configuration
-restic_repository: s3:https://{{ seaweedfs_hostname }}/restic
-restic_use_ca_cert: true
+restic_repository: s3:https://{{ seaweedfs_hostname }}:8443/restic
 restic_environment:
   - name: AWS_ACCESS_KEY_ID
     value: "{{ vault.seaweedfs.restic.user }}"
