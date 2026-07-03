@@ -4,6 +4,10 @@
 # Storage path
 defaultSettings:
   defaultDataPath: /storage
+  # Allow scheduling up to 150% of available disk space
+  storageOverProvisioningPercentage: 150
+  # Refuse new replicas when less than 20% disk space remains
+  storageMinimalAvailablePercentage: 20
 
 persistence:
   defaultClassReplicaCount: 3
