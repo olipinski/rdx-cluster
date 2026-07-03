@@ -4,3 +4,7 @@
 # Storage path
 defaultSettings:
   defaultDataPath: /storage
+
+persistence:
+  defaultClassReplicaCount: 3
+  replicaAutoBalance: "best-effort"
