@@ -16,19 +16,18 @@ spec:
         namespace: flux-system
   postRenderers:
     - kustomize:
-        patchesStrategicMerge:
-          - kind: Deployment
-            apiVersion: apps/v1
-            metadata:
+        patches:
+          - target:
+              version: v1
+              kind: Deployment
               name: nextcloud-aio-nextcloud
-            spec:
-              template:
-                spec:
-                  containers:
-                    - name: nextcloud-aio-nextcloud
-                      livenessProbe:
-                        initialDelaySeconds: 300 # Add a larger delay, it takes a while to start up
-                  terminationGracePeriod: 300 # Reduce from 10 to 5 minutes
+            patch: |
+              - op: replace
+                path: /template/spec/containers/0/livenessProbe/initialDelaySeconds
+                value: 300
+              - op: replace
+                path: /template/spec/terminationGracePeriod
+                value: 300
   releaseName: nextcloud
   targetNamespace: nextcloud
   install:
