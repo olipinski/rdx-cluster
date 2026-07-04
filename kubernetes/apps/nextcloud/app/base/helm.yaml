@@ -5,7 +5,7 @@ metadata:
   name: nextcloud
 spec:
   interval: 30m
-  timeout: 15m # Nextcloud takes a long time to come up
+  timeout: 20m # Nextcloud takes a long time to come up
   chart:
     spec:
       chart: nextcloud-aio-helm-chart
