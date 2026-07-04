@@ -1,5 +1,5 @@
 FROM alpine/kubectl:1.36.2@sha256:8c1459287ab748db6c8601ca23e91ba43ef20e1dcb83ad61f2e8e162d05fb325 AS kubectl
-FROM alpine/helm:4.2.2@sha256:ee6fe3e96d9f8ea8dd1af9ecd7bbb3e233616a25f145392376f020fd2a51eb33 AS helm
+FROM alpine/helm:4.2.0 AS helm
 FROM ghcr.io/astral-sh/uv:0.11.26@sha256:3d868e555f8f1dbc324afa005066cd11e1053fc4743b9808ca8025283e65efa5 AS uv
 FROM python:3.14-slim@sha256:b877e50bd90de10af8d82c57a022fc2e0dc731c5320d762a27986facfc3355c1
 
@@ -11,7 +11,7 @@ COPY --from=kubectl /usr/local/bin/kubectl /usr/local/bin/kubectl
 COPY --from=helm /usr/bin/helm /usr/local/bin/helm
 
 RUN apt update -qq && \
-    apt install sudo git apt-utils pwgen gnupg curl wireguard-tools vim whois wget jq awscli -y && \
+    apt install sudo git apt-utils pwgen gnupg curl wireguard-tools vim whois wget jq awscli watch -y && \
     apt clean && \
     rm -rf /usr/share/doc/* /usr/share/man/* /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

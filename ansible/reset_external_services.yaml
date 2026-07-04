@@ -1,5 +1,5 @@
 ---
-- name: Clean SeaweedFS Installation
+- name: Clean SeaweedFS installation
   hosts: s3
   become: true
   gather_facts: false
@@ -27,14 +27,14 @@
       ansible.builtin.systemd:
         daemon_reload: true
 
-- name: Clean OpenBao Installation
+- name: Clean OpenBao installation
   hosts: bao
   become: true
   gather_facts: false
   tags:
     - openbao
   tasks:
-    - name: Stop and disable OpenBao server
+    - name: Stop and disable the OpenBao server
       ansible.builtin.systemd:
         name: "{{ item }}"
         state: stopped
@@ -52,7 +52,7 @@
         - /var/lib/openbao/
         - /etc/openbao/
         - /var/log/openbao/
-        - /usr/local/bin/openbao
+        - /usr/local/bin/bao
         - /etc/systemd/system/openbao.service
         - /etc/systemd/system/openbao-unseal.service
     - name: Reload systemd daemon

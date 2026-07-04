@@ -200,9 +200,6 @@ nft_define_host:
   lan_network:
     name: lan_network
     value: 10.0.0.0/8
-  k8s_lb_host:
-    name: k8s_lb_host
-    value: 10.20.0.8
   s3_host:
     name: s3_host
     value: 10.20.0.8
@@ -282,8 +279,8 @@ nft_nat_host_prerouting_rules:
     - iifname $wan_interface tcp dport {3478, 5349} dnat $ingress_lb_host
   030_dnat_mqtt:
     - iifname $wan_interface tcp dport {1883, 8883} dnat $ingress_lb_host
-  500_dnat_seaweedfs:
-    - iifname $wan_interface tcp dport 9091 dnat s3_host
+  500_dnat_seaweedfs_s3:
+    - iifname $wan_interface tcp dport 8443 dnat $s3_host
 
 # NAT post-routing
 nft_nat_host_postrouting_rules:
@@ -350,6 +347,9 @@ bind9_zones:
       - label: s3
         type: A
         rdata: 10.20.0.8
+      - label: nas
+        type: A
+        rdata: 10.20.0.8
       - label: has
         type: A
         rdata: 10.30.3.10
@@ -359,6 +359,12 @@ bind9_zones:
       - label: maas
         type: NS
         rdata: ns.maas
+      - label: superis.eu.
+        type: A
+        rdata: 10.128.0.100
+      - label: superis.eu.
+        type: MX
+        rdata: 10 mail.superis.eu.
   - name: 10.in-addr.arpa
     type: primary
     default_ttl: 600
@@ -376,7 +382,7 @@ bind9_zones:
         rdata: "gateway.{{ dns_domain }}."
       - label: 20
         type: NS
-        rdata: "prime.{{ dns_domain }}."
+        rdata: "maas.{{ dns_domain }}."
 
 ############################
 # NTP role variables

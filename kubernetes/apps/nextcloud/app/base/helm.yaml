@@ -1,0 +1,44 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nextcloud
+spec:
+  interval: 30m
+  timeout: 20m # Nextcloud takes a long time to come up
+  chart:
+    spec:
+      chart: nextcloud-aio-helm-chart
+      version: 13.2.2
+      sourceRef:
+        kind: GitRepository
+        name: nextcloud-git
+        namespace: flux-system
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              version: v1
+              kind: Deployment
+              name: nextcloud-aio-nextcloud
+            patch: |
+              - op: add
+                path: /spec/template/spec/containers/0/livenessProbe/initialDelaySeconds
+                value: 600
+              - op: replace
+                path: /spec/template/spec/terminationGracePeriodSeconds
+                value: 300
+  releaseName: nextcloud
+  targetNamespace: nextcloud
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  valuesFrom:
+    - kind: ConfigMap
+      name: nextcloud-helm-values
+      valuesKey: base-values.yaml

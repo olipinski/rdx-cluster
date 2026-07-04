@@ -51,7 +51,8 @@
         name: openbao
         chart_ref: openbao
         chart_repo_url: https://openbao.github.io/openbao-helm
-        chart_version: 0.28.3
+        # renovate: datasource=helm depName=openbao repository=https://openbao.github.io/openbao-helm
+        chart_version: 0.28.4
         release_namespace: openbao
         create_namespace: true
         values_files:
@@ -126,8 +127,8 @@
       kubernetes.core.helm:
         name: flux-operator
         chart_ref: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator
-        # renovate: datasource=docker depName=fluxcd ociRepository=oci://ghcr.io/controlplaneio-fluxcd/charts
-        chart_version: 0.43.0
+        # renovate: datasource=helm depName=fluxcd repository=oci://ghcr.io/controlplaneio-fluxcd/charts
+        chart_version: 0.52.0
         release_namespace: flux-system
         create_namespace: true
         values_files:
@@ -138,8 +139,8 @@
       kubernetes.core.helm:
         name: flux-instance
         chart_ref: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-instance
-        # renovate: datasource=helm depName=fluxcd ociRepository=oci://ghcr.io/controlplaneio-fluxcd/charts
-        chart_version: 0.43.0
+        # renovate: datasource=helm depName=fluxcd repository=oci://ghcr.io/controlplaneio-fluxcd/charts
+        chart_version: 0.52.0
         release_namespace: flux-system
         create_namespace: true
         values_files:
