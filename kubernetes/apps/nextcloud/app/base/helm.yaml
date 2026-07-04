@@ -23,7 +23,7 @@ spec:
               name: nextcloud-aio-nextcloud
             patch: |
               - op: add
-                path: /template/spec/containers/0/livenessProbe/initialDelaySeconds
+                path: /template/spec/containers/0/-/livenessProbe/initialDelaySeconds
                 value: 300
               - op: replace
                 path: /template/spec/terminationGracePeriod
