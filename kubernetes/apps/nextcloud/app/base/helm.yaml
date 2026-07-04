@@ -5,6 +5,7 @@ metadata:
   name: nextcloud
 spec:
   interval: 30m
+  timeout: 15m # Nextcloud takes a long time to come up
   chart:
     spec:
       chart: nextcloud-aio-helm-chart
@@ -23,9 +24,6 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  dependsOn:
-    - name: longhorn
-      namespace: longhorn-system
   valuesFrom:
     - kind: ConfigMap
       name: nextcloud-helm-values
