@@ -8,7 +8,7 @@ spec:
   timeout: 20m # Nextcloud takes a long time to come up
   chart:
     spec:
-      chart: nextcloud-aio/nextcloud-aio-helm-chart
+      chart: nextcloud-aio-helm-chart
       version: 13.3.1
       sourceRef:
         kind: HelmRepository
