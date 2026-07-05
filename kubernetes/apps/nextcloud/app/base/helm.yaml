@@ -9,10 +9,10 @@ spec:
   chart:
     spec:
       chart: nextcloud-aio-helm-chart
-      version: 13.2.2
+      version: 13.3.1
       sourceRef:
-        kind: GitRepository
-        name: nextcloud-git
+        kind: HelmRepository
+        name: nextcloud
         namespace: flux-system
   postRenderers:
     - kustomize:
@@ -28,6 +28,24 @@ spec:
               - op: replace
                 path: /spec/template/spec/terminationGracePeriodSeconds
                 value: 300
+          - target:
+              version: v1
+              kind: Service
+              name: nextcloud-aio-apache
+            patch: |
+              - op: remove
+                path: /spec/externalTrafficPolicy
+              - op: replace
+                path: /spec/type
+                value: ClusterIP
+          - target:
+              version: v1
+              kind: Service
+              name: nextcloud-aio-talk-public
+            patch: |
+              - op: replace
+                path: /spec/type
+                value: ClusterIP
   releaseName: nextcloud
   targetNamespace: nextcloud
   install:
