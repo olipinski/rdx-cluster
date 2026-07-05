@@ -15,7 +15,6 @@ resources:
   - grafana-app.yaml
   - ingress-nginx-app.yaml
   - istio-app.yaml
-  - kafka-app.yaml
   - keycloak-app.yaml
   - kiali-app.yaml
   - kube-prometheus-stack-app.yaml
