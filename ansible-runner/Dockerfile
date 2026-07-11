@@ -1,4 +1,4 @@
-FROM alpine/kubectl:1.36.2@sha256:8c1459287ab748db6c8601ca23e91ba43ef20e1dcb83ad61f2e8e162d05fb325 AS kubectl
+FROM alpine/kubectl:1.36.2@sha256:f91cb226fa6f356221c1be464ea2ac7205346a5e35f60e1889867cd881581192 AS kubectl
 FROM alpine/helm:4.2.0@sha256:af08f75a3130d666a50b9fc150f40987ef20b885cf67659aabf4b83a5f2c5501 AS helm
 FROM ghcr.io/astral-sh/uv:0.11.26@sha256:3d868e555f8f1dbc324afa005066cd11e1053fc4743b9808ca8025283e65efa5 AS uv
 FROM python:3.14-slim@sha256:b877e50bd90de10af8d82c57a022fc2e0dc731c5320d762a27986facfc3355c1
