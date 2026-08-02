@@ -53,18 +53,18 @@
       "clientId": "$(env:GRAFANA_OAUTH_CLIENT_ID)",
       "name": "Grafana",
       "description": "Grafana",
-      "rootUrl": "https://monitoring.$(env:CLUSTER_DOMAIN)/grafana",
-      "adminUrl": "https://monitoring.$(env:CLUSTER_DOMAIN)/grafana",
-      "baseUrl": "https://monitoring.$(env:CLUSTER_DOMAIN)/grafana",
+       "rootUrl": "https://grafana.$(env:CLUSTER_DOMAIN)",
+      "adminUrl": "https://grafana.$(env:CLUSTER_DOMAIN)",
+      "baseUrl": "https://grafana.$(env:CLUSTER_DOMAIN)",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": true,
       "clientAuthenticatorType": "client-secret",
       "secret": "$(env:GRAFANA_OAUTH_CLIENT_SECRET)",
       "redirectUris": [
-        "https://monitoring.$(env:CLUSTER_DOMAIN)/grafana/login/generic_oauth"
+        "https://grafana.$(env:CLUSTER_DOMAIN)/login/generic_oauth"
       ],
-      "webOrigins": ["https://monitoring.$(env:CLUSTER_DOMAIN)/grafana"],
+      "webOrigins": ["https://grafana.$(env:CLUSTER_DOMAIN)"],
       "standardFlowEnabled": true,
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": true,

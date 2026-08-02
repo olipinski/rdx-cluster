@@ -61,9 +61,7 @@ datasources:
         access: proxy
         url: http://tempo-query-frontend-discovery.tempo.svc.cluster.local:3100
 
-##
 ## Provisioning sidecars
-##
 sidecar:
   dashboards:
     # Enable dashboard sidecar
