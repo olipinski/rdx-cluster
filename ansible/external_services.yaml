@@ -275,11 +275,6 @@
       loop_control:
         label: "Creating/updating credentials for {{ item.group }}"
 
-    - name: Load http auth_basic credentials
-      ansible.builtin.include_tasks:
-        file: tasks/create_basic_auth_credentials.yaml
-      no_log: true
-
     - name: Load bind9 DDNS key
       ansible.builtin.include_tasks:
         file: tasks/load_ddns_key_into_vault.yaml
