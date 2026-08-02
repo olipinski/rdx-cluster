@@ -98,29 +98,9 @@ install_charts:
 # renovate: datasource=github-releases depName=fluxcd/flux2
 fluxcd_version: v2.8.6
 
-###########
-# Ingress #
-###########
-
-# HTTP Basic auth credentials
-ingress_basic_auth_user: "{{ vault.ingress.admin.user }}"
-ingress_basic_auth_passwd: "{{ vault.ingress.admin.password }}"
-
-# DNS cluster service end-points
-traefik_dashboard_dns: "traefik.{{ dns_domain }}"
-longhorn_dashboard_dns: "storage.{{ dns_domain }}"
-kibana_dashboard_dns: "kibana.{{ dns_domain }}"
-elasticsearch_dns: "elasticsearch.{{ dns_domain }}"
-fluentd_dns: "fluentd.{{ dns_domain }}"
-monitoring_dns: "monitoring.{{ dns_domain }}"
-linkerd_dashboard_dns: "linkerd.{{ dns_domain }}"
-
 #################################
 # TLS Certificates: LetsEncrypt #
 #################################
-
-# Enable letsencrypt certificates
-enable_letsencrypt: true
 
 # Cloudflare API token
 certmanager_cloudflare_token: "{{ vault.certmanager.cloudflare.token }}"
@@ -359,22 +339,12 @@ istio_version: 1.29.2
 # Logging Secrets #
 ###################
 
-# Fluentd-fluentbit shared key
-fluentd_shared_key: "{{ vault.logging.fluentd.shared_key }}"
-
 # Elasticsearch 'elastic' user password
 efk_elasticsearch_passwd: "{{ vault.logging.elasticsearch.password }}"
 
 # Loki SeaweedFS user, key and bucket
 seaweedfs_loki_user: "{{ vault.seaweedfs.loki.user }}"
 seaweedfs_loki_key: "{{ vault.seaweedfs.loki.key }}"
-
-######################
-# Monitoring Secrets #
-######################
-
-# Grafana admin user password
-prometheus_grafana_password: "{{ vault.grafana.admin.password }}"
 
 #######################
 # Tracing Secrets     #
