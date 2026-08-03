@@ -150,7 +150,6 @@ kubeControllerManager:
   # headless service is needed, So prometheus can discover each of the endpoints/PODs behind the service.
   # ref: https://kubernetes.io/docs/concepts/services-networking/service/#headless-services
   # Required headless service to extract the metrics the service need to be defined without selector and so the endpoints must be defined explicitly
-  #
   # ref: https://kubernetes.io/docs/concepts/services-networking/service/#services-without-selectors
 
   # Enable KubeController manager monitoring
@@ -159,7 +158,7 @@ kubeControllerManager:
   # K3d tip: Get the K3d control plane node IPs e.g. as follows:
   # kubectl get nodes -l node-role.kubernetes.io/control-plane=true -o jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}' | tr ' ' ',' | sed 's/^/[&/;s/$/]/'
   endpoints: &cp
-    - 10.20.0.25 # silver000.maas.${CLUSTER_DOMAIN}
+    - 10.20.0.44 # silver000.maas.${CLUSTER_DOMAIN}
   service:
     # Enable creation of service
     enable: true
@@ -201,7 +200,7 @@ kubeProxy:
 # Core DNS monitoring
 coreDns:
   enabled: true
-  # Creates headless service to get accest to all coreDNS Pods
+  # Creates headless service to get access to all coreDNS Pods
   service:
     enabled: true
     port: 9153
