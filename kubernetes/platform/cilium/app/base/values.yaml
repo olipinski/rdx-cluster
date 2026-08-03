@@ -42,3 +42,7 @@ tunnelProtocol: geneve
 loadBalancer:
   mode: hybrid
   dsrDispatch: geneve
+
+# Enable Gateway API
+gatewayAPI:
+  enabled: true

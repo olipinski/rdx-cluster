@@ -16,3 +16,8 @@ prometheus:
   enabled: true
   servicemonitor:
     enabled: true
+
+# Enable Gateway API
+config:
+  gatewayAPI:
+    enabled: true
