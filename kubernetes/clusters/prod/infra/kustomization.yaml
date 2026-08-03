@@ -12,8 +12,8 @@ resources:
   - external-dns-app.yaml
   - external-secrets-app.yaml
   - flux-app.yaml
+  - gateway-api-app.yaml
   - grafana-app.yaml
-  - ingress-nginx-app.yaml
   - istio-app.yaml
   - keycloak-app.yaml
   - kiali-app.yaml
