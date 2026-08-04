@@ -8,7 +8,6 @@ resources:
   - ./prometheus-operator-mixin-rules.yaml
   - ./node-exporter-mixin-rules.yaml
   - ./etcd-mixin-rules.yaml
-  # - ./coredns-mixin-rules.yaml
   - ./grafana-mixin-rules.yaml
 
 # Disable fluxcd substitution

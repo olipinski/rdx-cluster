@@ -4,8 +4,8 @@
 grafana.ini:
   server:
     # Configuring /grafana subpath
-    domain: monitoring.${CLUSTER_DOMAIN}
-    root_url: "https://%(domain)s/grafana/"
+    domain: grafana.${CLUSTER_DOMAIN}
+    root_url: "https://%(domain)s/"
     # rewrite rules configured in nginx rules
     # https://grafana.com/tutorials/run-grafana-behind-a-proxy/
     # When serve_from_subpath is enabled, internal requests from e.g. prometheus get redirected to the defined root_url.
@@ -21,15 +21,12 @@ ingress:
   # Values can be templated
   annotations:
     # Enable cert-manager to create automatically the SSL certificate and store in Secret
-    cert-manager.io/cluster-issuer: ${TLS_ISSUER:=letsencrypt-issuer}
-    cert-manager.io/common-name: monitoring.${CLUSTER_DOMAIN}
-    # Nginx rewrite rule
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
-  path: /grafana/?(.*)
+    cert-manager.io/cluster-issuer: letsencrypt-issuer
+    cert-manager.io/common-name: grafana.${CLUSTER_DOMAIN}
   pathType: ImplementationSpecific
   hosts:
-    - monitoring.${CLUSTER_DOMAIN}
+    - grafana.${CLUSTER_DOMAIN}
   tls:
     - hosts:
-        - monitoring.${CLUSTER_DOMAIN}
-      secretName: monitoring-tls
+        - grafana.${CLUSTER_DOMAIN}
+      secretName: grafana-tls

@@ -37,10 +37,10 @@ spec:
               value: "true"
             - name: CLUSTER_DOMAIN
               value: "${CLUSTER_DOMAIN}"
-            - name: PI_ADMIN_FIRSTNAME
-              value: "${PI_ADMIN_FIRSTNAME}"
-            - name: PI_ADMIN_LASTNAME
-              value: "${PI_ADMIN_LASTNAME}"
+            - name: CLUSTER_ADMIN_FIRSTNAME
+              value: "${CLUSTER_ADMIN_FIRSTNAME}"
+            - name: CLUSTER_ADMIN_LASTNAME
+              value: "${CLUSTER_ADMIN_LASTNAME}"
           # Additional environment variables in secret
           envFrom:
             - secretRef:

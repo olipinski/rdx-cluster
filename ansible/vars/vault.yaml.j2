@@ -27,11 +27,6 @@ vault:
   flux:
     github:
       pat: {{ github_pat | default("") }}
-  # Ingress secrets
-  ingress:
-    admin:
-      user: admin
-      password: {{ traefik_basic_auth_password }}
   # Keycloak
   keycloak:
     admin:
