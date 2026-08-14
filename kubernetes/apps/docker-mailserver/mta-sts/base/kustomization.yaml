@@ -5,6 +5,6 @@ kind: Kustomization
 resources:
   - ns.yaml
   - mta-sts-file.yaml
-  - ingress-mta-sts.yaml
+  - httproute.yaml
   - nginx-mta-sts.yaml
   - nginx-mta-sts-svc.yaml
