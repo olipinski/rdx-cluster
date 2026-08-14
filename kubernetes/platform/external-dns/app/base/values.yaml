@@ -30,8 +30,10 @@ txtPrefix: external-dns-
 sources:
   - crd
   - service
-  - ingress
-  - istio-gateway
+  - gateway-httproute
+  - gateway-tlsroute
+  - gateway-tcproute
+  - gateway-udproute
 domainFilters:
   - ${CLUSTER_DOMAIN}
 logLevel: debug
