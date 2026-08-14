@@ -5,3 +5,7 @@ namespace: keycloak
 
 resources:
   - ../../base
+
+components:
+  - ../../components/httproute
+  - ../../components/monitor

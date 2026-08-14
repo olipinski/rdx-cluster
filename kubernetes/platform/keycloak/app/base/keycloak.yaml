@@ -35,8 +35,6 @@ spec:
     backchannelDynamic: true
   proxy:
     headers: xforwarded # double-check your reverse proxy sets and overwrites the X-Forwarded-* headers
-  # Do not create ingress
-  # TLS options are not supported. Ingress resource to be created separately.
   ingress:
     enabled: false
   # Additional Options
