@@ -3,8 +3,8 @@ apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 
 resources:
-  - elasticsearch-ingress.yaml
-  - kibana-ingress.yaml
+  - elasticsearch-httproute.yaml
+  - kibana-httproute.yaml
 
 patches:
   - target:

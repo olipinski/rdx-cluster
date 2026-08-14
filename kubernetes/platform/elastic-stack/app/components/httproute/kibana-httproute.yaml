@@ -1,0 +1,22 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: kibana-http-route
+  labels:
+    app.kubernetes.io/instance: kibana
+    app.kubernetes.io/name: kibana
+spec:
+  parentRefs:
+    - name: kube-gateway
+  hostnames:
+    - kibana.${CLUSTER_DOMAIN}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - kind: Service
+          name: efk-kb-http
+          port: 5601
