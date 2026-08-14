@@ -1,0 +1,16 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: UDPRoute
+metadata:
+  name: nextcloud-tcp-route
+  labels:
+    app.kubernetes.io/instance: nextcloud
+    app.kubernetes.io/name: nextcloud
+spec:
+  parentRefs:
+    - name: kube-gateway
+      sectionName: nextcloud-talk-udp
+  rules:
+    - backendRefs:
+        - name: nextcloud-aio-talk
+          port: 3478

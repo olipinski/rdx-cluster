@@ -4,7 +4,9 @@ kind: Kustomization
 
 resources:
   - helm.yaml
-  - ingress.yaml
+  - httproute.yaml
+  - tcproute.yaml
+  - udproute.yaml
 
 configMapGenerator:
   - name: nextcloud-helm-values
