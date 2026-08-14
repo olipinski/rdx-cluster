@@ -1,3 +1,4 @@
+---
 # kube-prom-stack helm values (open-telemetry-receiver)
 # Enable the OpenTelemetry receiver in Prometheus to receive OTLP data.
 # ref: https://prometheus.io/docs/guides/opentelemetry/#send-opentelemetry-metrics-to-the-prometheus-server
