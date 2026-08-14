@@ -7,7 +7,7 @@ resources:
   - ../../base
 
 components:
-  - ../../components/ingress
+  - ../../components/httproute
   - ../../components/backup
   - ../../components/monitor
 
