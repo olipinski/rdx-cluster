@@ -14,14 +14,6 @@ dashboardProviders:
         editable: true
         options:
           path: /var/lib/grafana/dashboards/default-folder
-      - name: istio
-        orgId: 1
-        folder: Istio
-        type: file
-        disableDeletion: false
-        editable: true
-        options:
-          path: /var/lib/grafana/dashboards/istio
       - name: infrastructure
         orgId: 1
         folder: Infrastructure
@@ -160,28 +152,6 @@ dashboards:
       revision: 5
       datasource:
         - {name: DS_PROMETHEUS, value: Prometheus}
-  istio:
-    istio-control-plane:
-      # https://grafana.com/grafana/dashboards/7645-istio-control-plane-dashboard/
-      # renovate: depName="Istio Dashboard"
-      gnetId: 7645
-      revision: 302
-      datasource:
-        - {name: DS_PROMETHEUS, value: Prometheus}
-    istio-mesh:
-      # https://grafana.com/grafana/dashboards/7639-istio-mesh-dashboard/
-      # renovate: depName="Istio Dashboard"
-      gnetId: 7639
-      revision: 303
-      datasource:
-        - {name: DS_PROMETHEUS, value: Prometheus}
-    istio-performance:
-      # https://grafana.com/grafana/dashboards/11829-istio-performance-dashboard/
-      # renovate: depName="Istio Dashboard"
-      gnetId: 11829
-      revision: 302
-      datasource:
-        - {name: DS_PROMETHEUS, value: Prometheus}
   seaweedfs:
     seaweed-monitoring:
       url: https://raw.githubusercontent.com/chrislusf/seaweedfs/master/other/metrics/grafana_seaweedfs.json
@@ -196,3 +166,30 @@ dashboards:
       url: https://raw.githubusercontent.com/keycloak/keycloak-grafana-dashboard/refs/heads/main/dashboards/keycloak-troubleshooting-dashboard.json
       datasource:
         - {name: DS_PROMETHEUS, value: Prometheus}
+  envoy:
+    envoy-proxy:
+      url: https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-addons-helm/dashboards/envoy-proxy-global.json
+      datasource:
+        - { name: DS_PROMETHEUS, value: Prometheus }
+    envoy-gateway:
+      url: https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-addons-helm/dashboards/envoy-gateway-global.json
+      datasource:
+        - { name: DS_PROMETHEUS, value: Prometheus }
+    envoy-upstream:
+      # renovate: depName="Envoy/Upstream
+      gnetId: 24457
+      revision: 4
+      datasource:
+        - { name: DS_PROMETHEUS, value: Prometheus }
+    envoy-downstream:
+      # renovate: depName="Envoy/Downstream
+      gnetId: 24458
+      revision: 3
+      datasource:
+        - { name: DS_PROMETHEUS, value: Prometheus }
+    envoy-overview:
+      # renovate: depName="Envoy/Overview
+      gnetId: 24459
+      revision: 3
+      datasource:
+        - { name: DS_PROMETHEUS, value: Prometheus }
