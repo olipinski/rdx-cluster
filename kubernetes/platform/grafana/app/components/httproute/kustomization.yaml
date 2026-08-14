@@ -7,7 +7,7 @@ configMapGenerator:
   - name: grafana-helm-values
     behavior: merge
     files:
-      - ingress-values.yaml=values.yaml
+      - httproute-values.yaml=values.yaml
 
 patches:
   - target:

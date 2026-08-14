@@ -4,4 +4,4 @@
   value:
     kind: ConfigMap
     name: grafana-helm-values
-    valuesKey: ingress-values.yaml
+    valuesKey: httproute-values.yaml
