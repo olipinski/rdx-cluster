@@ -9,8 +9,8 @@ metadata:
 spec:
   parentRefs:
     - name: kube-gateway
-      sectionName: nextcloud-talk-tcp
+      sectionName: sub-tcp
   rules:
     - backendRefs:
-        - name: nextcloud-aio-talk
-          port: 3478
+        - name: docker-mailserver
+          port: 10587

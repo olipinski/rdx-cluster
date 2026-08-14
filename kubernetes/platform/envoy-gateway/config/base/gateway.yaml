@@ -45,12 +45,6 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-    - name: imap-tcp
-      protocol: TCP
-      port: 143
-      allowedRoutes:
-        namespaces:
-          from: All
     - name: subs-tcp
       protocol: TCP
       port: 465

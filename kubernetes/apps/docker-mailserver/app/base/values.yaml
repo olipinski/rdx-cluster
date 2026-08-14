@@ -68,13 +68,7 @@ dovecot:
 rspamd:
   ingress:
     enabled: false
-    ingressClassName: nginx
-    annotations: {}
-    host: rspamd.${CLUSTER_DOMAIN}
-    path: /
-    tls:
-      enabled: false
-      secret:
+
 proxyProtocol:
   enabled: true
   trustedNetworks: 10.42.0.0/16
