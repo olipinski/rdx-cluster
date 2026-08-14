@@ -205,8 +205,8 @@ nft_define_host:
     value: 10.20.0.8
   # This has to by in sync with cluster-settings.yaml
   # TODO maybe there is an automated way?
-  ingress_lb_host:
-    name: ingress_lb_host
+  gateway_lb_host:
+    name: gateway_lb_host
     value: 10.128.0.100
   forward_tcp_accepted:
     name: forward_tcp_accept
@@ -270,15 +270,15 @@ nft_forward_host_rules:
 # NAT pre-routing, including DNAT
 nft_nat_host_prerouting_rules:
   005_dnat_http:
-    - iifname $wan_interface tcp dport {80, 443} dnat $ingress_lb_host
+    - iifname $wan_interface tcp dport {80, 443} dnat $gateway_lb_host
   010_dnat_ssh:
-    - iifname $wan_interface tcp dport 22 dnat $ingress_lb_host
+    - iifname $wan_interface tcp dport 22 dnat $gateway_lb_host
   015_dnat_email:
-    - iifname $wan_interface tcp dport {143, 993, 25, 465} dnat $ingress_lb_host
+    - iifname $wan_interface tcp dport {143, 993, 25, 465} dnat $gateway_lb_host
   025_dnat_coturn:
-    - iifname $wan_interface tcp dport {3478, 5349} dnat $ingress_lb_host
+    - iifname $wan_interface tcp dport {3478, 5349} dnat $gateway_lb_host
   030_dnat_mqtt:
-    - iifname $wan_interface tcp dport {1883, 8883} dnat $ingress_lb_host
+    - iifname $wan_interface tcp dport {1883, 8883} dnat $gateway_lb_host
   500_dnat_seaweedfs_s3:
     - iifname $wan_interface tcp dport 8443 dnat $s3_host
 

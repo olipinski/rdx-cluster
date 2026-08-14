@@ -8,5 +8,4 @@ resources:
 
 components:
   - ../../components/authentication
-  - ../../components/ingress
-  - ../../components/istio
+  - ../../components/httproute

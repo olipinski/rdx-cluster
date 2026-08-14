@@ -182,13 +182,6 @@ dashboards:
       revision: 302
       datasource:
         - {name: DS_PROMETHEUS, value: Prometheus}
-  nginx:
-    nginx:
-      url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/nginx.json
-      datasource: Prometheus
-    nginx-request-handling-performance:
-      url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/request-handling-performance.json
-      datasource: Prometheus
   seaweedfs:
     seaweed-monitoring:
       url: https://raw.githubusercontent.com/chrislusf/seaweedfs/master/other/metrics/grafana_seaweedfs.json

@@ -12,4 +12,3 @@
     - role: velero_cli
       vars:
         velero_cli_velero_arch: arm64
-    - role: istio_cli

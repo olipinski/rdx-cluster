@@ -9,7 +9,6 @@ resources:
 components:
   - ../../components/ingress
   - ../../components/k3s
-  - ../../components/disable-grafana
   - ../../components/vault-agent
   - ../../components/open-telemetry-receiver
 

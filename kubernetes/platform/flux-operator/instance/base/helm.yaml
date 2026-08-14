@@ -5,14 +5,9 @@ metadata:
   name: flux-instance
 spec:
   interval: 30m
-  chart:
-    spec:
-      chart: flux-instance
-      version: 0.58.0
-      sourceRef:
-        kind: HelmRepository
-        name: controlplane
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: flux-instance
   releaseName: flux-instance
   targetNamespace: flux-system
   install:

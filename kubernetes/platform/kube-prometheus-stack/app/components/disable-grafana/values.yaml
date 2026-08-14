@@ -1,7 +1,0 @@
----
-# kube-prometheus-stack helm values (disable-grafana)
-# Disabling installation of Grafana sub-chart
-grafana:
-  enabled: false
-  # Disable deployment of kube-prometheus-stack grafana dashboards
-  forceDeployDashboards: false

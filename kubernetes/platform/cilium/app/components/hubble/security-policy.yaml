@@ -1,0 +1,17 @@
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: hubble-security-policy
+spec:
+  targetRefs:
+    - name: hubble-httproute
+  oidc:
+    provider:
+      issuer: "https://sso.${CLUSTER_DOMAIN}/realms/rdxcluster"
+    clientIDRef:
+      name: hubble-oauth2-external-secret
+    clientSecret:
+      name: hubble-oauth2-external-secret
+    redirectURL: "https://hubble.${CLUSTER_DOMAIN}/oauth2/callback"
+    logoutPath: "/hubble/logout"

@@ -1,0 +1,71 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: kube-gateway
+  namespace: kube-system
+spec:
+  gatewayClassName: envoy-gateway
+  addresses:
+    - type: IPAddress
+      value: ${CLUSTER_GATEWAY_LOAD_BALANCER_IP}
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https
+      protocol: HTTPS
+      port: 443
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: envoy-gateway-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: nextcloud-talk-tcp
+      protocol: TCP
+      port: 3478
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: nextcloud-talk-udp
+      protocol: UDP
+      port: 3478
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: smtp-tcp
+      protocol: TCP
+      port: 25
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: imap-tcp
+      protocol: TCP
+      port: 143
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: subs-tcp
+      protocol: TCP
+      port: 465
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: sub-tcp
+      protocol: TCP
+      port: 587
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: imaps-tcp
+      protocol: TCP
+      port: 993
+      allowedRoutes:
+        namespaces:
+          from: All
