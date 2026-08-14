@@ -72,7 +72,6 @@ install_charts:
     namespace: kube-system
     value_files:
       - ../../../../kubernetes/platform/cilium/app/base/values.yaml
-      - ../../../../kubernetes/platform/cilium/app/components/istio-config/values.yaml
       - "../../../../kubernetes/platform/cilium/app/overlays/{{ overlay }}/values.yaml"
 
   coredns:
@@ -327,13 +326,6 @@ longhorn_version: v1.11.1
 # SeaweedFS user, key and bucket
 seaweedfs_longhorn_user: "{{ vault.seaweedfs.longhorn.user }}"
 seaweedfs_longhorn_key: "{{ vault.seaweedfs.longhorn.key }}"
-
-#######################
-# Istio Configuration #
-#######################
-
-# renovate: datasource=github-releases depName=istio/istio
-istio_version: 1.29.2
 
 ###################
 # Logging Secrets #

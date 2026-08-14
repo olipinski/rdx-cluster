@@ -10,11 +10,7 @@ resources:
   - elastic-helmrepo.yaml
   - external-dns-helmrepo.yaml
   - external-secrets-helmrepo.yaml
-  - grafana-helmrepo.yaml
-  - hashicorp-helmrepo.yaml
-  - istio-helmrepo.yaml
   - jetstack-helmrepo.yaml
-  - kiali-helmrepo.yaml
   - kube-vip-helmrepo.yaml
   - longhorn-helmrepo.yaml
   - metrics-server-helmrepo.yaml
@@ -23,5 +19,4 @@ resources:
   - openbao-helmrepo.yaml
   - opentelemetry-helmrepo.yaml
   - prometheus-community-helmrepo.yaml
-  - strimzi-helmrepo.yaml
   - vmware-tanzu-helmrepo.yaml

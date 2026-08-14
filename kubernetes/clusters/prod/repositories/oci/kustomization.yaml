@@ -2,4 +2,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - controlplane-ocirepo.yaml
+  - envoy-gateway-ocirepo.yaml
+  - flux-instance-ocirepo.yaml
+  - flux-operator-ocirepo.yaml
+  - grafana-ocirepo.yaml

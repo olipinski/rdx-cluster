@@ -1,0 +1,15 @@
+---
+crds:
+  enabled: false # Gateway API is managed separately to ensure Cilium compatibility
+createNamespace: true
+config:
+  telemetry:
+    metrics:
+      sinks:
+        - type: OpenTelemetry
+          openTelemetry:
+            host: forwarder-collector.opentelemetry
+            port: 4318
+            protocol: http
+            exportInterval: 60s
+            exportTimeout: 30s
