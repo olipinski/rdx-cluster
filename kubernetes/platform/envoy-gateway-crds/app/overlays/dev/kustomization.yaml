@@ -1,13 +1,13 @@
 ---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: istio-ingress
+namespace: envoy-gateway-system
 
 resources:
   - ../../base
 
 configMapGenerator:
-  - name: istio-gateway-helm-values
+  - name: envoy-gateway-crds-helm-values
     behavior: merge
     files:
       - overlay-values.yaml=values.yaml
@@ -16,5 +16,5 @@ patches:
   - target:
       group: helm.toolkit.fluxcd.io
       kind: HelmRelease
-      name: istio-gateway
+      name: envoy-gateway
     path: helm-patch.yaml

@@ -3,5 +3,5 @@
   path: /spec/valuesFrom/-
   value:
     kind: ConfigMap
-    name: istio-gateway-helm-values
+    name: envoy-gateway-crds-helm-values
     valuesKey: overlay-values.yaml
