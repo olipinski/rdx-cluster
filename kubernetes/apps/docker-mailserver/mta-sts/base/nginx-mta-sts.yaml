@@ -35,7 +35,7 @@ spec:
               weight: 100
       containers:
         - name: nginx-mta-sts
-          image: nginxinc/nginx-unprivileged:1.31.3-alpine@sha256:334d92979f15aaecd5dd50af5105e1230e2bb70765d45b1e2f964e7c5eda81c3
+          image: nginxinc/nginx-unprivileged:1.31.7-alpine@sha256:b5047b9b76845eac124358373c6852377c52e4b05834a47647e955dd91cb8f1e
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
